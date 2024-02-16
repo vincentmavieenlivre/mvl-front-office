@@ -6,3 +6,8 @@
 
 ### login
 ``` firebase login ```
+
+# emulator 
+```firebase emulators:start ```
+```firebase emulators:export  emulator_dumps/[name]```
+```firebase emulators:start --import emulator_dumps/[name]```

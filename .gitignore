@@ -4,3 +4,4 @@ bin/act
 *.cache
 .secrets
 .env.*
+emulator_dumps
