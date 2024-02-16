@@ -1,9 +1,11 @@
 import { FirebaseApp, initializeApp } from 'firebase/app';
 import { Firestore, collection, connectFirestoreEmulator, getDocs, getFirestore } from 'firebase/firestore';
 import { Env, getEnv } from '../utils/EnvUtils';
+import { Functions, connectFunctionsEmulator, getFunctions, httpsCallable } from 'firebase/functions';
 
 export let db: Firestore | undefined = undefined;
 export let firebase: FirebaseApp | undefined = undefined
+export let functions: Functions | undefined = undefined
 
 export function initFirebase() {
 
@@ -23,10 +25,13 @@ export function initFirebase() {
 
     let app = initializeApp(config);
     db = getFirestore(app);
+    functions = getFunctions(app)
 
     if (getEnv() == Env.DEVELOPMENT) {
         console.log("[firebase emulator] bind firestore to local emulator db")
         connectFirestoreEmulator(db, '127.0.0.1', 8080)
+        console.log("[firebase emulator] bind cloud functions to local emulator functions")
+        connectFunctionsEmulator(functions, "127.0.0.1", 5001);
     }
 }
 
@@ -37,6 +42,14 @@ export async function testFirestore() {
         const userSnapshot = await getDocs(users);
         const userList = userSnapshot.docs.map(doc => doc.data());
         console.log("firestore test [ok]", userList)
+    }
+}
+
+export async function testFunctions() {
+    if (functions) {
+        const test = httpsCallable(functions, 'test');
+        let result = await test({ text: "test parameter helloWorld" })
+        console.log("oui", result.data)
     }
 }
 
