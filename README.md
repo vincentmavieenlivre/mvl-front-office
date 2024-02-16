@@ -1,3 +1,14 @@
+# dev
+
+``` pnpm dev```
+
+# firebase
+[How to use firebase](./docs/firebase.md)
+
+
+# Naming conventions
+[How to name your commits, html classes, branches, files](./docs/naming.md)
+
 # React + TypeScript + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
