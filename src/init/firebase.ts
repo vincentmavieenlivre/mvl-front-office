@@ -1,6 +1,8 @@
-import { initializeApp } from 'firebase/app';
+import { FirebaseApp, initializeApp } from 'firebase/app';
+import { Firestore, collection, getDocs, getFirestore } from 'firebase/firestore';
 
-
+export let db: Firestore | undefined = undefined;
+export let firebase: FirebaseApp | undefined = undefined
 
 export function initFirebase() {
 
@@ -18,6 +20,17 @@ export function initFirebase() {
 
     console.info("firebase config from env", config)
 
-
-    return initializeApp(config);
+    let app = initializeApp(config);
+    db = getFirestore(app);
 }
+
+
+export async function testFirestore() {
+    if (db) {
+        const users = collection(db, 'user');
+        const userSnapshot = await getDocs(users);
+        const userList = userSnapshot.docs.map(doc => doc.data());
+        console.log("firestore test [ok]", userList)
+    }
+}
+
