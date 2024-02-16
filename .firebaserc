@@ -1,0 +1,14 @@
+{
+  "projects": {
+    "default": "front-office-staging-f55fa"
+  },
+  "targets": {
+    "front-office-staging-f55fa": {
+      "hosting": {
+        "staging": [
+          "front-office-staging-f55fa"
+        ]
+      }
+    }
+  }
+}
