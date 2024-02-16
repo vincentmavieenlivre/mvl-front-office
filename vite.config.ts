@@ -1,7 +1,35 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 
-// https://vitejs.dev/config/
-export default defineConfig({
-  plugins: [react()],
+
+export default defineConfig((test) => {
+
+  let options = {
+
+  }
+
+  // warning:
+  // --mode flag is used to determine the environment mode during the build process. However, there is an issue with using custom modes other than the default modes ("development" and "production") with Vite.
+
+
+  let finalEnv = process.env.NODE_ENV
+
+  console.log("[process.env.NODE_ENV]", finalEnv)
+
+  // build into different folders depending on the `mode`.
+  const outDir = (finalEnv === "staging") ? "./dist/staging/" : "./dist/production/";
+
+  if (finalEnv != "development") {
+    console.log('[build dir]', outDir)
+    options = {
+      ...options,
+      build: { outDir }
+    }
+  }
+
+  return {
+    plugins: [react()],
+    mode: process.env.NODE_ENV,
+    ...options
+  }
 })
