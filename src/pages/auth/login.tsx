@@ -1,12 +1,13 @@
-import { UserCredential, getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { User, UserCredential, getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import React from "react"
-
+import { useSelector, useDispatch } from "react-redux";
+import { setUser } from "../../redux/auth.slice";
 interface LoginProps {
 
 }
 
 export const LoginPage = (props: LoginProps) => {
-
+    const dispatch = useDispatch();
     const doLogin = async () => {
         let email = "super_admin@test.com"
         let password = "coucou"
@@ -14,12 +15,12 @@ export const LoginPage = (props: LoginProps) => {
         const auth = getAuth();
         let userCredential: UserCredential | void = await signInWithEmailAndPassword(auth, email, password).catch((e) => console.error("[login error]", e))
         if (userCredential) {
-            const user = userCredential.user;
-            console.info("[login ok] user:", user)
-
+            const user: User = userCredential.user;
             const idTokenResult = await user.getIdTokenResult(true);
-
-            console.log("[user claim]", idTokenResult.claims);
+            dispatch(setUser({
+                user: user,
+                tokenResult: idTokenResult
+            }))
         }
     }
 
@@ -41,9 +42,8 @@ export const LoginPage = (props: LoginProps) => {
                 <div className="flex-col flex  self-center p-10 sm:max-w-5xl xl:max-w-2xl  z-50">
                     <div className="self-start hidden lg:flex flex-col  text-white">
                         <img src="" className="mb-3" />
-                        <h1 className="mb-3 font-bold text-5xl">Hi ? Welcome Back Aji </h1>
-                        <p className="pr-3">Lorem ipsum is placeholder text commonly used in the graphic, print,
-                            and publishing industries for previewing layouts and visual mockups</p>
+                        <h1 className="mb-3 font-bold text-5xl">Hello, connectez-vous ! </h1>
+                        <p className="pr-3">Avec votre email et votre mot de passe</p>
                     </div>
                 </div>
                 <form onSubmit={handleLoginSubmit} className="flex justify-center self-center  z-10">
