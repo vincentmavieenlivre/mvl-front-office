@@ -2,15 +2,15 @@
 
 import { Routes, Route } from "react-router-dom";
 import RootPage from './pages/root';
+import PublicRoutes from "./routes/public.routes";
 function App() {
 
 
 
   return (
-    <Routes>
-      <Route path="/" element={<RootPage></RootPage>} />
-      <Route path="/login" element={<div>/login</div>} />
-    </Routes>
+    <>
+      <PublicRoutes></PublicRoutes>
+    </>
   )
 }
 

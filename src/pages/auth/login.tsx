@@ -6,7 +6,7 @@ interface LoginProps {
 
 export const Login = (props: LoginProps) => {
     return (
-        <div>login</div>
+        <button className="btn">Button</button>
     )
 };
 
