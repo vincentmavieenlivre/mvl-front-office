@@ -60,9 +60,6 @@ function App() {
     }
   }, [tokenResult])
 
-
-
-
   return (
     <>
       <Routes>
