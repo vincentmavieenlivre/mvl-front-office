@@ -2,6 +2,7 @@
 import { Routes, Route } from "react-router-dom";
 import RootPage from "../pages/root";
 import LoginPage from "../pages/auth/login";
+import React from "react";
 
 interface PublicRoutesProps {
 

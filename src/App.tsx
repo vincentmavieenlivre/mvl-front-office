@@ -7,11 +7,17 @@ import { RootState } from "./redux/store";
 import { useEffect } from "react";
 import { UserCredential, onAuthStateChanged } from "firebase/auth";
 import { auth } from "./init/firebase";
+import ProtectedSuperAdminRoutes from "./routes/protected-super-admin.routes";
+import ErrorsRoutes from "./routes/errors.routes";
+import { Route, Routes } from "react-router-dom";
+import RootPage from "./pages/root";
+import LoginPage from "./pages/auth/login";
 function App() {
 
 
 
   const dispatch = useDispatch();
+  const user = useSelector(selectUser)
 
   useEffect(() => {
     console.log("user effect")
@@ -37,12 +43,21 @@ function App() {
         }
       });
     }
-  }, []);
+  }, [auth]);
+
+
 
 
   return (
     <>
-      <PublicRoutes></PublicRoutes>
+      <Routes>
+
+        <Route path="/*" element={<PublicRoutes></PublicRoutes>} />
+        {user &&
+          <Route path="/admin/*" element={<ProtectedSuperAdminRoutes></ProtectedSuperAdminRoutes>} />
+        }
+      </Routes>
+
     </>
   )
 }
