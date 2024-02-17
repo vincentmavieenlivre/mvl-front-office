@@ -3,15 +3,13 @@
 import { useSelector, useDispatch } from "react-redux";
 import PublicRoutes from "./routes/public.routes";
 import { UserStore, selectToken, selectUser, setUser } from "./redux/auth.slice";
-import { RootState } from "./redux/store";
 import { useEffect, useState } from "react";
-import { IdTokenResult, User, UserCredential, onAuthStateChanged } from "firebase/auth";
+import { IdTokenResult, User, onAuthStateChanged } from "firebase/auth";
 import { auth } from "./init/firebase";
 import ProtectedSuperAdminRoutes from "./routes/protected-super-admin.routes";
-import ErrorsRoutes from "./routes/errors.routes";
 import { Navigate, Route, Routes, useLocation, useNavigate } from "react-router-dom";
-import RootPage from "./pages/root";
-import LoginPage from "./pages/auth/login";
+
+import { ERoles } from "./modeles/roles";
 function App() {
   let navigate = useNavigate();
   const [authDone, setAuthDone] = useState(false)
@@ -56,7 +54,7 @@ function App() {
   }, [user])
 
   useEffect(() => {
-    if (tokenResult?.claims.role == "SUPER_ADMIN") {
+    if (tokenResult?.claims.role == ERoles.SUPER_ADMIN) {
       console.info("redirect to backoffice")
       navigate('/admin')
     }
@@ -68,16 +66,11 @@ function App() {
   return (
     <>
       <Routes>
-
-
         <Route path="/*" element={<PublicRoutes></PublicRoutes>} />
         {authDone &&
           <Route path="/admin/*" element={<RequireAuth><ProtectedSuperAdminRoutes /></RequireAuth>} />
         }
-
-
       </Routes>
-
     </>
   )
 }
@@ -90,10 +83,6 @@ function RequireAuth({ children }: { children: JSX.Element }) {
 
   if (!user) {
     console.warn("user is null to access auth routes", user)
-    // Redirect them to the /login page, but save the current location they were
-    // trying to go to when they were redirected. This allows us to send them
-    // along to that page after they login, which is a nicer user experience
-    // than dropping them off on the home page.
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
