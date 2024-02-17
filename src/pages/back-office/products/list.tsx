@@ -1,5 +1,6 @@
 import { IResourceComponentsProps, useDelete, useList } from "@refinedev/core";
 import { useNotification } from "@refinedev/core";
+import Button from '@mui/material/Button';
 
 export const ProductList: React.FC<IResourceComponentsProps> = () => {
     const { data: products } = useList();
@@ -28,6 +29,8 @@ export const ProductList: React.FC<IResourceComponentsProps> = () => {
             >
                 Delete Product
             </button>
+
+            <Button variant="contained">mui</Button>
         </div>
     );
 };
