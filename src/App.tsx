@@ -2,22 +2,24 @@
 
 import { useSelector, useDispatch } from "react-redux";
 import PublicRoutes from "./routes/public.routes";
-import { UserStore, selectUser, setUser } from "./redux/auth.slice";
+import { UserStore, selectToken, selectUser, setUser } from "./redux/auth.slice";
 import { RootState } from "./redux/store";
-import { useEffect } from "react";
-import { UserCredential, onAuthStateChanged } from "firebase/auth";
+import { useEffect, useState } from "react";
+import { IdTokenResult, User, UserCredential, onAuthStateChanged } from "firebase/auth";
 import { auth } from "./init/firebase";
 import ProtectedSuperAdminRoutes from "./routes/protected-super-admin.routes";
 import ErrorsRoutes from "./routes/errors.routes";
-import { Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import RootPage from "./pages/root";
 import LoginPage from "./pages/auth/login";
 function App() {
-
-
+  let navigate = useNavigate();
+  const [authDone, setAuthDone] = useState(false)
 
   const dispatch = useDispatch();
   const user = useSelector(selectUser)
+  const tokenResult: IdTokenResult | undefined = useSelector(selectToken)
+
 
   useEffect(() => {
     console.log("user effect")
@@ -41,9 +43,24 @@ function App() {
           console.log("[on auth change => no user data]")
           dispatch(setUser(undefined));
         }
+      }, (error) => {
+        console.error("[onAuthStateChanged]", error)
       });
     }
-  }, [auth]);
+  }, [auth, user]);
+
+  useEffect(() => {
+    if (user && tokenResult) {
+      setAuthDone(true)
+    }
+  }, [user])
+
+  useEffect(() => {
+    if (tokenResult?.claims.role == "SUPER_ADMIN") {
+      console.info("redirect to backoffice")
+      navigate('/admin')
+    }
+  }, [tokenResult])
 
 
 
@@ -52,14 +69,36 @@ function App() {
     <>
       <Routes>
 
+
         <Route path="/*" element={<PublicRoutes></PublicRoutes>} />
-        {user &&
-          <Route path="/admin/*" element={<ProtectedSuperAdminRoutes></ProtectedSuperAdminRoutes>} />
+        {authDone &&
+          <Route path="/admin/*" element={<RequireAuth><ProtectedSuperAdminRoutes /></RequireAuth>} />
         }
+
+
       </Routes>
 
     </>
   )
 }
+
+function RequireAuth({ children }: { children: JSX.Element }) {
+  const user: User | undefined = useSelector(selectUser)
+  let location = useLocation();
+
+  console.log("required auth")
+
+  if (!user) {
+    console.warn("user is null to access auth routes", user)
+    // Redirect them to the /login page, but save the current location they were
+    // trying to go to when they were redirected. This allows us to send them
+    // along to that page after they login, which is a nicer user experience
+    // than dropping them off on the home page.
+    return <Navigate to="/login" state={{ from: location }} replace />;
+  }
+
+  return children;
+}
+
 
 export default App
