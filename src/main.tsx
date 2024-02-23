@@ -11,8 +11,8 @@ import { store } from "./redux/store";
 initFirebase()
 
 if (getEnv() == Env.DEVELOPMENT || getEnv() == Env.STAGING) {
-  await testFirestore()
-  await testFunctions()
+  /*  await testFirestore()
+   await testFunctions() */
 }
 
 ReactDOM.createRoot(document.getElementById('root')!).render(

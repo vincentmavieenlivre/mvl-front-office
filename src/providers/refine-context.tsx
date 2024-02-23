@@ -14,28 +14,28 @@ export function RefineContext({ children }) {
     return (
 
         <RefineSnackbarProvider preventDuplicate={true}>
-        <RefineKbarProvider>
-            <Refine
+            <RefineKbarProvider>
+                <Refine
                     routerProvider={routerProvider}
-                dataProvider={dataProvider("https://api.finefoods.refine.dev")}
+                    dataProvider={dataProvider("https://api.finefoods.refine.dev")}
                     notificationProvider={useNotificationProvider}
-                resources={[
-                    {
-                        name: "products",
-                        list: "/admin/products",
-                    },
-                ]}
-                options={{ syncWithLocation: true, warnWhenUnsavedChanges: true, }}
-            >
-                <RefineKbar />
+                    resources={[
+                        {
+                            name: "products",
+                            list: "/admin/products",
+                        },
+                    ]}
+                    options={{ syncWithLocation: true, warnWhenUnsavedChanges: true, }}
+                >
+                    <RefineKbar />
 
-                {children}
+                    {children}
 
-                {/*  <UnsavedChangesNotifier />
+                    {/*  <UnsavedChangesNotifier />
                 <DocumentTitleHandler /> */}
-            </Refine>
+                </Refine>
 
-        </RefineKbarProvider>
+            </RefineKbarProvider>
         </RefineSnackbarProvider>
 
     );

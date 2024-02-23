@@ -49,7 +49,12 @@ function App() {
 
   useEffect(() => {
     if (user && tokenResult) {
+      console.log("[set auth=TRUE]")
       setAuthDone(true)
+    } else {
+      console.log("[set auth=FALSE]")
+
+      setAuthDone(false)
     }
   }, [user])
 
@@ -76,10 +81,10 @@ function RequireAuth({ children }: { children: JSX.Element }) {
   const user: User | undefined = useSelector(selectUser)
   let location = useLocation();
 
-  console.log("required auth")
+  console.log("[required auth] can go on protected route =>", user != undefined, children)
 
   if (!user) {
-    console.warn("user is null to access auth routes", user)
+    console.warn("redirect to login")
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
 

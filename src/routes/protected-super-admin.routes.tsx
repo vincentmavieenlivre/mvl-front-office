@@ -11,7 +11,7 @@ interface ProtectedSuperAdminRoutesProps {
 }
 
 export const ProtectedSuperAdminRoutes = (props: ProtectedSuperAdminRoutesProps) => {
-    console.log("ProtectedSuperAdminRoutes")
+    console.log("[ProtectedSuperAdminRoutes] component")
     return (
         <Routes>
 
@@ -29,7 +29,8 @@ export const ProtectedSuperAdminRoutes = (props: ProtectedSuperAdminRoutesProps)
                 }
             >
 
-                <Route index element={<NavigateToResource />} />
+                {/* nested routes (used with Outlet) */}
+                <Route index element={<div>[admin home]</div>} />
                 <Route path="products" element={<ProductList />} />
                 <Route path="*" element={<ErrorComponent />} />
 
