@@ -4,18 +4,21 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "NODE_ENV=development vite --mode development",
+    "dev": "NODE_ENV=development refine dev --mode development",
     "dev:emulator": "firebase emulators:start --import emulator_dumps/init",
     "build:prod": "tsc && NODE_ENV=production dotenv -e .env.production vite build --mode production",
     "build:staging": " tsc && NODE_ENV=staging dotenv -e .env.staging vite build",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "refine": "refine"
   },
   "dependencies": {
     "@emotion/react": "^11.11.3",
     "@emotion/styled": "^11.11.0",
     "@mui/material": "^5.15.10",
     "@reduxjs/toolkit": "^2.2.1",
+    "@refinedev/cli": "^2.16.26",
+    "@refinedev/devtools": "^1.1.34",
     "@refinedev/kbar": "^1.3.6",
     "@refinedev/react-router-v6": "^4.5.5",
     "@refinedev/simple-rest": "^5.0.2",
@@ -43,5 +46,8 @@
     "tailwindcss": "^3.4.1",
     "typescript": "^5.2.2",
     "vite": "^5.1.0"
+  },
+  "refine": {
+    "projectId": "zB8t94-VPwJA0-BmEInX"
   }
 }

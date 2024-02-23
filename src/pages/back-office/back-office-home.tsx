@@ -18,12 +18,16 @@ export const BackOffice = (props: AdminHomeProps) => {
     }
 
     return (
-        <Refine dataProvider={dataProvider(API_URL)}>
+        <Refine
+            dataProvider={dataProvider(API_URL)}
+            options={{
+                projectId: "zB8t94-VPwJA0-BmEInX"
+            }}>
             {/* You can use Refine hooks inside here */}
             <OtherComponent />
             <RefineComponent />
         </Refine>
-    )
+    );
 };
 
 export default BackOffice;

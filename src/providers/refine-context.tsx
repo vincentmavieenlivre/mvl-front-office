@@ -10,33 +10,41 @@ import {
     RefineSnackbarProvider,
 } from "@refinedev/mui";
 
+import { DevtoolsProvider, DevtoolsPanel } from "@refinedev/devtools";
+
 export function RefineContext({ children }) {
     return (
+        <DevtoolsProvider>
 
-        <RefineSnackbarProvider preventDuplicate={true}>
-            <RefineKbarProvider>
-                <Refine
-                    routerProvider={routerProvider}
-                    dataProvider={dataProvider("https://api.finefoods.refine.dev")}
-                    notificationProvider={useNotificationProvider}
-                    resources={[
-                        {
-                            name: "products",
-                            list: "/admin/products",
-                        },
-                    ]}
-                    options={{ syncWithLocation: true, warnWhenUnsavedChanges: true, }}
-                >
-                    <RefineKbar />
+            <RefineSnackbarProvider preventDuplicate={true}>
+                <RefineKbarProvider>
+                    <Refine
+                        routerProvider={routerProvider}
+                        dataProvider={dataProvider("https://api.finefoods.refine.dev")}
+                        notificationProvider={useNotificationProvider}
+                        resources={[
+                            {
+                                name: "products",
+                                list: "/admin/products",
+                            },
+                        ]}
+                        options={{
+                            syncWithLocation: true,
+                            warnWhenUnsavedChanges: true,
+                            projectId: "zB8t94-VPwJA0-BmEInX"
+                        }}
+                    >
+                        <RefineKbar />
 
-                    {children}
+                        {children}
 
-                    {/*  <UnsavedChangesNotifier />
-                <DocumentTitleHandler /> */}
-                </Refine>
+                        {/*  <UnsavedChangesNotifier />
+                    <DocumentTitleHandler /> */}
+                    </Refine>
 
-            </RefineKbarProvider>
-        </RefineSnackbarProvider>
-
+                </RefineKbarProvider>
+            </RefineSnackbarProvider>
+            <DevtoolsPanel />
+        </DevtoolsProvider>
     );
 }
