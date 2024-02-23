@@ -8,7 +8,7 @@ import { BrowserRouter } from "react-router-dom";
 import { Provider } from "react-redux";
 import { store } from "./redux/store";
 
-initFirebase()
+//initFirebase()
 
 if (getEnv() == Env.DEVELOPMENT || getEnv() == Env.STAGING) {
   /*  await testFirestore()
