@@ -1,45 +1,111 @@
 
-import { useList } from "@refinedev/core";
-import { useTable } from "@refinedev/core";
-import { List, useDataGrid } from "@refinedev/mui";
-import { DataGrid, GridColDef } from '@mui/x-data-grid';
-import React from "react";
+import { useUpdate } from "@refinedev/core";
+
+
+import { Table, Input, Space } from "antd";
+import {
+    useTable,
+    EditButton,
+    ShowButton,
+    getDefaultSortOrder,
+    FilterDropdown,
+    useSelect,
+    List,
+} from "@refinedev/antd";
 
 export const UserList = () => {
+    const { mutate, isLoading, isUpdating } = useUpdate();
 
+    /*  let { dataGridProps: tableProps, tableQueryResult: { data, isLoading } } = useTable({
+         resource: "user",
+         pagination: { current: 1, pageSize: 10 },
+         sorters: { initial: [{ field: "email", order: "asc" }] },
+     }); */
 
-    const { dataGridProps, tableQueryResult: { data, isLoading } } = useDataGrid({
-        resource: "user",
-        pagination: { current: 1, pageSize: 10 },
+    let { tableProps, sorters, filters } = useTable({
         sorters: { initial: [{ field: "email", order: "asc" }] },
+
+        syncWithLocation: true,
     });
 
-    const columns = React.useMemo<GridColDef<any>[]>(
-        () => [
-            {
-                field: "id",
-                headerName: "ID",
-                type: "number",
-                width: 150,
+    const handleSelectionModelChange = (selectionModel) => {
+        // 'selectionModel' contains the selected row(s)
+        console.log('Selected Rows:', selectionModel);
+        // You can perform any desired action here
+    };
+
+    const onCellEditStop = (edit) => {
+        console.log("[edit stop]", edit)
+    }
+
+    const processRowUpdate = (update) => {
+        console.log("[update]", update)
+        updateUser(update)
+    }
+
+    const onProcessRowUpdateError = (error) => {
+
+    }
+
+    console.log("datagridProps", tableProps)
+    tableProps = {
+        ...tableProps, disableRowSelectionOnClick: false, filterMode: "client", checkboxSelection: false,
+        unstable_cellSelection: false,
+        onCellEditStop: onCellEditStop,
+        onStateChange: handleSelectionModelChange,
+        processRowUpdate: processRowUpdate,
+        onProcessRowUpdateError: onProcessRowUpdateError
+    }
+
+    const updateUser = async (user: any) => {
+        await mutate({
+            resource: "user",
+            id: user.id,
+            values: {
+                ...user
             },
-            {
-                field: "email",
-                headerName: "Email",
-                width: 150,
-            },
-        ],
-        [],
-    );
+        });
+    };
 
     if (isLoading) {
         return <div>Loading...</div>;
     }
 
-    console.log("data", data)
+
 
     return (
         <List>
-            <DataGrid {...dataGridProps} columns={columns} autoHeight />
+            <Table {...tableProps} rowKey="id">
+                <Table.Column
+                    dataIndex="id"
+                    title="Id"
+                    sorter
+
+
+                />
+                <Table.Column
+                    dataIndex="email"
+                    title="email"
+                    sorter
+
+                    filterDropdown={(props) => (
+                        <FilterDropdown {...props}>
+                            <Input />
+                        </FilterDropdown>
+                    )}
+                />
+                <Table.Column
+                    title="Actions"
+                    render={(_, record) => (
+                        <Space>
+                            <ShowButton hideText size="small" recordItemId={record.id} />
+                            <EditButton hideText size="small" recordItemId={record.id} />
+                        </Space>
+                    )}
+                />
+            </Table>
         </List>
     );
-};
+
+
+}

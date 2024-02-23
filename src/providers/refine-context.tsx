@@ -4,17 +4,14 @@ import dataProvider from "@refinedev/simple-rest";
 import { RefineKbarProvider, RefineKbar } from "@refinedev/kbar";
 import { NavigateToResource, DocumentTitleHandler, UnsavedChangesNotifier } from "@refinedev/react-router-v6";
 import { createAction, useRegisterActions } from "@refinedev/kbar";
-import {
-    RefineThemes,
-    useNotificationProvider,
-    RefineSnackbarProvider,
-} from "@refinedev/mui";
 
+import { App as AntdApp, ConfigProvider } from "antd";
+import { ErrorComponent, RefineThemes, ThemedLayoutV2, useNotificationProvider, AuthPage } from "@refinedev/antd";
 import { DevtoolsProvider, DevtoolsPanel } from "@refinedev/devtools";
 
 import { ReactNode } from "react";
 import { refineFirestoreDatabase } from "./firebase-data-provider";
-
+//import "@refinedev/antd/dist/reset.css"
 
 export function RefineContext({ children }: { children: ReactNode }) {
 
@@ -23,37 +20,43 @@ export function RefineContext({ children }: { children: ReactNode }) {
 
     return (
         <DevtoolsProvider>
+            <ConfigProvider theme={RefineThemes.Blue}>
+                <AntdApp>
 
-            <RefineSnackbarProvider preventDuplicate={true}>
-                <RefineKbarProvider>
-                    <Refine
-                        routerProvider={routerProvider}
-                        dataProvider={provider}                        
-                        notificationProvider={useNotificationProvider}
-                        resources={[
-                            {
-                                name: "user", // <- display in toolbar
-                                list: "/admin/users",
+                    <RefineKbarProvider>
+                        <Refine
+                            routerProvider={routerProvider}
+                            dataProvider={provider}
 
-                            },
-                        ]}
-                        options={{
-                            syncWithLocation: true,
-                            warnWhenUnsavedChanges: true,
-                            projectId: "zB8t94-VPwJA0-BmEInX"
-                        }}
-                    >
-                        <RefineKbar />
+                            resources={[
+                                {
+                                    name: "user", // <- display in toolbar
+                                    list: "/admin/users",
+                                    show: "/admin/users/:id",
+                                    edit: "/admin/users/:id/edit",
+                                    create: "/admin/users/create"
 
-                        {children}
+                                },
+                            ]}
+                            options={{
+                                syncWithLocation: true,
+                                warnWhenUnsavedChanges: true,
+                                projectId: "zB8t94-VPwJA0-BmEInX"
+                            }}
+                        >
+                            <RefineKbar />
 
-                        {/*  <UnsavedChangesNotifier />
+                            {children}
+
+                            {/*  <UnsavedChangesNotifier />
                     <DocumentTitleHandler /> */}
-                    </Refine>
+                        </Refine>
 
-                </RefineKbarProvider>
-            </RefineSnackbarProvider>
-            <DevtoolsPanel />
+                    </RefineKbarProvider>
+
+                    <DevtoolsPanel />
+                </AntdApp>
+            </ConfigProvider>
         </DevtoolsProvider>
     );
 }

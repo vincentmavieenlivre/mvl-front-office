@@ -1,13 +1,11 @@
-import React from "react"
 import { Routes, Route, Outlet } from "react-router-dom";
-import BackOffice from "../pages/back-office/back-office-home";
 import { RefineContext } from "../providers/refine-context";
-import { NavigateToResource, DocumentTitleHandler, UnsavedChangesNotifier } from "@refinedev/react-router-v6";
-import { ProductList } from "../pages/back-office/products/list";
-import { ErrorComponent, GitHubBanner } from "@refinedev/core";
-import { RefineKbarProvider, RefineKbar } from "@refinedev/kbar";
-import { ThemedLayoutV2, ThemedTitleV2 } from "@refinedev/mui";
+import { ErrorComponent } from "@refinedev/core";
+import { ThemedLayoutV2, ThemedTitleV2 } from "@refinedev/antd";
 import { UserList } from "../pages/back-office/users/user.list";
+import { UserShow } from "../pages/back-office/users/user.show";
+import { UserEdit } from "../pages/back-office/users/user.edit";
+import { UserCreate } from "../pages/back-office/users/user.create";
 interface ProtectedSuperAdminRoutesProps {
 
 }
@@ -37,6 +35,9 @@ export const ProtectedSuperAdminRoutes = (props: ProtectedSuperAdminRoutesProps)
                 {/* nested routes (used with Outlet) */}
                 <Route index element={<div>[admin home]</div>} />
                 <Route path="users" element={<UserList></UserList>} />
+                <Route path="users/:id" element={<UserShow />} />
+                <Route path="users/:id/edit" element={<UserEdit />} />
+                <Route path="users/create" element={<UserCreate />} />
                 <Route path="*" element={<ErrorComponent />} />
 
 
