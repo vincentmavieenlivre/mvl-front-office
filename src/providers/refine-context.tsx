@@ -17,6 +17,10 @@ import { refineFirestoreDatabase } from "./firebase-data-provider";
 
 
 export function RefineContext({ children }: { children: ReactNode }) {
+
+    let provider = refineFirestoreDatabase.getDataProvider()
+    console.log("provider", provider)
+
     return (
         <DevtoolsProvider>
 
@@ -24,13 +28,13 @@ export function RefineContext({ children }: { children: ReactNode }) {
                 <RefineKbarProvider>
                     <Refine
                         routerProvider={routerProvider}
-                        dataProvider={refineFirestoreDatabase.getDataProvider()}
-                        //dataProvider={dataProvider("https://api.finefoods.refine.dev")}
+                        dataProvider={provider}                        
                         notificationProvider={useNotificationProvider}
                         resources={[
                             {
-                                name: "products",
-                                list: "/admin/products",
+                                name: "user", // <- display in toolbar
+                                list: "/admin/users",
+
                             },
                         ]}
                         options={{

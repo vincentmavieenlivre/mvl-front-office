@@ -1,9 +1,6 @@
-import {
-    FirebaseAuth,
-    FirebaseDatabase,
-    FirestoreDatabase,
-} from "refine-firebase";
-import { app, auth, db } from "../init/firebase";
 
-console.log("[init firebase dataprovider]")
+import { app, auth, db } from "../init/firebase";
+import { FirestoreDatabase } from "../utils/refine-firebase/src";
+
+console.log("[init firebase dataprovider]", db)
 export const refineFirestoreDatabase = new FirestoreDatabase({ firebaseApp: app }, db);
