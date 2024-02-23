@@ -16,6 +16,7 @@
     "@emotion/react": "^11.11.3",
     "@emotion/styled": "^11.11.0",
     "@mui/material": "^5.15.10",
+    "@mui/x-data-grid": "latest",
     "@reduxjs/toolkit": "^2.2.1",
     "@refinedev/cli": "^2.16.26",
     "@refinedev/devtools": "^1.1.34",

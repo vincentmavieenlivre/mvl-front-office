@@ -14,6 +14,9 @@ dependencies:
   '@mui/material':
     specifier: ^5.15.10
     version: 5.15.10(@emotion/react@11.11.3)(@emotion/styled@11.11.0)(@types/react@18.2.55)(react-dom@18.2.0)(react@18.2.0)
+  '@mui/x-data-grid':
+    specifier: latest
+    version: 6.19.5(@mui/material@5.15.10)(@mui/system@5.15.9)(@types/react@18.2.55)(react-dom@18.2.0)(react@18.2.0)
   '@reduxjs/toolkit':
     specifier: ^2.2.1
     version: 2.2.1(react-redux@9.1.0)(react@18.2.0)
@@ -57,7 +60,7 @@ devDependencies:
     version: 4.47.1(@tanstack/react-query@4.36.1)(@types/react-dom@18.2.19)(@types/react@18.2.55)(react-dom@18.2.0)(react@18.2.0)
   '@refinedev/mui':
     specifier: ^5.14.4
-    version: 5.14.4(@emotion/react@11.11.3)(@emotion/styled@11.11.0)(@mui/lab@5.0.0-alpha.165)(@mui/material@5.15.10)(@mui/x-data-grid@6.19.4)(@refinedev/core@4.47.1)(@refinedev/react-hook-form@4.8.14)(@types/react@18.2.55)(dayjs@1.11.10)(react-dom@18.2.0)(react-hook-form@7.50.1)(react@18.2.0)
+    version: 5.14.4(@emotion/react@11.11.3)(@emotion/styled@11.11.0)(@mui/lab@5.0.0-alpha.165)(@mui/material@5.15.10)(@mui/x-data-grid@6.19.5)(@refinedev/core@4.47.1)(@refinedev/react-hook-form@4.8.14)(@types/react@18.2.55)(dayjs@1.11.10)(react-dom@18.2.0)(react-hook-form@7.50.1)(react@18.2.0)
   '@types/react':
     specifier: ^18.2.55
     version: 18.2.55
@@ -2553,8 +2556,8 @@ packages:
       react: 18.2.0
       react-is: 18.2.0
 
-  /@mui/x-data-grid@6.19.4(@mui/material@5.15.10)(@mui/system@5.15.9)(@types/react@18.2.55)(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-qXBe2mSetdsl3ZPqB/1LpKNkEiaYUiFXIaMHTIjuzLyusXgt+w7UsHYO7R+aJYUU7c3FeHla0R1nwRMY3kZ5ng==}
+  /@mui/x-data-grid@6.19.5(@mui/material@5.15.10)(@mui/system@5.15.9)(@types/react@18.2.55)(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-jV1ZqwyFslKqFScSn4t+xc/tNxLHOeJjz3HoeK+Wdf5t3bPM69pg/jLeg8TmOkAUY62JmQKCLVmcGWiR3AqUKQ==}
     engines: {node: '>=14.0.0'}
     peerDependencies:
       '@mui/material': ^5.4.1
@@ -2573,7 +2576,6 @@ packages:
       reselect: 4.1.8
     transitivePeerDependencies:
       - '@types/react'
-    dev: true
 
   /@nodelib/fs.scandir@2.1.5:
     resolution: {integrity: sha512-vq24Bq3ym5HEQm2NKCr3yXDwjc7vTsEThRDnkp2DK9p1uqLR+DHurm/NOTo0KG7HYHU7eppKZj3MyqYuMBf62g==}
@@ -2988,7 +2990,7 @@ packages:
       - '@types/react-dom'
     dev: false
 
-  /@refinedev/mui@5.14.4(@emotion/react@11.11.3)(@emotion/styled@11.11.0)(@mui/lab@5.0.0-alpha.165)(@mui/material@5.15.10)(@mui/x-data-grid@6.19.4)(@refinedev/core@4.47.1)(@refinedev/react-hook-form@4.8.14)(@types/react@18.2.55)(dayjs@1.11.10)(react-dom@18.2.0)(react-hook-form@7.50.1)(react@18.2.0):
+  /@refinedev/mui@5.14.4(@emotion/react@11.11.3)(@emotion/styled@11.11.0)(@mui/lab@5.0.0-alpha.165)(@mui/material@5.15.10)(@mui/x-data-grid@6.19.5)(@refinedev/core@4.47.1)(@refinedev/react-hook-form@4.8.14)(@types/react@18.2.55)(dayjs@1.11.10)(react-dom@18.2.0)(react-hook-form@7.50.1)(react@18.2.0):
     resolution: {integrity: sha512-D3XI4KI0ttvBZTyaYDHvDH+wQqDOZUAPldAVft4SnjFPxjaf/piWaUj7WwJR+peXtE/+gLGydk4W3oGDUVQ/RA==}
     peerDependencies:
       '@emotion/react': ^11.8.2
@@ -3008,7 +3010,7 @@ packages:
       '@mui/icons-material': 5.15.10(@mui/material@5.15.10)(@types/react@18.2.55)(react@18.2.0)
       '@mui/lab': 5.0.0-alpha.165(@emotion/react@11.11.3)(@emotion/styled@11.11.0)(@mui/material@5.15.10)(@types/react@18.2.55)(react-dom@18.2.0)(react@18.2.0)
       '@mui/material': 5.15.10(@emotion/react@11.11.3)(@emotion/styled@11.11.0)(@types/react@18.2.55)(react-dom@18.2.0)(react@18.2.0)
-      '@mui/x-data-grid': 6.19.4(@mui/material@5.15.10)(@mui/system@5.15.9)(@types/react@18.2.55)(react-dom@18.2.0)(react@18.2.0)
+      '@mui/x-data-grid': 6.19.5(@mui/material@5.15.10)(@mui/system@5.15.9)(@types/react@18.2.55)(react-dom@18.2.0)(react@18.2.0)
       '@refinedev/core': 4.47.1(@tanstack/react-query@4.36.1)(@types/react-dom@18.2.19)(@types/react@18.2.55)(react-dom@18.2.0)(react@18.2.0)
       '@refinedev/react-hook-form': 4.8.14(@refinedev/core@4.47.1)(@types/react-dom@18.2.19)(@types/react@18.2.55)(react-dom@18.2.0)(react-hook-form@7.50.1)(react@18.2.0)
       '@refinedev/ui-types': 1.22.4(@refinedev/core@4.47.1)(react-dom@18.2.0)(react@18.2.0)
@@ -7211,7 +7213,6 @@ packages:
 
   /reselect@4.1.8:
     resolution: {integrity: sha512-ab9EmR80F/zQTMNeneUr4cv+jSwPJgIlvEmVwLerwrWVbpLlBuls9XHzIeTFy4cegU2NHBp3va0LKOzU5qFEYQ==}
-    dev: true
 
   /reselect@5.1.0:
     resolution: {integrity: sha512-aw7jcGLDpSgNDyWBQLv2cedml85qd95/iszJjN988zX1t7AVRJi19d9kto5+W7oCfQ94gyo40dVbT6g2k4/kXg==}

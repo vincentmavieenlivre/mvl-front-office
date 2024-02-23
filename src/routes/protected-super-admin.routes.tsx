@@ -7,7 +7,7 @@ import { ProductList } from "../pages/back-office/products/list";
 import { ErrorComponent, GitHubBanner } from "@refinedev/core";
 import { RefineKbarProvider, RefineKbar } from "@refinedev/kbar";
 import { ThemedLayoutV2, ThemedTitleV2 } from "@refinedev/mui";
-import { ListUsers } from "../pages/back-office/users/list";
+import { UserList } from "../pages/back-office/users/user.list";
 interface ProtectedSuperAdminRoutesProps {
 
 }
@@ -36,7 +36,7 @@ export const ProtectedSuperAdminRoutes = (props: ProtectedSuperAdminRoutesProps)
 
                 {/* nested routes (used with Outlet) */}
                 <Route index element={<div>[admin home]</div>} />
-                <Route path="users" element={<ListUsers></ListUsers>} />
+                <Route path="users" element={<UserList></UserList>} />
                 <Route path="*" element={<ErrorComponent />} />
 
 
