@@ -5,3 +5,5 @@ bin/act
 .secrets
 .env.*
 emulator_dumps
+firestore-debug.log
+ui-debug.log
