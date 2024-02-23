@@ -11,6 +11,8 @@ import { Navigate, Route, Routes, useLocation, useNavigate } from "react-router-
 
 import { ERoles } from "./modeles/roles";
 import AppRoutes from "./routes/app-routes.index";
+
+
 function App() {
   let navigate = useNavigate();
   const [authDone, setAuthDone] = useState(false)

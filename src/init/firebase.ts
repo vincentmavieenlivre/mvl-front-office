@@ -34,7 +34,7 @@ export function initFirebase() {
         console.log("[firebase emulator] bind firestore to local emulator db")
         connectFirestoreEmulator(db, '127.0.0.1', 8080)
         console.log("[firebase emulator] bind cloud functions to local emulator functions")
-        connectFunctionsEmulator(functions, "127.0.0.1", 5001);
+        connectFunctionsEmulator(functions, "127.0.0.1", 5003);
         console.log("[firebase emulator] bind authentification")
         connectAuthEmulator(auth, "http://127.0.0.1:9099");
     }
@@ -54,7 +54,7 @@ export async function testFunctions() {
     if (functions) {
         const test = httpsCallable(functions, 'test');
         let result = await test({ text: "test parameter helloWorld" })
-        console.log("oui", result.data)
+        console.log("[test cloud function]", result.data)
     }
 }
 
