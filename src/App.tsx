@@ -10,6 +10,7 @@ import ProtectedSuperAdminRoutes from "./routes/protected-super-admin.routes";
 import { Navigate, Route, Routes, useLocation, useNavigate } from "react-router-dom";
 
 import { ERoles } from "./modeles/roles";
+import AppRoutes from "./routes/app-routes.index";
 function App() {
   let navigate = useNavigate();
   const [authDone, setAuthDone] = useState(false)
@@ -45,18 +46,14 @@ function App() {
         console.error("[onAuthStateChanged]", error)
       });
     }
-  }, [auth, user]);
+  }, []);
 
   useEffect(() => {
     if (user && tokenResult) {
       console.log("[set auth=TRUE]")
       setAuthDone(true)
-    } else {
-      console.log("[set auth=FALSE]")
-
-      setAuthDone(false)
     }
-  }, [user])
+  }, [user, tokenResult])
 
   useEffect(() => {
     if (tokenResult?.claims.role == ERoles.SUPER_ADMIN) {
@@ -66,30 +63,10 @@ function App() {
   }, [tokenResult])
 
   return (
-    <>
-      <Routes>
-        <Route path="/*" element={<PublicRoutes></PublicRoutes>} />
-        {authDone &&
-          <Route path="/admin/*" element={<RequireAuth><ProtectedSuperAdminRoutes /></RequireAuth>} />
-        }
-      </Routes>
-    </>
+    <AppRoutes authDone={authDone}></AppRoutes>
   )
 }
 
-function RequireAuth({ children }: { children: JSX.Element }) {
-  const user: User | undefined = useSelector(selectUser)
-  let location = useLocation();
-
-  console.log("[required auth] can go on protected route =>", user != undefined, children)
-
-  if (!user) {
-    console.warn("redirect to login")
-    return <Navigate to="/login" state={{ from: location }} replace />;
-  }
-
-  return children;
-}
 
 
 export default App

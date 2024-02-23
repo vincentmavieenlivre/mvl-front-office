@@ -6,6 +6,7 @@ import { NavigateToResource, DocumentTitleHandler, UnsavedChangesNotifier } from
 import { ProductList } from "../pages/back-office/products/list";
 import { ErrorComponent, GitHubBanner } from "@refinedev/core";
 import { RefineKbarProvider, RefineKbar } from "@refinedev/kbar";
+import { ThemedLayoutV2, ThemedTitleV2 } from "@refinedev/mui";
 interface ProtectedSuperAdminRoutesProps {
 
 }
@@ -19,8 +20,11 @@ export const ProtectedSuperAdminRoutes = (props: ProtectedSuperAdminRoutesProps)
                 path="/"
                 element={
                     <RefineContext>
-
+                        <ThemedLayoutV2 Title={(props) => (
+                            <ThemedTitleV2 {...props} text="MVL Admin" />
+                        )}>
                         <Outlet />
+                        </ThemedLayoutV2>
 
                     </RefineContext>
 
