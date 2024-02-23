@@ -3,15 +3,14 @@
 @tailwind utilities;
 
 
-@layer base {
-    .refine-create-button,
-    input[type='button'] {
-      @apply !bg-purple-500;
-      transition: background-color 0.3s; /* Add a smooth transition for the color change */
-    }
-    button:hover,
-    .button:hover,
-    input[type='button']:hover {
-      @apply !bg-purple-700; /* Change the background color on hover */
-    }
-  }
+
+.refine-create-button
+{
+ @apply !bg-purple-400;
+ transition: background-color 0.3s; /* Add a smooth transition for the color change */
+}
+
+.refine-create-button:hover {
+  @apply !bg-purple-500; /* Change the background color on hover */
+}
+     
