@@ -7,3 +7,4 @@ bin/act
 emulator_dumps
 firestore-debug.log
 ui-debug.log
+firebase-debug.log
