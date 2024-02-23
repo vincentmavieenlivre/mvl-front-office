@@ -6,30 +6,19 @@ export const UserEdit = () => {
     const { formProps, saveButtonProps, queryResult } = useForm({
         redirect: "show",
     });
-
+    console.log("query result", queryResult)
     const { selectProps } = useSelect({
-        resource: "categories",
-        defaultValue: queryResult?.data?.data?.category?.id,
+        resource: "user",
+        defaultValue: queryResult?.data?.data?.id,
     });
 
     return (
         <Edit saveButtonProps={saveButtonProps}>
             <Form {...formProps} layout="vertical">
-                <Form.Item label="Name" name="name">
+                <Form.Item label="Email" name="email">
                     <Input />
                 </Form.Item>
-                <Form.Item label="Description" name="description">
-                    <Input.TextArea />
-                </Form.Item>
-                <Form.Item label="Material" name="material">
-                    <Input />
-                </Form.Item>
-                <Form.Item label="Category" name={["category", "id"]}>
-                    <Select {...selectProps} />
-                </Form.Item>
-                <Form.Item label="Price" name="price">
-                    <InputNumber step="0.01" stringMode />
-                </Form.Item>
+
             </Form>
         </Edit>
     );

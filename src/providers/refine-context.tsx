@@ -20,7 +20,7 @@ export function RefineContext({ children }: { children: ReactNode }) {
 
     return (
         <DevtoolsProvider>
-            <ConfigProvider theme={RefineThemes.Blue}>
+            <ConfigProvider theme={RefineThemes.Purple}>
                 <AntdApp>
 
                     <RefineKbarProvider>

@@ -8,27 +8,16 @@ export const UserCreate = () => {
     });
 
     const { selectProps } = useSelect({
-        resource: "categories",
+        resource: "user",
     });
 
     return (
         <Create saveButtonProps={saveButtonProps}>
             <Form {...formProps} layout="vertical">
-                <Form.Item label="Name" name="name">
+                <Form.Item label="Email" name="email">
                     <Input />
                 </Form.Item>
-                <Form.Item label="Description" name="description">
-                    <Input.TextArea />
-                </Form.Item>
-                <Form.Item label="Material" name="material">
-                    <Input />
-                </Form.Item>
-                <Form.Item label="Category" name={["category", "id"]}>
-                    <Select {...selectProps} />
-                </Form.Item>
-                <Form.Item label="Price" name="price">
-                    <InputNumber step="0.01" stringMode />
-                </Form.Item>
+
             </Form>
         </Create>
     );
