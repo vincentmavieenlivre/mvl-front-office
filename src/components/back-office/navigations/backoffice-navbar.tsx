@@ -1,5 +1,7 @@
 import { auth } from '@app/init/firebase'
+import { getRoleColor } from '@app/modeles/roles'
 import { selectToken, selectUser } from '@app/redux/auth.slice'
+import { Space, Tag } from 'antd'
 import { IdTokenResult } from 'firebase/auth'
 import React from 'react'
 import { useSelector } from 'react-redux'
@@ -25,8 +27,8 @@ const BackOfficeNavBar = (props: Props) => {
                 <a className="btn btn-ghost text-xl">Mvl</a>
             </div>
             <div className="flex-none gap-2">
-                <div className="form-control">
-                    {user?.email} - {tokenResult?.claims.role}
+                <div className="form-control flex flex-row justify-around">
+                    {user?.email} <Space /> - <Tag color={getRoleColor(tokenResult?.claims.role)}>{tokenResult?.claims.role}</Tag>
                 </div>
                 <div className="dropdown dropdown-end">
                     <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar">
