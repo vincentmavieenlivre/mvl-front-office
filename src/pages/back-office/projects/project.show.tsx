@@ -3,7 +3,7 @@ import { TextField, NumberField, MarkdownField, Show } from "@refinedev/antd";
 
 import { Typography } from "antd";
 
-export const UserShow = () => {
+export const ProjectShow = () => {
     const { queryResult: { data, isLoading } } = useShow();
 
     const { data: categoryData, isLoading: categoryIsLoading } =

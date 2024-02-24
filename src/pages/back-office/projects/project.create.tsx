@@ -2,7 +2,7 @@ import { useForm, useSelect, Create } from "@refinedev/antd";
 
 import { Form, Input, Select, InputNumber } from "antd";
 
-export const UserCreate = () => {
+export const ProjectCreate = () => {
     const { formProps, saveButtonProps } = useForm({
         redirect: "edit",
     });

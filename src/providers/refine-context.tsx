@@ -37,6 +37,11 @@ export function RefineContext({ children }: { children: ReactNode }) {
                                     create: "/admin/users/create"
 
                                 },
+                                {
+                                    name: "project", // <- display in toolbar
+                                    list: "/admin/projects",
+                                    show: "/admin/projects/:id",
+                                },
                             ]}
                             options={{
                                 syncWithLocation: true,
