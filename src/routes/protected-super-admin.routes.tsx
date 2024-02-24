@@ -1,13 +1,15 @@
 import { Routes, Route, Outlet } from "react-router-dom";
 import { RefineContext } from "../providers/refine-context";
 import { ErrorComponent } from "@refinedev/core";
-import { ThemedLayoutV2, ThemedTitleV2 } from "@refinedev/antd";
+import { Header, ThemedLayoutV2, ThemedTitleV2 } from "@refinedev/antd";
 import { UserList } from "../pages/back-office/users/user.list";
 import { UserShow } from "../pages/back-office/users/user.show";
 import { UserEdit } from "../pages/back-office/users/user.edit";
 import { UserCreate } from "../pages/back-office/users/user.create";
 import { ProjectList } from "../pages/back-office/projects/project.list";
 import { ProjectShow } from "../pages/back-office/projects/project.show";
+import { Menu } from "antd";
+import BackOfficeNavBar from "@app/components/back-office/navigations/navbar";
 interface ProtectedSuperAdminRoutesProps {
 
 }
@@ -21,7 +23,7 @@ export const ProtectedSuperAdminRoutes = (props: ProtectedSuperAdminRoutesProps)
                 path="/"
                 element={
                     <RefineContext>
-                        <ThemedLayoutV2 Title={(props) => (
+                        <ThemedLayoutV2 initialSiderCollapsed={false} Title={(props) => (
                             <ThemedTitleV2 {...props} text="MVL Admin" />
                         )}>
                             <Outlet />

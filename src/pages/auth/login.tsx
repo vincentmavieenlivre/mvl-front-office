@@ -8,9 +8,8 @@ interface LoginProps {
 
 export const LoginPage = (props: LoginProps) => {
     const dispatch = useDispatch();
-    const doLogin = async () => {
-        let email = "super_admin@test.com"
-        let password = "coucou"
+
+    const doLogin = async (email, password) => {
 
         const auth = getAuth();
         let userCredential: UserCredential | void = await signInWithEmailAndPassword(auth, email, password).catch((e) => console.error("[login error]", e))
@@ -28,7 +27,7 @@ export const LoginPage = (props: LoginProps) => {
         event.preventDefault()
         console.log("[form data]", event.target.elements.email.value)
         console.log("[form data]", event.target.elements.password.value)
-        await doLogin()
+        await doLogin(event.target.elements.email.value, event.target.elements.password.value)
     }
 
 

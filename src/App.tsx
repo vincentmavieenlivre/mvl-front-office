@@ -58,9 +58,17 @@ function App() {
   }, [user, tokenResult])
 
   useEffect(() => {
-    if (tokenResult?.claims.role == ERoles.SUPER_ADMIN) {
+
+
+
+    if ([ERoles.SUPER_ADMIN, ERoles.BIOGRAPHER].includes(tokenResult?.claims.role)) {
       console.info("redirect to backoffice")
       navigate('/admin')
+    }
+
+    if (!tokenResult) {
+      console.info("redirect to login")
+      navigate('/login')
     }
   }, [tokenResult])
 

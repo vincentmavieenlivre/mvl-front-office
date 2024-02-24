@@ -1,7 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { IdTokenResult, User } from "firebase/auth";
+import { IdTokenResult, ParsedToken, User } from "firebase/auth";
 import type { PayloadAction } from '@reduxjs/toolkit'
 import { RootState } from "./store";
+import { ERoles } from "@app/modeles/roles";
 
 export interface UserStore {
     user?: User,
@@ -12,6 +13,10 @@ const initialState: UserStore = {
     user: undefined,
     tokenResult: undefined
 };
+
+export interface TokenRole {
+    role: ERoles
+}
 
 export const authSlice = createSlice({
     name: "user",

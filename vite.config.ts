@@ -27,8 +27,17 @@ export default defineConfig((test) => {
     }
   }
 
+  let alias = {
+    resolve: {
+      alias: {
+        '@app': '/src', // also in ts-config
+      },
+    }
+  }
+
   return {
     plugins: [react()],
+    ...alias,
     mode: process.env.NODE_ENV,
     ...options
   }

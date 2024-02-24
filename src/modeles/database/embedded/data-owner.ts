@@ -3,6 +3,8 @@ import { ERoles } from "../../roles";
 export interface DataOwner {
     organisation_id?: string
     organisation_name?: string
+
+    owner_ids: string[];
     users: UserOwner[];
 }
 
