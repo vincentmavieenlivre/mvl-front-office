@@ -4,6 +4,7 @@ import { User } from "@app/modeles/database/user"
 import { ERoles } from "@app/modeles/roles";
 import { FirestoreHelper } from "@app/utils/firebase/firestore-helper";
 import { ECollections } from "@app/utils/firebase/firestore-collections";
+import { Organization } from "@app/modeles/database/organization";
 scriptBootstrap()
 
 if (!db) {
@@ -15,13 +16,13 @@ let user: User = {
     name: "user1"
 }
 
-let a = new FirestoreHelper()
-await a.createNewDocument(db, ECollections.USERS, user)
+let helper = new FirestoreHelper()
+await helper.createNewDocument(db, ECollections.USERS, user)
 
 if (!user.id) throw 'user null'
 
 let project: Project = {
-    name: "project 1",
+    name: "project 2",
     owners: {
         owner_ids: [user.id],
         users: [
@@ -35,6 +36,20 @@ let project: Project = {
 }
 
 
-await a.createNewDocument(db, ECollections.PROJECTS, project)
+await helper.createNewDocument(db, ECollections.PROJECTS, project)
 
-console.log("created user=", user, "project=", project)
+if (!project.id) throw 'project null'
+
+let orga: Organization = {
+    name: "Elsan"
+}
+
+await helper.createNewDocument(db, ECollections.ORGANIZATION, orga)
+
+project.owners.organisation_id = orga.id
+project.owners.organisation_name = orga.name
+await helper.updateDocument(db, "project", project.id, project)
+
+
+
+console.log("created user=", user, "project=", project, "orga=", orga)

@@ -10,11 +10,14 @@ import { ProjectList } from "../pages/back-office/projects/project.list";
 import { ProjectShow } from "../pages/back-office/projects/project.show";
 import { Menu } from "antd";
 import BackOfficeNavBar from "@app/components/back-office/navigations/navbar";
+import { OrganizationList } from "@app/pages/back-office/organizations/organizations.list";
+import { OrganizationShow } from "@app/pages/back-office/organizations/organizations.show";
+import { OrganizationEdit } from "@app/pages/back-office/organizations/organizations.edit";
 interface ProtectedSuperAdminRoutesProps {
 
 }
 
-export const ProtectedSuperAdminRoutes = (props: ProtectedSuperAdminRoutesProps) => {
+export const BackOfficeRoutes = (props: ProtectedSuperAdminRoutesProps) => {
     console.log("[ProtectedSuperAdminRoutes] component")
     return (
         <Routes>
@@ -45,8 +48,14 @@ export const ProtectedSuperAdminRoutes = (props: ProtectedSuperAdminRoutesProps)
                 <Route path="users/:id/edit" element={<UserEdit />} />
                 <Route path="users/create" element={<UserCreate />} />
 
+                {/* PROJECTS */}
                 <Route path="projects" element={<ProjectList />} />
                 <Route path="projects/:id" element={<ProjectShow />} />
+
+                {/* ORGANIZATIONS */}
+                <Route path="organizations" element={<OrganizationList />} />
+                <Route path="organizations/:id" element={<OrganizationShow />} />
+                <Route path="organizations/:id/edit" element={<OrganizationEdit />} />
 
                 {/* CATCH ALL */}
                 <Route path="*" element={<ErrorComponent />} />
@@ -58,4 +67,4 @@ export const ProtectedSuperAdminRoutes = (props: ProtectedSuperAdminRoutesProps)
     )
 };
 
-export default ProtectedSuperAdminRoutes;
+export default BackOfficeRoutes;

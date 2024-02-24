@@ -12,17 +12,59 @@ import { DevtoolsProvider, DevtoolsPanel } from "@refinedev/devtools";
 import { ReactNode } from "react";
 import { refineFirestoreDatabase } from "./firebase-data-provider";
 import BackOfficeNavBar from "@app/components/back-office/navigations/backoffice-navbar";
+import { selectUser, selectToken } from "@app/redux/auth.slice";
+import { IdTokenResult } from "firebase/auth";
+import { useSelector } from "react-redux";
+import { ERoles, isRole } from "@app/modeles/roles";
 
 //import "@refinedev/antd/dist/reset.css"
+
+const userRoutes = {
+    name: "user", // <- bind to useOne / getList ...
+    list: "/admin/users",
+    show: "/admin/users/:id",
+    edit: "/admin/users/:id/edit",
+    create: "/admin/users/create"
+
+}
+
+const projectRoutes = {
+    name: "project", // <-<- bind to useOne / getList ...
+    list: "/admin/projects",
+    show: "/admin/projects/:id",
+}
+
+const organizationRoutes = {
+    name: "organization", // <- bind to useOne / getList ...
+    list: "/admin/organizations",
+    show: "/admin/organizations/:id",
+    edit: "/admin/organizations/:id/edit",
+
+}
 
 export function RefineContext({ children }: { children: ReactNode }) {
 
     let provider = refineFirestoreDatabase.getDataProvider()
-    console.log("provider", provider)
-    const items = new Array(15).fill(null).map((_, index) => ({
-        key: index + 1,
-        label: `nav ${index + 1}`,
-    }));
+
+    const user = useSelector(selectUser)
+    const tokenResult: IdTokenResult | undefined = useSelector(selectToken)
+
+    let ressources = []
+
+    if (tokenResult && isRole(tokenResult, ERoles.SUPER_ADMIN)) {
+        ressources.push(userRoutes)
+        ressources.push(projectRoutes)
+        ressources.push(organizationRoutes)
+    }
+
+    if (tokenResult && isRole(tokenResult, ERoles.BIOGRAPHER)) {
+        ressources.push(projectRoutes)
+    }
+
+    if (tokenResult && isRole(tokenResult, ERoles.ORGANIZATION_ADMIN)) {
+        ressources.push(projectRoutes)
+    }
+
 
     return (
         <DevtoolsProvider>
@@ -33,21 +75,7 @@ export function RefineContext({ children }: { children: ReactNode }) {
                         routerProvider={routerProvider}
                         dataProvider={provider}
 
-                        resources={[
-                            {
-                                name: "user", // <- display in toolbar
-                                list: "/admin/users",
-                                show: "/admin/users/:id",
-                                edit: "/admin/users/:id/edit",
-                                create: "/admin/users/create"
-
-                            },
-                            {
-                                name: "project", // <- display in toolbar
-                                list: "/admin/projects",
-                                show: "/admin/projects/:id",
-                            },
-                        ]}
+                        resources={ressources}
                         options={{
                             syncWithLocation: true,
                             warnWhenUnsavedChanges: true,
@@ -58,9 +86,6 @@ export function RefineContext({ children }: { children: ReactNode }) {
 
                         {children}
 
-
-                        {/*  <UnsavedChangesNotifier />
-                    <DocumentTitleHandler /> */}
                     </Refine>
 
 

@@ -4,7 +4,7 @@ import { Navigate, Route, Routes, useLocation } from "react-router-dom";
 import PublicRoutes from "./public.routes";
 import { IdTokenResult, User } from "firebase/auth";
 import { useSelector } from "react-redux";
-import ProtectedSuperAdminRoutes from "./protected-super-admin.routes";
+import BackOfficeRoutes from "./backoffice.routes";
 import { TokenRole, selectToken, selectUser } from "../redux/auth.slice";
 import { ERoles } from "@app/modeles/roles";
 
@@ -17,7 +17,7 @@ export const AppRoutes = (props: RoutesProps) => {
     <Routes>
       <Route path="/*" element={<PublicRoutes></PublicRoutes>} />
       {props.authDone &&
-        <Route path="/admin/*" element={<RequireAuth><ProtectedSuperAdminRoutes /></RequireAuth>} />
+        <Route path="/admin/*" element={<RequireAuth><BackOfficeRoutes /></RequireAuth>} />
       }
     </Routes>
   )

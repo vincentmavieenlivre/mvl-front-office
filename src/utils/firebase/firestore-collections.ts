@@ -1,4 +1,5 @@
 export enum ECollections {
     USERS = "user",
-    PROJECTS = "project"
+    PROJECTS = "project",
+    ORGANIZATION = "organization"
 }

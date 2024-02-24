@@ -3,10 +3,13 @@ import { TextField, NumberField, MarkdownField, Show } from "@refinedev/antd";
 
 import { Typography } from "antd";
 
-export const UserShow = () => {
-    const { queryResult: { data, isLoading } } = useShow();
+export const OrganizationShow = () => {
+    //  const { queryResult: { data, isLoading } } = useShow();
+    const { queryResult } = useShow<any>();
 
+    const { data, isLoading, isError } = queryResult;
 
+    console.log("daukdkkd", data)
 
     return (
         <Show isLoading={isLoading}>
@@ -15,10 +18,6 @@ export const UserShow = () => {
 
             <Typography.Title level={5}>Name</Typography.Title>
             <TextField value={data?.data?.name} />
-
-            <Typography.Title level={5}>Email</Typography.Title>
-            <TextField value={data?.data?.email} />
-
 
         </Show>
     );

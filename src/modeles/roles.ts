@@ -1,8 +1,15 @@
+import { IdTokenResult } from "firebase/auth";
+
 export enum ERoles {
     SUPER_ADMIN = "super_admin",
     ORGANIZATION_ADMIN = "organization_admin",
     BIOGRAPHER = "biographer",
     USER = "user"
+}
+
+
+export function isRole(token: IdTokenResult, e: ERoles): boolean {
+    return e == token?.claims?.role
 }
 
 export function getRoleColor(r?: ERoles) {

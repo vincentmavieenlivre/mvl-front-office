@@ -1,4 +1,4 @@
-import { Firestore, addDoc, collection } from "firebase/firestore";
+import { Firestore, addDoc, collection, doc, updateDoc } from "firebase/firestore";
 
 export class FirestoreHelper {
     /**
@@ -73,18 +73,17 @@ export class FirestoreHelper {
      * @returns {Promise<any>}
      * @memberof FirestoreHelper
      */
-    updateDocument(
+    async updateDocument(
         db: any,
         collectionName: string,
         docId: string,
         data: Object
     ): Promise<any> {
-        return db
-            .collection(collectionName)
-            .doc(docId)
-            .update(data)
-            .then(() => true)
-            .catch((err) => err);
+
+        collection(db, collectionName)
+        let ref = doc(db, collectionName, docId);
+        let ret = await updateDoc(ref, data);
+        return ret
     }
 
     /**

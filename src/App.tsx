@@ -6,7 +6,7 @@ import { UserStore, selectToken, selectUser, setUser } from "./redux/auth.slice"
 import { useEffect, useState } from "react";
 import { IdTokenResult, User, onAuthStateChanged } from "firebase/auth";
 import { auth } from "./init/firebase";
-import ProtectedSuperAdminRoutes from "./routes/protected-super-admin.routes";
+import BackOfficeRoutes from "./routes/backoffice.routes";
 import { Navigate, Route, Routes, useLocation, useNavigate } from "react-router-dom";
 
 import { ERoles } from "./modeles/roles";

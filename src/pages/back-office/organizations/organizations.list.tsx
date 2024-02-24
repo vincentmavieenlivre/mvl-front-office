@@ -1,8 +1,8 @@
 
 import { useUpdate } from "@refinedev/core";
-import { UserOwner } from "@app/modeles/database/embedded/data-owner"
 
-import { Table, Input, Space, Divider, Tag } from "antd";
+
+import { Table, Input, Space } from "antd";
 import {
     useTable,
     EditButton,
@@ -12,24 +12,21 @@ import {
     useSelect,
     List,
 } from "@refinedev/antd";
-import { Project } from "@app/modeles/database/project";
-import { getRoleColor } from "@app/modeles/roles";
-import { FieldPath } from "firebase/firestore";
-import { IdTokenResult } from "firebase/auth";
-import { useSelector } from "react-redux";
-import { selectToken, selectUser } from "@app/redux/auth.slice";
-import { getOwnerFilter } from "@app/utils/refine-helpers/owner-filter"
-export const ProjectList = () => {
+import { Organization } from "@app/modeles/database/organization";
 
-    const tokenResult: IdTokenResult | undefined = useSelector(selectToken)
-    const user = useSelector(selectUser)
-
+export const OrganizationList = () => {
     const { mutate, isLoading, isUpdating } = useUpdate();
 
+    /*  let { dataGridProps: tableProps, tableQueryResult: { data, isLoading } } = useTable({
+         resource: "user",
+         pagination: { current: 1, pageSize: 10 },
+         sorters: { initial: [{ field: "email", order: "asc" }] },
+     }); */
 
     let { tableProps, sorters, filters } = useTable({
+        resource: "organization",
         sorters: { initial: [{ field: "name", order: "asc" }] },
-        filters: getOwnerFilter(user?.uid, tokenResult?.claims.role),
+
         syncWithLocation: true,
     });
 
@@ -52,7 +49,7 @@ export const ProjectList = () => {
 
     }
 
-    console.log("[project data]", tableProps.dataSource)
+    console.log("datagridProps", tableProps)
     tableProps = {
         ...tableProps, disableRowSelectionOnClick: false, filterMode: "client", checkboxSelection: false,
         unstable_cellSelection: false,
@@ -64,7 +61,7 @@ export const ProjectList = () => {
 
     const updateUser = async (user: any) => {
         await mutate({
-            resource: "user",
+            resource: "organization",
             id: user.id,
             values: {
                 ...user
@@ -90,7 +87,7 @@ export const ProjectList = () => {
                 />
                 <Table.Column
                     dataIndex="name"
-                    title="name"
+                    title="Nom"
                     sorter
 
                     filterDropdown={(props) => (
@@ -99,38 +96,17 @@ export const ProjectList = () => {
                         </FilterDropdown>
                     )}
                 />
-
                 <Table.Column
-                    dataIndex="user_id"
-                    title="Utilisateur"
-                    sorter
-                    render={(_: any, record: Project) => {
-                        return (
-                            record.owners && record.owners.users.map((u: UserOwner, index) =>
-                                <Space key={index}>
-                                    <ShowButton size="small" resource="user" recordItemId={u.user_id}>{u.user_name}</ShowButton>
-                                    <Tag color={getRoleColor(u.user_role)} key={u.user_role}>
-                                        {u.user_role}
-                                    </Tag>
-                                </Space>
-
-                            ))
-                    }}
+                    title="Actions"
+                    render={(_, record: Organization) => (
+                        <Space>
+                            <ShowButton hideText size="small" recordItemId={record.id} />
+                            <EditButton hideText size="small" recordItemId={record.id} />
+                        </Space>
+                    )}
                 />
-
-
-                <Table.Column
-                    dataIndex="organisation_name"
-                    title="Organisation"
-                    sorter
-                    render={(_: any, record: Project) => {
-                        return (<div>{record?.owners?.organisation_name}</div>)
-                    }}
-                />
-
-
             </Table>
-        </List >
+        </List>
     );
 
 
