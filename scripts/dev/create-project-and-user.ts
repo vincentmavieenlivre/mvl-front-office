@@ -1,3 +1,4 @@
-import * as db from '../../src/init'
+import { scriptBootstrap } from "../bootstrap";
 
-console.log("test")
+scriptBootstrap()
+
