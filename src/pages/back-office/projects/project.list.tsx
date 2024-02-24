@@ -97,25 +97,21 @@ export const ProjectList = () => {
 
                 <Table.Column
                     dataIndex="user_id"
-                    title="user_id"
+                    title="Utilisateur"
                     sorter
                     render={(_: any, record: any) => (
                         <div>
-                            <div>{record.user_id}</div>
-                            <div>{record.user_id}</div>
+                            <Space>
+                                <ShowButton size="small" resource="user" recordItemId={record.user_id}>{record.user_id}</ShowButton>
+                            </Space>
+                            <Space>
+                                <ShowButton size="small" resource="user" recordItemId={record.user_id}>{record.user_id}</ShowButton>
+                            </Space>
                         </div>
                     )}
                 ></Table.Column>
 
-                <Table.Column
-                    title="Actions"
-                    render={(_, record) => (
-                        <Space>
-                            <ShowButton hideText size="small" resource="user" recordItemId={record.user_id} />
 
-                        </Space>
-                    )}
-                />
             </Table>
         </List>
     );
