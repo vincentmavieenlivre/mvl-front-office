@@ -2,7 +2,7 @@
 import { useUpdate } from "@refinedev/core";
 
 
-import { Table, Input, Space } from "antd";
+import { Table, Input, Space, Tag } from "antd";
 import {
     useTable,
     EditButton,
@@ -13,6 +13,7 @@ import {
     List,
 } from "@refinedev/antd";
 import { Organization } from "@app/modeles/database/organization";
+import { AdminUser } from "@app/modeles/database/embedded/data-owner";
 
 export const OrganizationList = () => {
     const { mutate, isLoading, isUpdating } = useUpdate();
@@ -96,6 +97,20 @@ export const OrganizationList = () => {
                         </FilterDropdown>
                     )}
                 />
+
+                <Table.Column
+                    dataIndex="name"
+                    title="Admins"
+                    sorter
+                    render={(_, record: Organization) => (
+                        record.admins && record?.admins.map((a: AdminUser) => {
+                            return <Tag key={a.user_id}>{a.user_name}</Tag>
+                        })
+                    )}
+
+                />
+
+
                 <Table.Column
                     title="Actions"
                     render={(_, record: Organization) => (

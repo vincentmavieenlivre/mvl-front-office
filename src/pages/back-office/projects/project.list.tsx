@@ -6,11 +6,12 @@ import { Table, Input, Space, Divider, Tag } from "antd";
 import {
     useTable,
     EditButton,
-    ShowButton,
+
     getDefaultSortOrder,
     FilterDropdown,
     useSelect,
     List,
+    ShowButton,
 } from "@refinedev/antd";
 import { Project } from "@app/modeles/database/project";
 import { getRoleColor } from "@app/modeles/roles";
@@ -108,7 +109,8 @@ export const ProjectList = () => {
                         return (
                             record.owners && record.owners.users.map((u: UserOwner, index) =>
                                 <Space key={index}>
-                                    <ShowButton size="small" resource="user" recordItemId={u.user_id}>{u.user_name}</ShowButton>
+                                    <ShowButton size="small" meta={{ authorId: "10" }}
+                                        recordItemId={u.user_id} resource="user" >{u.user_name}</ShowButton>
                                     <Tag color={getRoleColor(u.user_role)} key={u.user_role}>
                                         {u.user_role}
                                     </Tag>

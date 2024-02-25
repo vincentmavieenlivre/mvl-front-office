@@ -27,9 +27,11 @@ export const BackOfficeRoutes = (props: ProtectedSuperAdminRoutesProps) => {
                 path="/"
                 element={
                     <RefineContext>
-                        <ThemedLayoutV2 initialSiderCollapsed={false} Title={(props) => (
-                            <ThemedTitleV2 {...props} text="MVL Admin" />
-                        )}>
+                        <ThemedLayoutV2
+                            /* Header={() => <div>lol</div>} */
+                            initialSiderCollapsed={false} Title={(props) => (
+                                <ThemedTitleV2 {...props} text="MVL Admin" />
+                            )}>
                             <Outlet />
                         </ThemedLayoutV2>
 
