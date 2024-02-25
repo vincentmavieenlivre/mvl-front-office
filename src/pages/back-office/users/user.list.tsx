@@ -2,7 +2,7 @@
 import { useUpdate } from "@refinedev/core";
 
 
-import { Table, Input, Space } from "antd";
+import { Table, Input, Space, Tag } from "antd";
 import {
     useTable,
     EditButton,
@@ -12,6 +12,8 @@ import {
     useSelect,
     List,
 } from "@refinedev/antd";
+import { getRoleColor } from "@app/modeles/roles";
+import { User } from "@app/modeles/database/user";
 
 export const UserList = () => {
     const { mutate, isLoading, isUpdating } = useUpdate();
@@ -94,6 +96,14 @@ export const UserList = () => {
                         </FilterDropdown>
                     )}
                 />
+
+                <Table.Column
+                    title="Role"
+                    render={(_, record: User) => (
+                        <Tag color={getRoleColor(record.role)}>{record.role}</Tag>
+                    )}
+                />
+
                 <Table.Column
                     title="Actions"
                     render={(_, record) => (

@@ -13,6 +13,7 @@ import BackOfficeNavBar from "@app/components/back-office/navigations/navbar";
 import { OrganizationList } from "@app/pages/back-office/organizations/organizations.list";
 import { OrganizationShow } from "@app/pages/back-office/organizations/organizations.show";
 import { OrganizationEdit } from "@app/pages/back-office/organizations/organizations.edit";
+import { OrganizationCreate } from "@app/pages/back-office/organizations/organizations.create";
 interface ProtectedSuperAdminRoutesProps {
 
 }
@@ -56,6 +57,7 @@ export const BackOfficeRoutes = (props: ProtectedSuperAdminRoutesProps) => {
                 <Route path="organizations" element={<OrganizationList />} />
                 <Route path="organizations/:id" element={<OrganizationShow />} />
                 <Route path="organizations/:id/edit" element={<OrganizationEdit />} />
+                <Route path="organizations/create" element={<OrganizationCreate />} />
 
                 {/* CATCH ALL */}
                 <Route path="*" element={<ErrorComponent />} />

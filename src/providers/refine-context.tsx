@@ -24,7 +24,7 @@ const userRoutes = {
     list: "/admin/users",
     show: "/admin/users/:id",
     edit: "/admin/users/:id/edit",
-    create: "/admin/users/create"
+    create: "/admin/users/create" // add create btn at top of list
 
 }
 
@@ -39,6 +39,7 @@ const organizationRoutes = {
     list: "/admin/organizations",
     show: "/admin/organizations/:id",
     edit: "/admin/organizations/:id/edit",
+    create: "/admin/organizations/create" // add create btn at top of list
 
 }
 

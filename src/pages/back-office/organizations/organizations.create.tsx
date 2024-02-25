@@ -7,21 +7,19 @@ export const OrganizationCreate = () => {
         redirect: "edit",
     });
 
-    if (saveButtonProps) {
-        saveButtonProps.onClick = (() => {
-            console.log("catch click => make create user")
+    /*   if (saveButtonProps) {
+          saveButtonProps.onClick = (() => {
+              console.log("catch click => make create user")
+  
+          })
+      } */
 
-        })
-    }
 
-    const { selectProps } = useSelect({
-        resource: "user",
-    });
 
     return (
         <Create saveButtonProps={saveButtonProps}>
             <Form {...formProps} layout="vertical">
-                <Form.Item label="Email" name="email">
+                <Form.Item label="Nom" name="name">
                     <Input />
                 </Form.Item>
 

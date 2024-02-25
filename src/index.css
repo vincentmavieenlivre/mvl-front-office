@@ -4,13 +4,16 @@
 
 
 
-.refine-create-button, .refine-save-button
+.refine-create-button,
+.refine-save-button,
 {
- @apply !bg-purple-400;
- transition: background-color 0.3s; /* Add a smooth transition for the color change */
+@apply !bg-purple-400;
+transition: background-color 0.3s;
+/* Add a smooth transition for the color change */
 }
 
-.refine-create-button:hover, .refine-save-button:hover {
-  @apply !bg-purple-500; /* Change the background color on hover */
+.refine-create-button:hover,
+.refine-save-button:hover {
+  @apply !bg-purple-500;
+  /* Change the background color on hover */
 }
-     

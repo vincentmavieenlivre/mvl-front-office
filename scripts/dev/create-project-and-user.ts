@@ -12,8 +12,9 @@ if (!db) {
 }
 
 let user: User = {
-    email: "user1@mvl.com",
-    name: "user1"
+    email: "user2@elsan.com",
+    name: "user1",
+    role: ERoles.ORGANIZATION_ADMIN
 }
 
 let helper = new FirestoreHelper()

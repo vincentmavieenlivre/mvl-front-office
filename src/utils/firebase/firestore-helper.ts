@@ -1,4 +1,24 @@
-import { Firestore, addDoc, collection, doc, updateDoc } from "firebase/firestore";
+import _ from 'lodash';
+import { DocumentData, Firestore, Query, addDoc, collection, doc, getDoc, getDocs, updateDoc } from "firebase/firestore";
+
+export function removeUndefinedRecursive(obj) {
+    return _.transform(obj, function (result, value, key) {
+        if (_.isObject(value)) {
+            result[key] = removeUndefinedRecursive(value);
+        } else if (!_.isUndefined(value)) {
+            result[key] = value;
+        }
+    });
+}
+
+export async function index<Type>(lambda: Query<unknown, DocumentData>): Promise<Type[]> {
+    let data: Type[] = []
+    const querySnapshot = await getDocs(lambda);
+    querySnapshot.forEach((doc) => {
+        data.push({ ...doc.data(), id: doc.id })
+    });
+    return data;
+}
 
 export class FirestoreHelper {
     /**
@@ -185,26 +205,21 @@ export class FirestoreHelper {
      * @returns {Promise<any>}
      * @memberof FirestoreHelper
      */
-    getDocument(
+    static async getDocument<T>(
         db: any,
         collectionName: string,
         documentId: string
-    ): Promise<any> {
-        const docRef = db.collection(collectionName).doc(documentId);
-        return docRef
-            .get()
-            .then(function (doc) {
-                if (doc.exists) {
-                    return doc.data();
-                } else {
-                    // doc.data() will be undefined in this case
-                    console.log('No such document!');
-                    return false;
-                }
-            })
-            .catch(function (error) {
-                console.log('Error getting document:', error);
-            });
+    ): Promise<T | undefined> {
+        const docRef = doc(db, collectionName, documentId);
+        const docSnap = await getDoc(docRef);
+
+        if (docSnap.exists()) {
+            return { ...docSnap.data(), id: docSnap.id } as T
+        } else {
+            console.log("No such document! id=", documentId);
+        }
+
+
     }
 
     /**

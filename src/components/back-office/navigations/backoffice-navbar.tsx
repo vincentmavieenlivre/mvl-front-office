@@ -1,7 +1,7 @@
 import { auth } from '@app/init/firebase'
 import { getRoleColor } from '@app/modeles/roles'
 import { selectToken, selectUser } from '@app/redux/auth.slice'
-import { Space, Tag } from 'antd'
+import { Avatar, Space, Tag } from 'antd'
 import { IdTokenResult } from 'firebase/auth'
 import React from 'react'
 import { useSelector } from 'react-redux'
@@ -33,9 +33,14 @@ const BackOfficeNavBar = (props: Props) => {
                 <div className="dropdown dropdown-end">
                     <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar">
                         <div className="w-10 rounded-full">
-                            <img alt="Tailwind CSS Navbar component" src="https://daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg" />
+                            <Avatar style={{ backgroundColor: "purple", verticalAlign: 'middle' }} size="large" gap={1}>
+                                {user.displayName[0].toUpperCase()}
+                            </Avatar>
                         </div>
                     </div>
+
+
+
                     <ul tabIndex={0} className="mt-3 z-[1] p-2 shadow menu menu-sm dropdown-content bg-base-100 rounded-box w-52">
 
                         <li onClick={logout}><a>Logout</a></li>
