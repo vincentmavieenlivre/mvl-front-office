@@ -66,9 +66,16 @@ function App() {
       navigate('/admin')
     }
 
+    if ([ERoles.USER].includes(tokenResult?.claims.role)) {
+      console.info("redirect to app")
+      navigate('/app')
+    }
+
     if (!tokenResult) {
-      console.info("redirect to login")
-      navigate('/login')
+      //console.info("redirect to login")
+      //navigate('/login')
+
+      console.info("anonymous user")
     }
   }, [tokenResult])
 

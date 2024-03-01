@@ -2,7 +2,7 @@
 import { useUpdate } from "@refinedev/core";
 import { UserOwner } from "@app/modeles/database/embedded/data-owner"
 
-import { Table, Input, Space, Divider, Tag } from "antd";
+import { Table, Input, Space, Divider, Tag, Button } from "antd";
 import {
     useTable,
     EditButton,
@@ -20,6 +20,7 @@ import { IdTokenResult } from "firebase/auth";
 import { useSelector } from "react-redux";
 import { selectToken, selectUser } from "@app/redux/auth.slice";
 import { getOwnerFilter } from "@app/utils/refine-helpers/owner-filter"
+import { useNavigate } from "react-router-dom";
 export const ProjectList = () => {
 
     const tokenResult: IdTokenResult | undefined = useSelector(selectToken)
@@ -77,11 +78,22 @@ export const ProjectList = () => {
         return <div>Loading...</div>;
     }
 
-
+    let nav = useNavigate()
 
     return (
         <List>
             <Table {...tableProps} rowKey="id">
+
+                <Table.Column
+                    dataIndex="id"
+                    title="Id"
+                    sorter
+                    render={(record: Project) => {
+                        return (<Button onClick={() => nav('/app')} size="small">Projet</Button>)
+                    }}
+
+                />
+
                 <Table.Column
                     dataIndex="id"
                     title="Id"

@@ -60,23 +60,27 @@ export const OrganizationEdit = () => {
 
 
     const initData = async () => {
-
+        // get all admins across all projects
         let users: User[] = await index(query(collection(db, "user"), where("role", "==", ERoles.ORGANIZATION_ADMIN)))
         let o = await getOrganization()
 
+        console.log("users", users)
 
-        let admins = (o?.admins.map((r: AdminUser) => r.user_id) ?? [])
-        setOrganizationKeys(admins)
+        if (o?.admins?.length > 0) {
+            let admins = (o?.admins.map((r: AdminUser) => r.user_id) ?? [])
+            setOrganizationKeys(admins)
+        }
 
-
-        setAllOrgaAdmins(users.map((u: User, index: number) => {
+        let adminsClean = users.map((u: User, index: number) => {
             let v: RecordType = {
                 key: u?.id,
                 user_name: u.email,
                 user_id: u.id
             }
             return v
-        }))
+        })
+        console.log("admins2", adminsClean)
+        setAllOrgaAdmins(adminsClean)
 
 
     }

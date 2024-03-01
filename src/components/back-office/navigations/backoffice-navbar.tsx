@@ -5,10 +5,14 @@ import { Avatar, Space, Tag } from 'antd'
 import { IdTokenResult } from 'firebase/auth'
 import React from 'react'
 import { useSelector } from 'react-redux'
+import { useNavigate, useNavigation } from 'react-router-dom'
 
 type Props = {}
 
 const BackOfficeNavBar = (props: Props) => {
+
+    let nav = useNavigate()
+
 
     const user = useSelector(selectUser)
     const tokenResult: IdTokenResult | undefined = useSelector(selectToken)
@@ -42,7 +46,7 @@ const BackOfficeNavBar = (props: Props) => {
 
 
                     <ul tabIndex={0} className="mt-3 z-[1] p-2 shadow menu menu-sm dropdown-content bg-base-100 rounded-box w-52">
-
+                        <li onClick={() => nav('/app')}><a>Go</a></li>
                         <li onClick={logout}><a>Logout</a></li>
                     </ul>
                 </div>
