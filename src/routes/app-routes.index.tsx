@@ -7,7 +7,7 @@ import { useSelector } from "react-redux";
 import BackOfficeRoutes from "./backoffice.routes";
 import { TokenRole, selectToken, selectUser } from "../redux/auth.slice";
 import { ERoles } from "@app/modeles/roles";
-import AppHome from "@app/pages/app/home";
+import AppHome from "@app/pages/app/app-home";
 
 interface RoutesProps {
   authDone: boolean;
