@@ -7,6 +7,8 @@
  * See a full list of supported triggers at https://firebase.google.com/docs/functions
  */
 
+import { initializeApp } from 'firebase-admin/app';
 
-
+const app = initializeApp();
 export { test } from './test/test'
+export { createUser } from "./user/create-user" 
