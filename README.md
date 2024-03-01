@@ -5,6 +5,8 @@
 # firebase
 [How to use firebase](./docs/firebase.md)
 
+# scripts
+[How to use firebase](./docs/scripts.md)
 
 # Naming conventions
 [How to name your commits, html classes, branches, files](./docs/naming.md)
