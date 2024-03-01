@@ -73,9 +73,9 @@ function App() {
 
     if (!tokenResult) {
       //console.info("redirect to login")
-      //navigate('/login')
+      navigate('/login')
 
-      console.info("anonymous user")
+
     }
   }, [tokenResult])
 

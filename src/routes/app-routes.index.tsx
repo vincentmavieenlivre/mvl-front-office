@@ -8,6 +8,7 @@ import BackOfficeRoutes from "./backoffice.routes";
 import { TokenRole, selectToken, selectUser } from "../redux/auth.slice";
 import { ERoles } from "@app/modeles/roles";
 import AppHome from "@app/pages/app/app-home";
+import AppLayout from "@app/pages/layout/app.layout";
 
 interface RoutesProps {
   authDone: boolean;
@@ -20,7 +21,9 @@ export const AppRoutes = (props: RoutesProps) => {
       {props.authDone &&
         <>
           <Route path="/admin/*" element={<RequireAuth><BackOfficeRoutes /></RequireAuth>} />
-          <Route path="/app" element={<AppHome></AppHome>} />
+          <Route element={<AppLayout />}>
+            <Route path="/app" element={<AppHome></AppHome>} />
+          </Route>
         </>
       }
     </Routes>
