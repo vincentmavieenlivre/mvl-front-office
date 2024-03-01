@@ -3,7 +3,7 @@ import { Routes, Route } from "react-router-dom";
 import RootPage from "../pages/root";
 import LoginPage from "../pages/auth/login";
 import React from "react";
-import Home from "@app/pages/app/home";
+import AppHome from "@app/pages/app/home";
 
 interface PublicRoutesProps {
 
