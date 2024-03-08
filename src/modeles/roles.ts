@@ -8,6 +8,27 @@ export enum ERoles {
     FAMILY = "family"
 }
 
+export enum EPermission{
+    CREATE_PROJECT
+}
+
+
+export const permissionsByRole = {
+    "user":  [EPermission.CREATE_PROJECT]
+}
+
+export function hasPermission(token:IdTokenResult, permission:EPermission):boolean{
+    let r:ERoles = getRoleFromToken(token)
+    console.log("ROLE OF CURRENT USER", r)
+    let roleString = r.toString()
+    
+    return permissionsByRole[roleString] && permissionsByRole[roleString].includes(permission)
+
+}
+
+export function getRoleFromToken(token: IdTokenResult): ERoles {
+    return token?.claims?.role as ERoles
+}
 
 export function isRole(token: IdTokenResult, e: ERoles): boolean {
     return e == token?.claims?.role
@@ -23,10 +44,13 @@ export function getRoleColor(r?: ERoles) {
             return "yellow"
         case ERoles.USER:
             return "green"
+        case ERoles.FAMILY:
+            return "pink"
+
         default:
             break;
     }
 
-    throw 'unknow role' + r
+    throw 'unknow role => ' + r
 
 }

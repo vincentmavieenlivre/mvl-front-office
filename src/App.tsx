@@ -2,7 +2,7 @@
 
 import { useSelector, useDispatch } from "react-redux";
 import PublicRoutes from "./routes/public.routes";
-import { UserStore, selectToken, selectUser, setUser } from "./redux/auth.slice";
+import { UserStore, selectToken, selectUser, setUser, setUserProjects } from "./redux/auth.slice";
 import { useEffect, useState } from "react";
 import { IdTokenResult, User, onAuthStateChanged } from "firebase/auth";
 import { auth } from "./init/firebase";
@@ -10,7 +10,8 @@ import BackOfficeRoutes from "./routes/backoffice.routes";
 import { Navigate, Route, Routes, useLocation, useNavigate } from "react-router-dom";
 
 import { ERoles } from "./modeles/roles";
-import AppRoutes from "./routes/app-routes.index";
+import AppRoutes from "./routes/app.routes.index";
+import { UserProjectsService } from "./domains/services/user-projects.service";
 
 
 function App() {
@@ -21,6 +22,22 @@ function App() {
   const user = useSelector(selectUser)
   const tokenResult: IdTokenResult | undefined = useSelector(selectToken)
 
+  const onUserSignIn = async (token: IdTokenResult, user: User) => {
+    if (token && user) {
+
+      let data: UserStore = {
+        user: user,
+        tokenResult: token
+      }
+
+      let p = await UserProjectsService.getUserProjects(data)
+
+      dispatch(setUserProjects(p))
+      dispatch(setUser(data));
+      setAuthDone(true)
+      console.log("[set auth=TRUE]")
+    }
+  }
 
   useEffect(() => {
     console.log("user effect")
@@ -31,12 +48,9 @@ function App() {
           console.log("[on auth change => with user]", user)
 
           user.getIdTokenResult(true).then((idTokenResult) => {
-            let data: UserStore = {
-              user: user,
-              tokenResult: idTokenResult
-            }
+
             console.log("[on auth change => with claims]", idTokenResult)
-            dispatch(setUser(data));
+            onUserSignIn(idTokenResult, user)
           })
 
 
@@ -52,10 +66,9 @@ function App() {
 
   useEffect(() => {
     if (user && tokenResult) {
-      console.log("[set auth=TRUE]")
-      setAuthDone(true)
+      onUserSignIn(tokenResult, user)
     }
-  }, [user, tokenResult])
+  }, [user])
 
   useEffect(() => {
 
@@ -66,7 +79,7 @@ function App() {
       navigate('/admin')
     }
 
-    if ([ERoles.USER].includes(tokenResult?.claims.role)) {
+    if ([ERoles.USER, ERoles.FAMILY].includes(tokenResult?.claims.role)) {
       console.info("redirect to app")
       navigate('/app')
     }

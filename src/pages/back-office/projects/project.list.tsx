@@ -20,7 +20,8 @@ import { IdTokenResult } from "firebase/auth";
 import { useSelector } from "react-redux";
 import { selectToken, selectUser } from "@app/redux/auth.slice";
 import { getOwnerFilter } from "@app/utils/refine-helpers/owner-filter"
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { APP_ROUTES } from "@app/routes/app.routes.index";
 export const ProjectList = () => {
 
     const tokenResult: IdTokenResult | undefined = useSelector(selectToken)
@@ -88,8 +89,12 @@ export const ProjectList = () => {
                     dataIndex="id"
                     title="Id"
                     sorter
-                    render={(record: Project) => {
-                        return (<Button onClick={() => nav('/app')} size="small">Projet</Button>)
+                    render={(recordId: string) => {
+                        if (!recordId) return
+                        return (
+                            <Link to={APP_ROUTES.SHOW_PROJECT.replace(':id', recordId)}>
+                                <Button onClick={() => nav('/app')} size="small">Projet</Button>
+                            </Link>)
                     }}
 
                 />
@@ -120,8 +125,8 @@ export const ProjectList = () => {
                     render={(_: any, record: Project) => {
                         return (
                             record.owners && record.owners.users.map((u: UserOwner, index) =>
-                                <Space key={index}>
-                                    <ShowButton size="small" meta={{ authorId: "10" }}
+                                <Space key={u.user_id} className="mt-3">
+                                    <ShowButton size="small" 
                                         recordItemId={u.user_id} resource="user" >{u.user_name}</ShowButton>
                                     <Tag color={getRoleColor(u.user_role)} key={u.user_role}>
                                         {u.user_role}

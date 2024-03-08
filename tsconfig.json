@@ -30,7 +30,8 @@
   },
   "include": [
     "src",
-    "scripts"
+    "scripts",
+    "functions/src"
   ],
   "references": [
     {

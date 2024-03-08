@@ -11,5 +11,5 @@
   "compileOnSave": true,
   "include": [
     "src"
-  ]
+, "../src/manager/admin/user.manager.admin.ts"  ]
 }

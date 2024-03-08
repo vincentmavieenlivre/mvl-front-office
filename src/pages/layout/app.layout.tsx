@@ -1,10 +1,13 @@
 import { auth } from '@app/init/firebase'
 import React, { ReactNode } from 'react'
-import { Outlet } from 'react-router-dom'
+import { Link, Outlet } from 'react-router-dom'
 
 type Props = {}
 
 export default function AppLayout(props: Props) {
+
+
+    console.log("[LAYOUT APP]")
 
     const logout = async () => {
         await auth?.signOut()
@@ -25,7 +28,9 @@ export default function AppLayout(props: Props) {
                     </div>
                 </div>
                 <div className="navbar-center">
-                    <a className="btn btn-ghost text-xl">Ma vie en livre</a>
+                    <Link className="btn btn-ghost text-xl" to="/app">
+                        Ma vie en livre
+                    </Link>
                 </div>
                 <div className="navbar-end">
                     <button className="btn btn-ghost btn-circle">

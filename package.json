@@ -47,7 +47,9 @@
     "postcss": "^8.4.35",
     "tailwindcss": "^3.4.1",
     "typescript": "^5.2.2",
-    "vite": "^5.1.0"
+    "vite": "^5.1.0",
+    "firebase-admin": "latest",
+    "firebase-functions": "latest"
   },
   "refine": {
     "projectId": "zB8t94-VPwJA0-BmEInX"

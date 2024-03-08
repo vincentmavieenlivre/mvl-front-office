@@ -3,15 +3,18 @@ import { IdTokenResult, ParsedToken, User } from "firebase/auth";
 import type { PayloadAction } from '@reduxjs/toolkit'
 import { RootState } from "./store";
 import { ERoles } from "@app/modeles/roles";
+import { Project } from "@app/modeles/database/project";
 
 export interface UserStore {
     user?: User,
-    tokenResult?: IdTokenResult
+    tokenResult?: IdTokenResult,
+    userProjects: Project[]
 }
 
 const initialState: UserStore = {
     user: undefined,
-    tokenResult: undefined
+    tokenResult: undefined,
+    userProjects: []
 };
 
 export interface TokenRole {
@@ -32,12 +35,31 @@ export const authSlice = createSlice({
                 state.tokenResult = undefined
             }
         },
+        setUserProjects: (state, action: PayloadAction<Project[] | undefined>) => {
+            if (action.payload && action.payload.length > 0) {
+                console.info("[store] users projects num", action.payload.length)
+                state.userProjects = action.payload;
+            } else {
+                console.info("[store] users projects NOT YET PROJECT")
+
+            }
+        },
+        addUserProjects: (state, action: PayloadAction<Project | undefined>) => {
+            if (action.payload) {
+                console.info("[store] users projects add", action.payload)
+                state.userProjects.push(action.payload)
+            } else {
+                console.info("[store] users projects NOT YET PROJECT")
+
+            }
+        },
     },
 });
 
 // Action creators are generated for each case reducer function
-export const { setUser } = authSlice.actions;
+export const { setUser, setUserProjects, addUserProjects } = authSlice.actions;
 
+export const selectUserProjects = (state: RootState): Project[] => state.user.userProjects
 export const selectUser = (state: RootState): User | undefined => state.user.user
 export const selectToken = (state: RootState): IdTokenResult | undefined => state.user.tokenResult
 

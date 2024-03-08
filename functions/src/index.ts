@@ -10,5 +10,9 @@
 import { initializeApp } from 'firebase-admin/app';
 
 const app = initializeApp();
+
 export { test } from './test/test'
-export { createUser } from "./user/create-user" 
+
+/* user & family */
+export { createUser } from "./user/create-user"
+export { inviteFamily } from "./user/invite-family"

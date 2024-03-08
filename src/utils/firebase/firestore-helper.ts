@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { DocumentData, Firestore, Query, addDoc, collection, doc, getDoc, getDocs, updateDoc } from "firebase/firestore";
+import { DocumentData, Firestore, Query, addDoc, collection, doc, getDoc, getDocs, query, updateDoc, where } from "firebase/firestore";
 
 export function removeUndefinedRecursive(obj) {
     return _.transform(obj, function (result, value, key) {
@@ -232,46 +232,29 @@ export class FirestoreHelper {
      * @returns {Promise<any>}
      * @memberof FirestoreHelper
      */
-    async queryData(
+    async queryData<T>(
         db: any,
         collectionName: string,
         queryArray: Array<any>,
-        orderBy: Array<any> = null
-    ): Promise<any> {
-        return new Promise((resolve, reject) => {
-            const dataRef = collection(db, collectionName);
+    ): Promise<T[]> {
 
-            let queryRef = dataRef;
-            queryArray.forEach((query) => {
-                queryRef = queryRef.where(query[0], query[1], query[2]);
-            });
+        const dataRef = collection(db, collectionName);
 
-            if (orderBy !== null) {
-                if (typeof orderBy[1] === undefined) {
-                    orderBy[1] = 'asc';
-                }
-                queryRef = queryRef.orderBy(orderBy[0], orderBy[1]);
-            }
+        let queryRef = dataRef;
 
-            const results = {};
 
-            queryRef
-                .get()
-                .then((snapshot) => {
-                    snapshot.forEach((doc) => {
-                        results[doc.id] = doc.data();
-                    });
-                    if (Object.keys(results).length > 0) {
-                        resolve(results);
-                    } else {
-                        resolve('No such document!');
-                    }
-                })
-                .catch((err) => {
-                    reject(false);
-                    console.log('Error getting documents', err);
-                });
+        let q = query(queryRef, where(queryArray[0], queryArray[1], queryArray[2]))
+        const querySnapshot = await getDocs(q);
+
+        let docs: T[] = []
+        querySnapshot.forEach((doc) => {
+            // doc.data() is never undefined for query doc snapshots
+            console.log(doc.id, " => ", doc.data());
+            docs.push({ id: doc.id, ...doc.data() as T })
         });
+
+        return docs
+
     }
 
     /**
