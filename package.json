@@ -13,6 +13,7 @@
     "refine": "refine"
   },
   "dependencies": {
+    "@ant-design/icons": "^5.3.1",
     "@emotion/react": "^11.11.3",
     "@emotion/styled": "^11.11.0",
     "@reduxjs/toolkit": "^2.2.1",
@@ -44,12 +45,12 @@
     "eslint": "^8.56.0",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.5",
+    "firebase-admin": "latest",
+    "firebase-functions": "latest",
     "postcss": "^8.4.35",
     "tailwindcss": "^3.4.1",
     "typescript": "^5.2.2",
-    "vite": "^5.1.0",
-    "firebase-admin": "latest",
-    "firebase-functions": "latest"
+    "vite": "^5.1.0"
   },
   "refine": {
     "projectId": "zB8t94-VPwJA0-BmEInX"

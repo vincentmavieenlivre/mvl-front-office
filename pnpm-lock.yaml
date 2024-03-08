@@ -5,6 +5,9 @@ settings:
   excludeLinksFromLockfile: false
 
 dependencies:
+  '@ant-design/icons':
+    specifier: ^5.3.1
+    version: 5.3.1(react-dom@18.2.0)(react@18.2.0)
   '@emotion/react':
     specifier: ^11.11.3
     version: 11.11.3(@types/react@18.2.55)(react@18.2.0)
@@ -183,8 +186,8 @@ packages:
       react-dom: 18.2.0(react@18.2.0)
     dev: false
 
-  /@ant-design/icons@5.3.0(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-69FgBsIkeCjw72ZU3fJpqjhmLCPrzKGEllbrAZK7MUdt1BrKsyG6A8YDCBPKea27UQ0tRXi33PcjR4tp/tEXMg==}
+  /@ant-design/icons@5.3.1(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-85zROTJCCApQn0Ee6L9561+Vd7yVKtSWNm2TpmOsYMrumchbzaRK83x1WWHv2VG+Y1ZAaKkDwcnnSPS/eSwNHA==}
     engines: {node: '>=8'}
     peerDependencies:
       react: '>=16.0.0'
@@ -206,7 +209,7 @@ packages:
       react: '>=17.0.0'
       react-dom: '>=17.0.0'
     dependencies:
-      '@ant-design/icons': 5.0.1(react-dom@18.2.0)(react@18.2.0)
+      '@ant-design/icons': 5.3.1(react-dom@18.2.0)(react@18.2.0)
       '@ant-design/pro-provider': 2.13.3(antd@5.14.2)(react-dom@18.2.0)(react@18.2.0)
       '@ant-design/pro-utils': 2.14.12(antd@5.14.2)(react-dom@18.2.0)(react@18.2.0)
       '@babel/runtime': 7.23.9
@@ -249,7 +252,7 @@ packages:
       react: '>=17.0.0'
       react-dom: '>=17.0.0'
     dependencies:
-      '@ant-design/icons': 5.0.1(react-dom@18.2.0)(react@18.2.0)
+      '@ant-design/icons': 5.3.1(react-dom@18.2.0)(react@18.2.0)
       '@ant-design/pro-provider': 2.13.3(antd@5.14.2)(react-dom@18.2.0)(react@18.2.0)
       '@babel/runtime': 7.23.9
       antd: 5.14.2(react-dom@18.2.0)(react@18.2.0)
@@ -3838,7 +3841,7 @@ packages:
     dependencies:
       '@ant-design/colors': 7.0.2
       '@ant-design/cssinjs': 1.18.4(react-dom@18.2.0)(react@18.2.0)
-      '@ant-design/icons': 5.3.0(react-dom@18.2.0)(react@18.2.0)
+      '@ant-design/icons': 5.3.1(react-dom@18.2.0)(react@18.2.0)
       '@ant-design/react-slick': 1.0.2(react@18.2.0)
       '@ctrl/tinycolor': 3.6.1
       '@rc-component/color-picker': 1.5.2(react-dom@18.2.0)(react@18.2.0)

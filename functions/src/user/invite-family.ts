@@ -17,23 +17,22 @@ export const inviteFamily = onCall(async (request) => {
     let familyEmail = params.familyEmail
     if (familyEmail) {
         log("email family", familyEmail)
-
         if (request.auth?.uid) {
             let userAuth: UserRecord = await getAuth().getUser(request.auth?.uid)
             log("user claims", userAuth.customClaims.role)
 
             const userDocRef = await getFirestore().collection(ECollections.USERS).doc(userAuth.uid).get()
             let userDoc: User | undefined = userDocRef.data() as User;
-
+            log("user Doc", userDoc)
             if (userDoc) {
                 let invitationToken = generateUniqueToken()
-                let blob: CreateRequest = {
+                let blob: CreateRequest = { 
                     email: userEmail,
                     emailVerified: true,
                     password: userPassword,
                     displayName: userName,
                     disabled: false
-                }
+                } 
 
                 let um = new AdminUserManager()
                 let customToken = await um.createUser(blob, userRole)

@@ -40,7 +40,14 @@ const organizationRoutes = {
     show: "/admin/organizations/:id",
     edit: "/admin/organizations/:id/edit",
     create: "/admin/organizations/create" // add create btn at top of list
+}
 
+
+const bookTemplatesRoutes = {
+    name: "template", // <-<- bind to useOne / getList ...
+    list: "/admin/templates",
+    edit: "/admin/templates/:id/edit",
+    create: "/admin/templates/create" // add create btn at top of list
 }
 
 export function RefineContext({ children }: { children: ReactNode }) {
@@ -56,6 +63,7 @@ export function RefineContext({ children }: { children: ReactNode }) {
         ressources.push(userRoutes)
         ressources.push(projectRoutes)
         ressources.push(organizationRoutes)
+        ressources.push(bookTemplatesRoutes)
     }
 
     if (tokenResult && isRole(tokenResult, ERoles.BIOGRAPHER)) {

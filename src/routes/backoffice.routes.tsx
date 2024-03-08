@@ -14,6 +14,9 @@ import { OrganizationList } from "@app/pages/back-office/organizations/organizat
 import { OrganizationShow } from "@app/pages/back-office/organizations/organizations.show";
 import { OrganizationEdit } from "@app/pages/back-office/organizations/organizations.edit";
 import { OrganizationCreate } from "@app/pages/back-office/organizations/organizations.create";
+import { TemplateList } from "@app/pages/back-office/templates/templates.list";
+import { TemplateCreate } from "@app/pages/back-office/templates/templates.create";
+import { TemplateEdit } from "@app/pages/back-office/templates/templates.edit";
 interface ProtectedSuperAdminRoutesProps {
 
 }
@@ -61,8 +64,14 @@ export const BackOfficeRoutes = (props: ProtectedSuperAdminRoutesProps) => {
                 <Route path="organizations/:id/edit" element={<OrganizationEdit />} />
                 <Route path="organizations/create" element={<OrganizationCreate />} />
 
+                {/* BOOK TEMPLATES */}
+                <Route path="templates" element={<TemplateList />} />                
+                 <Route path="templates/:id/edit" element={<TemplateEdit />} /> 
+                <Route path="templates/create" element={<TemplateCreate />} />
+
                 {/* CATCH ALL */}
                 <Route path="*" element={<ErrorComponent />} />
+                
 
 
             </Route>
