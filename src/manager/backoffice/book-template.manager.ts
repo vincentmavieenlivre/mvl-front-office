@@ -9,22 +9,10 @@ import { Firestore, addDoc, collection, deleteDoc, doc, getDoc, getDocs, query, 
 
 export class BookTemplateManager{
     
+    private template:IBookTemplate|undefined
+
     constructor(public db:Firestore, public templateId:string){
         
-    }
-    
-    
-    
-    private  removeEditableFields = (q: IBookQuestionEditable): IBookQuestion => {
-        let cleaned: IBookQuestion = {
-            questionTitle: q.questionTitle
-        }
-        
-        if (q.id) {
-            cleaned.id = q.id
-        }
-        
-        return cleaned
     }
     
     async loadTemplate():Promise<IBookTemplate>{
@@ -32,15 +20,17 @@ export class BookTemplateManager{
         const docSnap = await getDoc(documentRef);
         
         if (docSnap.exists()) {
-            return {
+            this.template = {
                 ...docSnap.data(),
                 id: docSnap.id
             } as unknown as IBookTemplate
+            this.template.id = this.templateId as string
+            return this.template
         }else{
             throw 'no template found with id' + this.templateId
         } 
     }
-    
+
     async loadQuestions():Promise<IBookQuestion[]>{
         let collectionRef = collection(this.db, ECollections.BOOK_TEMPLATE, this.templateId, ECollections.QUESTIONS);
         const subcollectionQuery = query(collectionRef);
@@ -57,9 +47,44 @@ export class BookTemplateManager{
             
             questions.push(d)
         });
-        
+
+        // if there is an order : return sorted questions
+        if (this.template?.questionsOrder && this.template?.questionsOrder.length > 0) {
+            let sortedIds = this.template.questionsOrder?.sort((a, b) => {
+                return a.index > b.index
+            })
+
+            let sortedQuestions: IBookQuestion[] = []
+            if (sortedIds) {
+                for (let s of sortedIds) {
+                    let q = questions.find((q) => q.id == s.id)
+                    if (q) {
+                        sortedQuestions.push(q)
+                    }
+                }
+
+                return sortedQuestions
+            }
+        } 
+
         return questions
     }
+    
+    private  removeEditableFields = (q: IBookQuestionEditable): IBookQuestion => {
+        let cleaned: IBookQuestion = {
+            questionTitle: q.questionTitle
+        }
+        
+        if (q.id) {
+            cleaned.id = q.id
+        }
+        
+        return cleaned
+    }
+    
+ 
+    
+   
     
     async createQuestionInTemplate(q:IBookQuestionEditable){
         let collectionRef = collection(this.db, ECollections.BOOK_TEMPLATE, this.templateId, ECollections.QUESTIONS);
