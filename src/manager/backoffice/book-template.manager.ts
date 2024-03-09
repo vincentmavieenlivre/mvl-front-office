@@ -86,7 +86,7 @@ export class BookTemplateManager{
     
     
     // update ALL documents related to order
-    async upsertQuestionsOrder(questions:IBookQuestionEditable[]){
+    async upsertTemplate(questions:IBookQuestionEditable[], coverUrl:string|undefined = undefined){
         let order:{ index: number, id: string }[];
         order = questions.map((q:IBookQuestionEditable, index) => {    
             if(!q.id) throw "question have no id to save order"
@@ -95,9 +95,13 @@ export class BookTemplateManager{
         
         let collectionRef = collection(this.db, ECollections.BOOK_TEMPLATE);
         const documentRef = doc(collectionRef, this.templateId)
-        await updateDoc(documentRef, {
-            questionsOrder: order
-        })
+
+        let finalDoc = {
+            questionsOrder: order,
+            coverUrl: coverUrl
+        }
+
+        await updateDoc(documentRef, finalDoc)
         console.log("save question order", order)
         
     }

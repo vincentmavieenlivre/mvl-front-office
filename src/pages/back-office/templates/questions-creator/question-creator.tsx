@@ -1,7 +1,8 @@
 import { IBookQuestion, IBookQuestionEditable } from '@app/modeles/database/book/book-question'
-import { Button, Input, List } from 'antd'
+import { Button, Input, List, Typography } from 'antd'
 import React, { useEffect, useState } from 'react'
 import { ArrowUpOutlined, ArrowDownOutlined, DeleteOutlined } from '@ant-design/icons';
+import { Title } from '@refinedev/antd';
 
 
 type Props = {
@@ -118,7 +119,7 @@ export default function QuestionCreator(props: Props) {
 
     return (
         <>
-
+            <Typography.Title level={5} >Questions associées</Typography.Title>
             <div>
                 <Input onKeyDown={handleKeyDown} value={inputValue} onChange={onNewQuestionChange} />
                 <Button className='mt-4 mb-10' type="primary" onClick={handleAddQuestion}>

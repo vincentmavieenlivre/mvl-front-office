@@ -11,17 +11,20 @@ import { Auth, connectAuthEmulator, getAuth } from 'firebase/auth';
 import { Env, getEnv } from '../src/utils/EnvUtils';
 import {  getAuth as adminGetAuth } from "firebase-admin/auth";
 import { initializeApp as adminInit } from 'firebase-admin/app';
+import { FirebaseStorage, connectStorageEmulator, getStorage } from 'firebase/storage';
+
 // export firebase entry points
 export let db: Firestore | undefined = undefined;
 export let firebase: FirebaseApp | undefined = undefined
 export let functions: Functions | undefined = undefined
 export let auth: Auth | undefined = undefined;
 export let app: FirebaseApp | undefined = undefined
+export let storage: FirebaseStorage | undefined = undefined
 
-
-console.info("set FIREBASE EMULATEUR ENV VARIABLES")
+console.info("[firebase admin-sdk] FIREBASE EMULATEUR ENV VARIABLES")
 process.env.FIREBASE_AUTH_EMULATOR_HOST = "127.0.0.1:9099" 
 process.env.FIRESTORE_EMULATOR_HOST = "127.0.0.1:8080" 
+process.env.FIREBASE_STORAGE_EMULATOR_HOST="127.0.0.1:9199"
 
 export function scriptBootstrap() {
 
@@ -42,8 +45,9 @@ export function scriptBootstrap() {
     app = initializeApp(config);
     db = getFirestore(app);
     functions = getFunctions(app)
-    
+    storage = getStorage();
     auth = getAuth();
+  
 
     if (getEnv() == Env.DEVELOPMENT) {
         console.log("[firebase emulator] bind firestore to local emulator db")
@@ -52,7 +56,8 @@ export function scriptBootstrap() {
         connectFunctionsEmulator(functions, "127.0.0.1", 5003);
         console.log("[firebase emulator] bind authentification")
         connectAuthEmulator(auth, "http://127.0.0.1:9099");
-     
+        console.log("[firebase emulator] bind storage")
+        connectStorageEmulator(storage, "127.0.0.1", 9199);
     }
 
 }

@@ -10,6 +10,8 @@ import { AdminUser } from "@app/modeles/database/embedded/data-owner";
 import QuestionCreator from "./questions-creator/question-creator";
 import { IBookQuestion, IBookQuestionEditable } from "@app/modeles/database/book/book-question";
 import { BookTemplateManager } from "@app/manager/backoffice/book-template.manager";
+import TemplateThemeCreator from "./template-theme/template-theme.create";
+import { IBookTemplate } from "@app/modeles/database/book/book-template";
 
 interface RecordType extends AdminUser {
     key: string | undefined;
@@ -19,6 +21,7 @@ interface RecordType extends AdminUser {
 export const TemplateEdit = () => {
     const { resources, resource, action, id } = useResource();
 
+    const [currentTemplate, setCurrentTemplate] = useState<IBookTemplate>(undefined)
     const [questions, setQuestions] = useState<IBookQuestionEditable[]>([])
     const [toDeleteQuestionIds, setToDeleteQuestionIds] = useState<string[]>([])
     const [organization, setOrganization] = useState<any | undefined>(undefined)
@@ -28,13 +31,17 @@ export const TemplateEdit = () => {
     let templateManager: BookTemplateManager = new BookTemplateManager(db, id)
 
     const initData = async () => {
-        let template = await templateManager.loadTemplate()
+        let template: IBookTemplate = await templateManager.loadTemplate()
+        template.id = id as string
+        console.log("current template", template)
+        setCurrentTemplate(template)
+
         let questions: IBookQuestion[] = await templateManager.loadQuestions()
         console.log("async load questions", questions)
         console.log("async load order", template.questionsOrder)
 
 
-        if (template?.questionsOrder?.length > 0) {
+        if (template?.questionsOrder && template?.questionsOrder.length > 0) {
             let sortedIds = template.questionsOrder?.sort((a, b) => {
                 return a.index > b.index
             })
@@ -65,6 +72,10 @@ export const TemplateEdit = () => {
 
 
     const { mutate, isLoading, isUpdating } = useUpdate();
+
+    const onCoverUploaded = (coverUrl: string) => {
+        setCurrentTemplate({ ...currentTemplate, coverUrl: coverUrl })
+    }
 
     const updateOrganization = async (updatedOrganization: Organization) => {
         if (id) {
@@ -119,7 +130,7 @@ export const TemplateEdit = () => {
             }
 
             // 3) always save order
-            await templateManager.upsertQuestionsOrder(questions)
+            await templateManager.upsertTemplate(questions, currentTemplate.coverUrl)
 
 
 
@@ -142,9 +153,17 @@ export const TemplateEdit = () => {
 
             </Form>
 
+
+
+            <Card>
+                {currentTemplate &&
+                    <TemplateThemeCreator onCoverUploaded={onCoverUploaded} template={currentTemplate}></TemplateThemeCreator>
+                }
+            </Card>
             <Card>
                 <QuestionCreator onToDelete={setToDeleteQuestionIds} onListChange={setQuestions} questions={questions}></QuestionCreator>
             </Card>
+
         </Edit>
     );
 };
