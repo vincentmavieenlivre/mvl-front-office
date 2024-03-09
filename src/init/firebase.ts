@@ -3,6 +3,7 @@ import { Firestore, collection, connectFirestoreEmulator, getDocs, getFirestore 
 import { Env, getEnv } from '../utils/EnvUtils';
 import { Functions, connectFunctionsEmulator, getFunctions, httpsCallable } from 'firebase/functions';
 import { Auth, connectAuthEmulator, getAuth } from 'firebase/auth';
+import { FirebaseStorage, connectStorageEmulator, getStorage } from 'firebase/storage';
 
 
 // export firebase entry points
@@ -11,6 +12,7 @@ export let firebase: FirebaseApp | undefined = undefined
 export let functions: Functions | undefined = undefined
 export let auth: Auth | undefined = undefined;
 export let app: FirebaseApp | undefined = undefined
+export let storage: FirebaseStorage | undefined = undefined
 
 
 const env = import.meta.env // vite
@@ -32,7 +34,7 @@ app = initializeApp(config);
 db = getFirestore(app);
 functions = getFunctions(app)
 auth = getAuth();
-
+storage = getStorage();
 if (getEnv() == Env.DEVELOPMENT) {
     console.log("[firebase emulator] bind firestore to local emulator db")
     connectFirestoreEmulator(db, '127.0.0.1', 8080)
@@ -40,6 +42,8 @@ if (getEnv() == Env.DEVELOPMENT) {
     connectFunctionsEmulator(functions, "127.0.0.1", 5003);
     console.log("[firebase emulator] bind authentification")
     connectAuthEmulator(auth, "http://127.0.0.1:9099");
+    console.log("[firebase emulator] bind storage")
+    connectStorageEmulator(storage, "127.0.0.1", 9199);
 }
 
 export async function testFirestore() {
