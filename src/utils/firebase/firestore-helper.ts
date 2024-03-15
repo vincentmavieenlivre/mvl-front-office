@@ -103,7 +103,7 @@ export class FirestoreHelper {
         collection(db, collectionName)
         let ref = doc(db, collectionName, docId);
         let ret = await updateDoc(ref, data);
-        return ret
+        return data
     }
 
     /**

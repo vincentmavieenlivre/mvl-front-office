@@ -16,6 +16,7 @@ import ShowProjectPage from "@app/pages/app/projects/show.project.page";
 export const APP_ROUTES = {
   NEW_PROJECT: "/app/projects/new",
   SHOW_PROJECT: "/app/projects/:id",
+  LIST_PROJECTS: "/app"
 }
 
 interface RoutesProps {

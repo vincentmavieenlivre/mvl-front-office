@@ -1,0 +1,14 @@
+
+.card{
+  cursor: pointer;
+  &.active {    
+    padding:30px;
+    transform: rotateX(0deg);
+    color: black;
+    border: 2px solid oklch(var(--s));
+    line-height: 40px;  
+    padding-left: 44px;
+      font-weight: bold;
+    background-color: #ffd;
+  }
+}

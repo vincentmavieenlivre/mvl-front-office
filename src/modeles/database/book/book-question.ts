@@ -2,6 +2,7 @@ export interface IBookQuestion{
 
     id?:string;
     questionTitle:string;
+    template_question_id?:string // reference when stored in project collection (null in template collection)
 
 }
 

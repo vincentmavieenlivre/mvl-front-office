@@ -14,6 +14,23 @@ export class BookTemplateManager{
     constructor(public db:Firestore, public templateId:string){
         
     }
+
+
+    public static async loadAllTemplates(db:Firestore):Promise<IBookTemplate[]>{
+
+        const q = query(collection(db, ECollections.BOOK_TEMPLATE));        
+        const docSnaps = await getDocs(q);
+
+        let res:IBookTemplate[] = []
+
+        docSnaps.forEach((doc) => {
+             res.push({
+                ...doc.data(),
+                id: doc.id
+            } as unknown as IBookTemplate)
+        })
+        return res
+    }
     
     async loadTemplate():Promise<IBookTemplate>{
         const documentRef = doc(this.db, ECollections.BOOK_TEMPLATE, this.templateId)

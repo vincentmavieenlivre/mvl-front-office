@@ -49,7 +49,7 @@ export const authSlice = createSlice({
                 console.info("[store] users projects add", action.payload)
                 state.userProjects.push(action.payload)
             } else {
-                console.info("[store] users projects NOT YET PROJECT")
+                console.info("[store] users projects NOT YET PROJECT", action)
 
             }
         },
