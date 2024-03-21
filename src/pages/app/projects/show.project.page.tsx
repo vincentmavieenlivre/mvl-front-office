@@ -1,20 +1,37 @@
+import AudioRecorder from '@app/components/app/media/AudioRecorder'
+import { UserProjectsService } from '@app/domains/services/user-projects.service'
+import { useMicrophone } from '@app/hook/use-microphone'
 import { db, functions } from '@app/init/firebase'
+import { IBookQuestion } from '@app/modeles/database/book/book-question'
 import { Project } from '@app/modeles/database/project'
 import { ECollections } from '@app/utils/firebase/firestore-collections'
 import { FirestoreHelper } from '@app/utils/firebase/firestore-helper'
+import { List } from 'antd'
 import { httpsCallable } from 'firebase/functions'
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
+import { TypeAnimation } from 'react-type-animation'
 
 type Props = {}
 
 export default function ShowProjectPage({ }: Props) {
     const params: any = useParams()
+
     const [project, setProject] = useState<Project>()
+    const [questions, setQuestions] = useState<IBookQuestion[]>([])
+    const micGranted: boolean = useMicrophone()
+
+
 
     const loadProject = async () => {
-        const p = await FirestoreHelper.getDocument<Project>(db, ECollections.PROJECTS, params.id)
+        let pm = new UserProjectsService(params.id)
+        let p = await pm.loadProject()
         if (p) {
+            let questions: IBookQuestion[] = await pm.loadQuestions()
+            if (questions.length > 0) {
+                setQuestions(questions)
+            }
+            console.log("question length", questions)
             setProject(p)
         }
     }
@@ -29,8 +46,16 @@ export default function ShowProjectPage({ }: Props) {
     }
 
     useEffect(() => {
+        console.log("grand change", micGranted)
+    }, [micGranted])
+
+
+
+    useEffect(() => {
         loadProject()
+
     }, [])
+
 
 
     return (
@@ -41,6 +66,27 @@ export default function ShowProjectPage({ }: Props) {
             {project &&
                 <div>loaded: {project.name}</div>
             }
+
+            <List
+                itemLayout="horizontal"
+                dataSource={questions}
+                renderItem={(item, index) => (
+                    <List.Item>
+                        <List.Item.Meta
+                            title={<a>{item.questionTitle}</a>}
+
+                        />
+                        <div>
+
+                            {micGranted == true &&
+                                <AudioRecorder projectId={params.id} question={item}></AudioRecorder>
+                            }
+
+
+                        </div>
+                    </List.Item>
+                )}
+            />
 
         </div>
     )

@@ -10,12 +10,69 @@ import { ECollections } from "@app/utils/firebase/firestore-collections"
 import { FirestoreHelper } from "@app/utils/firebase/firestore-helper"
 import { IdTokenResult, User } from "firebase/auth"
 import { ParsedToken } from "firebase/auth/cordova"
-import { addDoc, collection } from "firebase/firestore"
+import { addDoc, collection, getDocs, query } from "firebase/firestore"
 import _ from 'lodash';
 export class UserProjectsService {
+
+    private loadedProject:Project|undefined = undefined;
     
     constructor(private projectId:string){
         
+    }
+
+    async loadQuestions():Promise<IBookQuestion[]>{
+        let collectionRef = collection(db, ECollections.PROJECTS, this.projectId, ECollections.QUESTIONS);
+        const subcollectionQuery = query(collectionRef);
+        
+        const snapshot = await getDocs(subcollectionQuery);
+        
+        let questions:IBookQuestion[] = []
+        
+        snapshot.forEach((doc) => {
+            let d:IBookQuestion = {
+                ...doc.data(),
+                id: doc.id
+            } as unknown as IBookQuestion;
+            
+            questions.push(d)
+        });
+
+
+        // if there is an order : return sorted questions
+        if (this.loadedProject?.questionsOrder && this.loadedProject?.questionsOrder.length > 0) {
+            let sortedIds = this.loadedProject.questionsOrder?.sort((a, b) => {
+                return a.index - b.index
+            })
+
+            let sortedQuestions: IBookQuestion[] = []
+            if (sortedIds) {
+                console.log("sorted", sortedIds.map((d) => d.id + " => " + d.index))
+                console.log("questions", questions)
+                for (let s of sortedIds) {
+                    let q = questions.find((q) => q.template_question_id == s.id)
+                    if (q) {
+                        sortedQuestions.push(q)
+                    }else{
+                        console.warn("not found")
+                    }
+                }
+                console.log("sorted final", sortedQuestions.map((d) => d.template_question_id))
+                return sortedQuestions
+            }
+        } 
+
+        //return questions
+    }
+    
+
+    public async loadProject():Promise<Project>{
+        const p = await FirestoreHelper.getDocument<Project>(db, ECollections.PROJECTS, this.projectId)
+        this.loadedProject = p
+        if(p){
+            return p
+        }else{
+            throw 'no project found for ' + this.projectId
+        }
     }
     
     async createQuestionInProject(q:IBookQuestion){

@@ -16,3 +16,4 @@ export { test } from './test/test'
 /* user & family */
 export { createUser } from "./user/create-user"
 export { inviteFamily } from "./user/invite-family"
+export { speechToText } from './transcript/speech-to-text'
