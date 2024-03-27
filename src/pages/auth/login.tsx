@@ -60,7 +60,8 @@ export const LoginPage = (props: LoginProps) => {
                                 <label className="mb-5 text-sm font-medium text-gray-700 tracking-wide">
                                     Password
                                 </label>
-                                <input name="password" className="w-full content-center text-base px-4 py-2 border  border-gray-300 rounded-lg focus:outline-none focus:border-green-400" type="" placeholder="Enter your password" />
+                                <input type="password" name="password" 
+                                className="w-full content-center text-base px-4 py-2 border  border-gray-300 rounded-lg focus:outline-none focus:border-green-400" placeholder="Enter your password" />
                             </div>
                             <div className="flex items-center justify-between">
                                 <div className="flex items-center">

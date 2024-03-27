@@ -1,14 +1,23 @@
 
 .card{
+  img{
+    border-top-left-radius:  17px!important;
+    border-top-right-radius:  17px!important;
+  }
   cursor: pointer;
   &.active {    
-    padding:30px;
-    transform: rotateX(0deg);
-    color: black;
+    //padding:30px;
+    //transform: rotateX(0deg);
+    //color: black;
     border: 2px solid oklch(var(--s));
-    line-height: 40px;  
-    padding-left: 44px;
-      font-weight: bold;
-    background-color: #ffd;
+    //line-height: 40px;  
+    //padding-left: 44px;
+    font-weight: bold;
+    //background-color: #ffd;
+    box-shadow: -1px 14px 39px -4px rgba(0,0,0,0.51);
+-webkit-box-shadow: -1px 14px 39px -4px rgba(0,0,0,0.51);
+-moz-box-shadow: -1px 14px 39px -4px rgba(0,0,0,0.51);
   }
+
+
 }

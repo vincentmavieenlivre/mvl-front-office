@@ -17,3 +17,11 @@ transition: background-color 0.3s;
   @apply !bg-purple-500;
   /* Change the background color on hover */
 }
+
+.mvl-icon{
+  color: #5965fe;
+}
+
+.firebase-emulator-warning{
+  display: none;
+}

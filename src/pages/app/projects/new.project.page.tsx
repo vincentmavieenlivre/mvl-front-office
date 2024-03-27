@@ -73,16 +73,15 @@ export default function NewProject({ }: Props) {
                             src={t.coverUrl}
                         />
                     }
-                    actions={[
+                 /*    actions={[
                         <SettingOutlined key="setting" />,
                         <EditOutlined key="edit" />,
                         <EllipsisOutlined key="ellipsis" />,
-                    ]}
+                    ]} */
                 >
                     <Meta
-                        avatar={<Avatar src="https://api.dicebear.com/7.x/miniavs/svg?seed=8" />}
                         title={t.name}
-                        description="This is the description"
+                        description="Racontez vos souvenirs d'enfance"
                     />
                 </Card>
             </div>
@@ -97,7 +96,7 @@ export default function NewProject({ }: Props) {
                 <div>
                     <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Le nom de votre projet</label>
                     <input type="text" id="projectName" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                        placeholder="Mon mariage" required />
+                        placeholder="Nommez votre projet" required />
                 </div>
             </div>
 
