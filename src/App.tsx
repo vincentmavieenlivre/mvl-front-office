@@ -12,7 +12,9 @@ import { Navigate, Route, Routes, useLocation, useNavigate } from "react-router-
 import { ERoles } from "./modeles/roles";
 import AppRoutes from "./routes/app.routes.index";
 import { UserProjectsService } from "./domains/services/user-projects.service";
+import { pdfjs } from "react-pdf";
 
+pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`;
 
 function App() {
   let navigate = useNavigate();

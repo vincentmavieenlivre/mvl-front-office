@@ -35,15 +35,20 @@ db = getFirestore(app);
 functions = getFunctions(app)
 auth = getAuth();
 storage = getStorage();
+
+
 if (getEnv() == Env.DEVELOPMENT) {
+    const ip = '127.0.0.1'
+
     console.log("[firebase emulator] bind firestore to local emulator db")
-    connectFirestoreEmulator(db, '127.0.0.1', 8080)
+    connectFirestoreEmulator(db, ip, 8080)
     console.log("[firebase emulator] bind cloud functions to local emulator functions")
-    connectFunctionsEmulator(functions, "127.0.0.1", 5003);
+    connectFunctionsEmulator(functions, ip, 5003);
     console.log("[firebase emulator] bind authentification")
-    connectAuthEmulator(auth, "http://127.0.0.1:9099");
-    console.log("[firebase emulator] bind storage")
-    connectStorageEmulator(storage, "127.0.0.1", 9199);
+    connectAuthEmulator(auth, `http://${ip}:9099`);
+
+    //console.log("[firebase emulator] bind storage")
+    //connectStorageEmulator(storage, ip, 9199);
 }
 
 export async function testFirestore() {

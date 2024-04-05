@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "NODE_ENV=development refine dev --mode development",
+    "dev": "NODE_ENV=development refine dev --mode development --host",
     "dev:emulator": "firebase emulators:start --import emulator_dumps/init",
     "build:prod": "tsc && NODE_ENV=production dotenv -e .env.production vite build --mode production",
     "build:staging": " tsc && NODE_ENV=staging dotenv -e .env.staging vite build",
@@ -28,6 +28,7 @@
     "lodash": "^4.17.21",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-pdf": "^7.7.1",
     "react-redux": "^9.1.0",
     "react-router-dom": "^6.22.0",
     "react-type-animation": "^3.2.0",

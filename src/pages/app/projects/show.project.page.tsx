@@ -7,12 +7,13 @@ import { IBookQuestion } from '@app/modeles/database/book/book-question'
 import { Project } from '@app/modeles/database/project'
 import { ECollections } from '@app/utils/firebase/firestore-collections'
 import { FirestoreHelper } from '@app/utils/firebase/firestore-helper'
-import { loadPdf, nestPdf } from '@app/utils/pdf/pdf.utils'
+import { loadPdf, nestPdf, openInTab } from '@app/utils/pdf/pdf.utils'
 import { Badge, Button, Divider, FloatButton, List } from 'antd'
 import { httpsCallable } from 'firebase/functions'
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { TypeAnimation } from 'react-type-animation'
+import { Document, Page, Thumbnail } from 'react-pdf';
 
 const mockData = [
     `Eh bien oui, je me souviens bien que j’étais dans un cours
@@ -74,6 +75,13 @@ export default function ShowProjectPage({ }: Props) {
     const [questions, setQuestions] = useState<IBookQuestion[]>([])
     const micGranted: boolean = useMicrophone()
 
+    const [bookPdfUrl, setBookPdfUrl] = useState<string | undefined>(undefined)
+    const [numPages, setNumPages] = useState<number>();
+    const [pageNumber, setPageNumber] = useState<number>(1);
+
+    function onDocumentLoadSuccess({ numPages }: { numPages: number }): void {
+        setNumPages(numPages);
+    }
 
 
     const loadProject = async () => {
@@ -153,11 +161,42 @@ export default function ShowProjectPage({ }: Props) {
                 )}
             />
 
-            <button    onClick={nestPdf}
-            style={{position: "fixed", bottom: 40, right: 40}}  className="btn btn-primary">
-            <ReadOutlined   style={{fontSize: 25}} size={500} /> Générer votre livre </button>
+            <button onClick={async () => {
+                let url = await nestPdf()
+                console.log("final url book", url)
+                setBookPdfUrl(url)
+            }}
+                style={{ zIndex: 9999, position: "fixed", bottom: 40, right: 40 }} className="btn btn-primary">
+                <ReadOutlined style={{ fontSize: 25 }} size={500} /> Générer votre livre </button>
 
 
+            {bookPdfUrl &&
+                <div className='flex flex-row justify-center mt-20'>
+                    <div className='document' >
+
+                        <Document  className={"p-4 document"} renderMode="canvas" file={bookPdfUrl} onLoadSuccess={onDocumentLoadSuccess}>
+                            <Thumbnail  width={500}  pageNumber={pageNumber} />
+                            
+                            <div className="flex flex-row justify-around mt-6">
+                            
+                            <button onClick={() => setPageNumber(pageNumber - 1 >= 1 ? pageNumber - 1 : 1 )} className="btn btn-circle btn-outline">
+                                {'<'}
+                            </button>
+
+                            <button onClick={() =>  openInTab(bookPdfUrl) } className="btn btn-outline">
+                                {'Télécharger'}
+                            </button>
+
+
+                            <button onClick={() => setPageNumber( pageNumber  < (numPages as number) ? pageNumber + 1 : numPages as number) } className="btn btn-circle btn-outline">
+                                {'>'}
+                            </button>
+                            </div>
+
+                        </Document>
+                    </div>
+                </div>
+            }
         </div>
     )
 }
