@@ -11,7 +11,7 @@ import QuestionCreator from "./questions-creator/question-creator";
 import { IBookQuestion, IBookQuestionEditable } from "@app/modeles/database/book/book-question";
 import { BookTemplateManager } from "@app/manager/backoffice/book-template.manager";
 import TemplateThemeCreator from "./template-theme/template-theme.create";
-import { IBookTemplate } from "@app/modeles/database/book/book-template";
+import { IBookTemplate, IChapter } from "@app/modeles/database/book/book-template";
 
 interface RecordType extends AdminUser {
     key: string | undefined;
@@ -25,18 +25,20 @@ export const TemplateEdit = () => {
     const [questions, setQuestions] = useState<IBookQuestionEditable[]>([])
     const [toDeleteQuestionIds, setToDeleteQuestionIds] = useState<string[]>([])
     const [organization, setOrganization] = useState<any | undefined>(undefined)
+    const [chapters, setChapters] = useState<IChapter[]>([])
 
     console.log("template edit")
 
-    let templateManager: BookTemplateManager = new BookTemplateManager(db, id)
+    const templateManager: BookTemplateManager = new BookTemplateManager(db, id)
 
     const initData = async () => {
-        let template: IBookTemplate = await templateManager.loadTemplate()
+        const template: IBookTemplate = await templateManager.loadTemplate()
 
         console.log("current template", template)
         setCurrentTemplate(template)
+        setChapters(template.chapters ?? [])
 
-        let questions: IBookQuestion[] = await templateManager.loadQuestions()
+        const questions: IBookQuestion[] = await templateManager.loadQuestions()
         console.log("async load questions", questions)
         console.log("async load order", template.questionsOrder)
 
@@ -72,7 +74,7 @@ export const TemplateEdit = () => {
         saveButtonProps.onClick = (async () => {
 
             // 1) create or update
-            for (let q of questions) {
+            for (const q of questions) {
                 if (q.new == true) {
                     console.log("CREATE QUESTION", q)
                     await templateManager.createQuestionInTemplate(q)
@@ -84,7 +86,7 @@ export const TemplateEdit = () => {
             }
 
             // 2) delete
-            for (let toDeleteId of toDeleteQuestionIds) {
+            for (const toDeleteId of toDeleteQuestionIds) {
                 await templateManager.deleteQuestionInTemplate(toDeleteId)
             }
 
@@ -117,7 +119,13 @@ export const TemplateEdit = () => {
                 }
             </Card>
             <Card>
-                <QuestionCreator onToDelete={setToDeleteQuestionIds} onListChange={setQuestions} questions={questions}></QuestionCreator>
+                <QuestionCreator
+                    onChapterAdded={(n) => { setChapters([...chapters, n]); console.log(n) }}
+                    onToDelete={setToDeleteQuestionIds} onListChange={setQuestions}
+                    chapters={chapters ?? []}
+                    questions={questions}
+
+                ></QuestionCreator>
             </Card>
 
         </Edit>

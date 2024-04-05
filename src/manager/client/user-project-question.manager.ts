@@ -11,7 +11,7 @@ export class UserProjectQuestionManager{
     }
 
     public async updateAudioUrl(audioUrl:string){
-        let collectionRef = collection(db, ECollections.PROJECTS, this.projectId, ECollections.QUESTIONS);
+        const collectionRef = collection(db, ECollections.PROJECTS, this.projectId, ECollections.QUESTIONS);
         const documentRef = doc(collectionRef, this.question.id)
         await updateDoc(documentRef, {
             audioUrl: audioUrl

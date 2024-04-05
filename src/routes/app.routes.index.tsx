@@ -52,7 +52,7 @@ function InternalAppRedirector({ children }: { children: JSX.Element }) {
   const token: IdTokenResult | undefined = useSelector(selectToken)
   const role: ERoles = (token?.claims as unknown as TokenRole)?.role
   const userProjects: Project[] = useSelector(selectUserProjects)
-  let location = useLocation();
+  const location = useLocation();
 
   console.log("user projects", location)
   // redirect to create a new project
@@ -78,7 +78,7 @@ function RequireAuth({ children }: { children: JSX.Element }) {
   const user: User | undefined = useSelector(selectUser)
   const token: IdTokenResult | undefined = useSelector(selectToken)
   const role: ERoles = (token?.claims as unknown as TokenRole)?.role
-  let location = useLocation();
+  const location = useLocation();
 
   console.log("[required auth] can go on protected route =>", user != undefined, "role", role, "user", user?.email)
 

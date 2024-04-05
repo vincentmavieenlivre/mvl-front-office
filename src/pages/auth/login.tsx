@@ -12,7 +12,7 @@ export const LoginPage = (props: LoginProps) => {
     const doLogin = async (email, password) => {
 
         const auth = getAuth();
-        let userCredential: UserCredential | void = await signInWithEmailAndPassword(auth, email, password).catch((e) => console.error("[login error]", e))
+        const userCredential: UserCredential | void = await signInWithEmailAndPassword(auth, email, password).catch((e) => console.error("[login error]", e))
         if (userCredential) {
             const user: User = userCredential.user;
             const idTokenResult = await user.getIdTokenResult(true);

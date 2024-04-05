@@ -40,7 +40,7 @@ const AudioRecorder = (props: Props) => {
 	const transcriptAudioToText = async (audioUrl: string) => {
 		if (functions) {
 			const test = httpsCallable(functions, 'speechToText');
-			let result = await test({ audioUrl: audioUrl })
+			const result = await test({ audioUrl: audioUrl })
 			console.log("[transcripted text]", result)
 			return result
 		}
@@ -89,7 +89,7 @@ const AudioRecorder = (props: Props) => {
 		mediaRecorder.current = media;
 		mediaRecorder.current.start();
 
-		let localAudioChunks: any = [];
+		const localAudioChunks: any = [];
 
 		mediaRecorder.current.ondataavailable = (event: any) => {
 
@@ -104,7 +104,7 @@ const AudioRecorder = (props: Props) => {
 
 	const doProcess = async (downloadUrl) => {
 		console.log("go transcript cloud function")
-		let data = await transcriptAudioToText(downloadUrl)
+		const data = await transcriptAudioToText(downloadUrl)
 		console.log("transcript res", data?.data.text)
 		setTranscribedText(data?.data.text)
 		setProcessing(false)
@@ -123,7 +123,7 @@ const AudioRecorder = (props: Props) => {
 				console.log("audioUrl", audioUrl)
 				setAudio(audioUrl);
 				setAudioChunks([]);
-				let downloadUrl: string = await uploadAudioOnStorage(audioBlob)
+				const downloadUrl: string = await uploadAudioOnStorage(audioBlob)
 				if (downloadUrl) {
 					doProcess(downloadUrl)
 				}
@@ -143,18 +143,18 @@ const AudioRecorder = (props: Props) => {
 			contentType: audioMimeType
 		}
 
-		let audioStorageRef = ref(storage, `projects/${props.projectId}/questions/${props.question}/answer.webm`);
+		const audioStorageRef = ref(storage, `projects/${props.projectId}/questions/${props.question}/answer.webm`);
 
 		try {
 			console.log("custom upload go for", audioFileBlob)
-			let resSnapshot = await uploadBytes(audioStorageRef, audioFileBlob)
+			const resSnapshot = await uploadBytes(audioStorageRef, audioFileBlob)
 			console.log('Uploaded the audio blob', resSnapshot);
 
-			let downloadURL = await getDownloadURL(resSnapshot.ref)
+			const downloadURL = await getDownloadURL(resSnapshot.ref)
 			console.log('File available at', downloadURL);
 
-			let qm = new UserProjectQuestionManager(props.projectId, props.question)
-			let audioUrl: string = await qm.updateAudioUrl(downloadURL)
+			const qm = new UserProjectQuestionManager(props.projectId, props.question)
+			const audioUrl: string = await qm.updateAudioUrl(downloadURL)
 			console.log("audio url", audioUrl)
 
 

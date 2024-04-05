@@ -35,7 +35,7 @@ export default function NewProject({ }: Props) {
 
     const loadAllTemplates = async () => {
         if (db) {
-            let templates = await BookTemplateManager.loadAllTemplates(db)
+            const templates = await BookTemplateManager.loadAllTemplates(db)
             if (templates && templates.length) {
                 console.log("templates loaded", templates.length)
                 setTemplates(templates)
@@ -52,8 +52,8 @@ export default function NewProject({ }: Props) {
         console.log("form create project submit", event.target.projectName.value)
         event.preventDefault()
         if (event.target.projectName.value && user && token && db && currentTemplate?.id) {
-            let projectName = event.target.projectName.value;
-            let newProject: Project = await UserProjectsService.createProject(projectName, user, token, currentTemplate?.id)
+            const projectName = event.target.projectName.value;
+            const newProject: Project = await UserProjectsService.createProject(projectName, user, token, currentTemplate?.id)
             dispatch(addUserProjects(newProject))
             navigate(APP_ROUTES.LIST_PROJECTS)
 

@@ -26,7 +26,7 @@ export const OrganizationEdit = () => {
 
     const getOrganization = async () => {
         if (id) {
-            let o = await FirestoreHelper.getDocument<Organization>(db, ECollections.ORGANIZATION, id)
+            const o = await FirestoreHelper.getDocument<Organization>(db, ECollections.ORGANIZATION, id)
             if (o) {
                 setOrganization(o)
                 return o;
@@ -61,18 +61,18 @@ export const OrganizationEdit = () => {
 
     const initData = async () => {
         // get all admins across all projects
-        let users: User[] = await index(query(collection(db, "user"), where("role", "==", ERoles.ORGANIZATION_ADMIN)))
-        let o = await getOrganization()
+        const users: User[] = await index(query(collection(db, "user"), where("role", "==", ERoles.ORGANIZATION_ADMIN)))
+        const o = await getOrganization()
 
         console.log("users", users)
 
         if (o?.admins?.length > 0) {
-            let admins = (o?.admins.map((r: AdminUser) => r.user_id) ?? [])
+            const admins = (o?.admins.map((r: AdminUser) => r.user_id) ?? [])
             setOrganizationKeys(admins)
         }
 
-        let adminsClean = users.map((u: User, index: number) => {
-            let v: RecordType = {
+        const adminsClean = users.map((u: User, index: number) => {
+            const v: RecordType = {
                 key: u?.id,
                 user_name: u.email,
                 user_id: u.id
@@ -111,7 +111,7 @@ export const OrganizationEdit = () => {
         setOrganizationKeys(nextTargetKeys);
         if (direction == 'right') { // left -> right move
             moveKeys.forEach((val: string, index: number) => {
-                let u = allOrgaAdmins?.find((e: RecordType) => e.key == val)
+                const u = allOrgaAdmins?.find((e: RecordType) => e.key == val)
                 console.log("add", u)
                 if (u && u.user_id && u.user_name) {
                     addOrganizationAdmin(organization, u.user_id, u.user_name)
@@ -120,7 +120,7 @@ export const OrganizationEdit = () => {
         }
         if (direction == 'left') { // left -> right move
             moveKeys.forEach((val: string, index: number) => {
-                let u = allOrgaAdmins?.find((e: RecordType) => e.key == val)
+                const u = allOrgaAdmins?.find((e: RecordType) => e.key == val)
                 if (u && u.user_id && u.user_name) {
                     removeOrganizationAdmin(organization, u.user_id)
                 }

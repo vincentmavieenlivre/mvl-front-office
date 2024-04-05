@@ -52,12 +52,12 @@ const bookTemplatesRoutes = {
 
 export function RefineContext({ children }: { children: ReactNode }) {
 
-    let provider = refineFirestoreDatabase.getDataProvider()
+    const provider = refineFirestoreDatabase.getDataProvider()
 
     const user = useSelector(selectUser)
     const tokenResult: IdTokenResult | undefined = useSelector(selectToken)
 
-    let ressources = []
+    const ressources = []
 
     if (tokenResult && isRole(tokenResult, ERoles.SUPER_ADMIN)) {
         ressources.push(userRoutes)

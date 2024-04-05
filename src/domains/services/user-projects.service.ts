@@ -21,15 +21,15 @@ export class UserProjectsService {
     }
 
     async loadQuestions():Promise<IBookQuestion[]>{
-        let collectionRef = collection(db, ECollections.PROJECTS, this.projectId, ECollections.QUESTIONS);
+        const collectionRef = collection(db, ECollections.PROJECTS, this.projectId, ECollections.QUESTIONS);
         const subcollectionQuery = query(collectionRef);
         
         const snapshot = await getDocs(subcollectionQuery);
         
-        let questions:IBookQuestion[] = []
+        const questions:IBookQuestion[] = []
         
         snapshot.forEach((doc) => {
-            let d:IBookQuestion = {
+            const d:IBookQuestion = {
                 ...doc.data(),
                 id: doc.id
             } as unknown as IBookQuestion;
@@ -40,16 +40,16 @@ export class UserProjectsService {
 
         // if there is an order : return sorted questions
         if (this.loadedProject?.questionsOrder && this.loadedProject?.questionsOrder.length > 0) {
-            let sortedIds = this.loadedProject.questionsOrder?.sort((a, b) => {
+            const sortedIds = this.loadedProject.questionsOrder?.sort((a, b) => {
                 return a.index - b.index
             })
 
-            let sortedQuestions: IBookQuestion[] = []
+            const sortedQuestions: IBookQuestion[] = []
             if (sortedIds) {
                 console.log("sorted", sortedIds.map((d) => d.id + " => " + d.index))
                 console.log("questions", questions)
-                for (let s of sortedIds) {
-                    let q = questions.find((q) => q.template_question_id == s.id)
+                for (const s of sortedIds) {
+                    const q = questions.find((q) => q.template_question_id == s.id)
                     if (q) {
                         sortedQuestions.push(q)
                     }else{
@@ -76,10 +76,10 @@ export class UserProjectsService {
     }
     
     async createQuestionInProject(q:IBookQuestion){
-        let collectionRef = collection(db, ECollections.PROJECTS, this.projectId, ECollections.QUESTIONS);
+        const collectionRef = collection(db, ECollections.PROJECTS, this.projectId, ECollections.QUESTIONS);
         q.template_question_id = _.clone(q.id)
         delete q['id']
-        let res = await addDoc(collectionRef, q);
+        const res = await addDoc(collectionRef, q);
         console.log("question saved => new ID=", res.id )
         q.id = res.id         
     }
@@ -89,9 +89,9 @@ export class UserProjectsService {
         // if user is admin || user || family etc...
         
         
-        let helper = new FirestoreHelper()
+        const helper = new FirestoreHelper()
         console.log("db", db, "collection", ECollections.PROJECTS, "userid", user.user?.uid)
-        let projects: Project[] = await helper.queryData<Project>(db, ECollections.PROJECTS, ["owners.owner_ids", "array-contains-any", [user.user?.uid]])
+        const projects: Project[] = await helper.queryData<Project>(db, ECollections.PROJECTS, ["owners.owner_ids", "array-contains-any", [user.user?.uid]])
         
         console.log("[getUserProjects] num=", projects.length)
         
@@ -107,14 +107,14 @@ export class UserProjectsService {
         if(!db) throw "database null"
         
         // the use who create
-        let u: UserOwner = {
+        const u: UserOwner = {
             user_name: creator.displayName,
             user_id: creator.uid,
             user_role: token.claims.role as ERoles
         }
         
         // the minimal project data
-        let p: Project = {
+        const p: Project = {
             name: projectName,
             owners: {
                 owner_ids: [creator.uid],
@@ -124,19 +124,19 @@ export class UserProjectsService {
         }
         
         // create the minimal project data
-        let createdProject:Project = await new FirestoreHelper().createNewDocument(db, ECollections.PROJECTS, p)
+        const createdProject:Project = await new FirestoreHelper().createNewDocument(db, ECollections.PROJECTS, p)
         
         // get questions & order from template
-        let templateManager = new BookTemplateManager(db, templateId)        
-        let sourceTemplate:IBookTemplate = await templateManager.loadTemplate()
-        let questions:IBookQuestion[] = await templateManager.loadQuestions()
+        const templateManager = new BookTemplateManager(db, templateId)        
+        const sourceTemplate:IBookTemplate = await templateManager.loadTemplate()
+        const questions:IBookQuestion[] = await templateManager.loadQuestions()
         
         // add all the questions (& order) to the created project
         if(createdProject.id){
-            let ups:UserProjectsService =  new UserProjectsService(createdProject.id)
+            const ups:UserProjectsService =  new UserProjectsService(createdProject.id)
             
             // add questions
-            for(let q of questions){
+            for(const q of questions){
                 await ups.createQuestionInProject(q)
                 createdProject.questions?.push(q)
             }
@@ -145,7 +145,7 @@ export class UserProjectsService {
             p.questionsOrder = sourceTemplate.questionsOrder
 
             // final update
-            let updatedPrroject:Project = await new FirestoreHelper().updateDocument(db, ECollections.PROJECTS, createdProject.id, p)
+            const updatedPrroject:Project = await new FirestoreHelper().updateDocument(db, ECollections.PROJECTS, createdProject.id, p)
             console.log("updated project", updatedPrroject)
             return updatedPrroject   
 

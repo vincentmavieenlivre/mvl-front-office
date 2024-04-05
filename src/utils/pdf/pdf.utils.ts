@@ -39,7 +39,7 @@ export const loadPdf = async () => {
     if (functions) {
         console.log("pdf")
         const test = httpsCallable(functions, 'renderPdfTest');
-        let response = await test({ audioUrl: "test" })
+        const response = await test({ audioUrl: "test" })
         const pdfData = response.data; // Retrieve the PDF data from the response
 
         console.log("pdfdata", pdfData)

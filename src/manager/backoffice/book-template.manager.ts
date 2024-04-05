@@ -21,7 +21,7 @@ export class BookTemplateManager{
         const q = query(collection(db, ECollections.BOOK_TEMPLATE));        
         const docSnaps = await getDocs(q);
 
-        let res:IBookTemplate[] = []
+        const res:IBookTemplate[] = []
 
         docSnaps.forEach((doc) => {
              res.push({
@@ -49,15 +49,15 @@ export class BookTemplateManager{
     }
 
     async loadQuestions():Promise<IBookQuestion[]>{
-        let collectionRef = collection(this.db, ECollections.BOOK_TEMPLATE, this.templateId, ECollections.QUESTIONS);
+        const collectionRef = collection(this.db, ECollections.BOOK_TEMPLATE, this.templateId, ECollections.QUESTIONS);
         const subcollectionQuery = query(collectionRef);
         
         const snapshot = await getDocs(subcollectionQuery);
         
-        let questions:IBookQuestion[] = []
+        const questions:IBookQuestion[] = []
         
         snapshot.forEach((doc) => {
-            let d:IBookQuestion = {
+            const d:IBookQuestion = {
                 ...doc.data(),
                 id: doc.id
             } as unknown as IBookQuestion;
@@ -67,14 +67,14 @@ export class BookTemplateManager{
 
         // if there is an order : return sorted questions
         if (this.template?.questionsOrder && this.template?.questionsOrder.length > 0) {
-            let sortedIds = this.template.questionsOrder?.sort((a, b) => {
+            const sortedIds = this.template.questionsOrder?.sort((a, b) => {
                 return a.index > b.index
             })
 
-            let sortedQuestions: IBookQuestion[] = []
+            const sortedQuestions: IBookQuestion[] = []
             if (sortedIds) {
-                for (let s of sortedIds) {
-                    let q = questions.find((q) => q.id == s.id)
+                for (const s of sortedIds) {
+                    const q = questions.find((q) => q.id == s.id)
                     if (q) {
                         sortedQuestions.push(q)
                     }
@@ -88,7 +88,7 @@ export class BookTemplateManager{
     }
     
     private  removeEditableFields = (q: IBookQuestionEditable): IBookQuestion => {
-        let cleaned: IBookQuestion = {
+        const cleaned: IBookQuestion = {
             questionTitle: q.questionTitle
         }
         
@@ -104,15 +104,15 @@ export class BookTemplateManager{
    
     
     async createQuestionInTemplate(q:IBookQuestionEditable){
-        let collectionRef = collection(this.db, ECollections.BOOK_TEMPLATE, this.templateId, ECollections.QUESTIONS);
-        let res = await addDoc(collectionRef, this.removeEditableFields(q));
+        const collectionRef = collection(this.db, ECollections.BOOK_TEMPLATE, this.templateId, ECollections.QUESTIONS);
+        const res = await addDoc(collectionRef, this.removeEditableFields(q));
         console.log("question saved => new ID=", res.id )
         q.id = res.id // the first time the question is created there is no "id" denormalized inside
         q.new = false
     }
     
     async updateQuestionInTemplate(q:IBookQuestionEditable){
-        let collectionRef = collection(this.db, ECollections.BOOK_TEMPLATE, this.templateId, ECollections.QUESTIONS);
+        const collectionRef = collection(this.db, ECollections.BOOK_TEMPLATE, this.templateId, ECollections.QUESTIONS);
         const documentRef = doc(collectionRef, q.id)
         await updateDoc(documentRef, this.removeEditableFields(q) as any)
         console.log("question updated", q)
@@ -120,7 +120,7 @@ export class BookTemplateManager{
     }
     
     async deleteQuestionInTemplate(toDeleteId:string){
-        let collectionRef = collection(this.db, ECollections.BOOK_TEMPLATE, this.templateId, ECollections.QUESTIONS);
+        const collectionRef = collection(this.db, ECollections.BOOK_TEMPLATE, this.templateId, ECollections.QUESTIONS);
         const documentRef = doc(collectionRef, toDeleteId)
         await deleteDoc(documentRef)
         console.log("[delete question]", toDeleteId)
@@ -135,10 +135,10 @@ export class BookTemplateManager{
             return { index: index, id: q.id}
         })
         
-        let collectionRef = collection(this.db, ECollections.BOOK_TEMPLATE);
+        const collectionRef = collection(this.db, ECollections.BOOK_TEMPLATE);
         const documentRef = doc(collectionRef, this.templateId)
 
-        let finalDoc = {
+        const finalDoc = {
             questionsOrder: order,
             coverUrl: coverUrl
         }

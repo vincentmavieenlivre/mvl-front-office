@@ -22,7 +22,7 @@ export function removeOrganizationAdmin(o: Organization, userId: string) {
     if (o.admins?.length) {
         console.log("remove admin", userId)
 
-        let a = o.admins.filter((u: AdminUser) => u.user_id != userId)
+        const a = o.admins.filter((u: AdminUser) => u.user_id != userId)
         o.admins = a
     }
 }

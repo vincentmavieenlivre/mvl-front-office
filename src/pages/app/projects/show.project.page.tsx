@@ -85,10 +85,10 @@ export default function ShowProjectPage({ }: Props) {
 
 
     const loadProject = async () => {
-        let pm = new UserProjectsService(params.id)
-        let p = await pm.loadProject()
+        const pm = new UserProjectsService(params.id)
+        const p = await pm.loadProject()
         if (p) {
-            let questions: IBookQuestion[] = await pm.loadQuestions()
+            const questions: IBookQuestion[] = await pm.loadQuestions()
             if (questions.length > 0) {
                 setQuestions(questions)
             }
@@ -98,10 +98,10 @@ export default function ShowProjectPage({ }: Props) {
     }
 
     const onInvite = async () => {
-        let email = "family@test.com"
+        const email = "family@test.com"
         if (functions) {
             const test = httpsCallable(functions, 'inviteFamily');
-            let result = await test({ familyEmail: email })
+            const result = await test({ familyEmail: email })
             console.log("[invite family result]", result)
         }
     }
@@ -162,7 +162,7 @@ export default function ShowProjectPage({ }: Props) {
             />
 
             <button onClick={async () => {
-                let url = await nestPdf()
+                const url = await nestPdf()
                 console.log("final url book", url)
                 setBookPdfUrl(url)
             }}

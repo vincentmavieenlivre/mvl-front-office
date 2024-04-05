@@ -12,7 +12,7 @@ export function removeUndefinedRecursive(obj) {
 }
 
 export async function index<Type>(lambda: Query<unknown, DocumentData>): Promise<Type[]> {
-    let data: Type[] = []
+    const data: Type[] = []
     const querySnapshot = await getDocs(lambda);
     querySnapshot.forEach((doc) => {
         data.push({ ...doc.data(), id: doc.id })
@@ -101,8 +101,8 @@ export class FirestoreHelper {
     ): Promise<any> {
 
         collection(db, collectionName)
-        let ref = doc(db, collectionName, docId);
-        let ret = await updateDoc(ref, data);
+        const ref = doc(db, collectionName, docId);
+        const ret = await updateDoc(ref, data);
         return data
     }
 
@@ -240,13 +240,13 @@ export class FirestoreHelper {
 
         const dataRef = collection(db, collectionName);
 
-        let queryRef = dataRef;
+        const queryRef = dataRef;
 
 
-        let q = query(queryRef, where(queryArray[0], queryArray[1], queryArray[2]))
+        const q = query(queryRef, where(queryArray[0], queryArray[1], queryArray[2]))
         const querySnapshot = await getDocs(q);
 
-        let docs: T[] = []
+        const docs: T[] = []
         querySnapshot.forEach((doc) => {
             // doc.data() is never undefined for query doc snapshots
             console.log(doc.id, " => ", doc.data());

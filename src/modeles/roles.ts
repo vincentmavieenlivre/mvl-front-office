@@ -18,9 +18,9 @@ export const permissionsByRole = {
 }
 
 export function hasPermission(token:IdTokenResult, permission:EPermission):boolean{
-    let r:ERoles = getRoleFromToken(token)
+    const r:ERoles = getRoleFromToken(token)
     console.log("ROLE OF CURRENT USER", r)
-    let roleString = r.toString()
+    const roleString = r.toString()
     
     return permissionsByRole[roleString] && permissionsByRole[roleString].includes(permission)
 

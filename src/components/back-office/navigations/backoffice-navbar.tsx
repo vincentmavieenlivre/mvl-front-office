@@ -11,7 +11,7 @@ type Props = {}
 
 const BackOfficeNavBar = (props: Props) => {
 
-    let nav = useNavigate()
+    const nav = useNavigate()
 
 
     const user = useSelector(selectUser)

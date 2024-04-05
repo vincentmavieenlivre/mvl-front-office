@@ -9,7 +9,7 @@ scriptBootstrap()
 
 if (functions && auth) {
     const createUser = httpsCallable(functions, 'createUser');
-    let result: any = await createUser({
+    const result: any = await createUser({
         userEmail: 'xxx@example.com',
         userPassword: 'coucou',
         userName: 'xxx Doe',
@@ -18,20 +18,20 @@ if (functions && auth) {
 
     console.log("result signup", result)
 
-    let token = result.data.token
+    const token = result.data.token
     console.log("custom token with claim for end user signup", token)
 
     signInWithCustomToken(auth, token)
         .then((userCredential) => {
 
-            var user = userCredential.user;
+            const user = userCredential.user;
 
             console.log("[user signed in ok]", user)
 
         })
         .catch((error) => {
-            var errorCode = error.code;
-            var errorMessage = error.message;
+            const errorCode = error.code;
+            const errorMessage = error.message;
             // ...
         });
 

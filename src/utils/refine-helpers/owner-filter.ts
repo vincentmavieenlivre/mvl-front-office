@@ -4,7 +4,7 @@ import { FieldPath } from "firebase/firestore";
 export function getOwnerFilter(currentUserId: string, currentRole: ERoles) {
     const path = new FieldPath("owners", "owner_ids")
 
-    let filters: any = {
+    const filters: any = {
         initial: [
 
         ]

@@ -1,7 +1,7 @@
 
 
 import dotenv from 'dotenv';
-let env = dotenv.config({ path: '.env.development' }).parsed;
+const env = dotenv.config({ path: '.env.development' }).parsed;
 
 import { FirebaseApp, initializeApp } from 'firebase/app';
 import { Firestore, collection, connectFirestoreEmulator, getDocs, getFirestore } from 'firebase/firestore';
@@ -15,7 +15,7 @@ import { FirebaseStorage, connectStorageEmulator, getStorage } from 'firebase/st
 
 // export firebase entry points
 export let db: Firestore | undefined = undefined;
-export let firebase: FirebaseApp | undefined = undefined
+export const firebase: FirebaseApp | undefined = undefined
 export let functions: Functions | undefined = undefined
 export let auth: Auth | undefined = undefined;
 export let app: FirebaseApp | undefined = undefined

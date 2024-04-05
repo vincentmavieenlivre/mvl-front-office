@@ -19,7 +19,7 @@ export  class AdminUserManager {
         if (!blob.email) throw "email is null"
         if (!blob.displayName) throw "name is null"
 
-        let userRecord = await getAuth().createUser(blob)
+        const userRecord = await getAuth().createUser(blob)
 
         // See the UserRecord reference doc for the contents of userRecord.
         log(`Successfully fetched user data:  ${userRecord}`);
@@ -28,12 +28,12 @@ export  class AdminUserManager {
             role: userRole
         })
 
-        let customToken = await getAuth().createCustomToken(userRecord.uid, {
+        const customToken = await getAuth().createCustomToken(userRecord.uid, {
             role: userRole
         })
 
         // create user document
-        let userDocument: User = {
+        const userDocument: User = {
             email: blob.email,
             name: blob.displayName,
             role: userRole,

@@ -16,17 +16,17 @@ if (!db) {
     throw 'db not init'
 }
 
-let helper = new FirestoreHelper()
+const helper = new FirestoreHelper()
 
 async  function createUserOrganizationOnProject():Promise<Project>{
     
-    let user: User = {
+    const user: User = {
         email: "user1@test.com",
         name: "user1",
         role: ERoles.USER
     }
 
-    let userBlob: CreateRequest = {
+    const userBlob: CreateRequest = {
         email: user.email,
         emailVerified: true,
         password: "coucou",
@@ -38,13 +38,13 @@ async  function createUserOrganizationOnProject():Promise<Project>{
         throw "db null"
     }
 
-    let organizationUser: User = {
+    const organizationUser: User = {
         email: "organization@test.com",
         name: "organization-user",
         role: ERoles.ORGANIZATION_ADMIN
     }
 
-    let blobOrganization: CreateRequest = {
+    const blobOrganization: CreateRequest = {
         email: organizationUser.email,
         emailVerified: true,
         password: "coucou",
@@ -54,7 +54,7 @@ async  function createUserOrganizationOnProject():Promise<Project>{
     
 
        
-    let um = new AdminUserManager()
+    const um = new AdminUserManager()
     await um.createUser(blobOrganization, ERoles.ORGANIZATION_ADMIN)
     organizationUser.id = um.userId
     await um.createUser(userBlob, ERoles.USER)
@@ -66,7 +66,7 @@ async  function createUserOrganizationOnProject():Promise<Project>{
     if (!user.id && !organizationUser.id) throw 'user or orga are null'
     
     // ADD USER AND FAMILY USER
-    let project: Project = {
+    const project: Project = {
         name: "project",
         owners: {
             owner_ids: [user.id, organizationUser.id],
@@ -88,7 +88,7 @@ async  function createUserOrganizationOnProject():Promise<Project>{
     await helper.createNewDocument(db, ECollections.PROJECTS, project)
     
     if (!project.id) throw 'project null'
-    let orga: Organization = {
+    const orga: Organization = {
         name: "Organization"
     }
     
@@ -108,15 +108,15 @@ async  function createUserOrganizationOnProject():Promise<Project>{
 
 
 
-let p = await createUserOrganizationOnProject()
+const p = await createUserOrganizationOnProject()
 
 async function createFamilyUser():Promise<User>{
-    let familyUser: User = {
+    const familyUser: User = {
         email: "family@test.com",
         name: "family-user",
         role: ERoles.FAMILY
     }
-    let blob: CreateRequest = {
+    const blob: CreateRequest = {
         email: familyUser.email,
         emailVerified: true,
         password: "coucou",
@@ -124,7 +124,7 @@ async function createFamilyUser():Promise<User>{
         disabled: false
     }
     
-    let um = new AdminUserManager()
+    const um = new AdminUserManager()
     await um.createUser(blob, ERoles.FAMILY)
     familyUser.id = um.userId
     
@@ -133,12 +133,12 @@ async function createFamilyUser():Promise<User>{
 }
 
 async function createBiographerUser():Promise<User>{
-    let biographerUser: User = {
+    const biographerUser: User = {
         email: "biographer@test.com",
         name: "biographer1",
         role: ERoles.BIOGRAPHER
     }
-    let blob: CreateRequest = {
+    const blob: CreateRequest = {
         email: biographerUser.email,
         emailVerified: true,
         password: "coucou",
@@ -146,7 +146,7 @@ async function createBiographerUser():Promise<User>{
         disabled: false
     }
     
-    let um = new AdminUserManager()
+    const um = new AdminUserManager()
     await um.createUser(blob, ERoles.BIOGRAPHER)
     biographerUser.id = um.userId
     
@@ -154,8 +154,8 @@ async function createBiographerUser():Promise<User>{
     return biographerUser
 }
 
-let familyUser = await createFamilyUser()
-let biographerUser = await createBiographerUser()
+const familyUser = await createFamilyUser()
+const biographerUser = await createBiographerUser()
 
 
 if(p.id){

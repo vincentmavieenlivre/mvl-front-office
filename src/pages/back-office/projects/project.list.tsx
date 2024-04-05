@@ -79,7 +79,7 @@ export const ProjectList = () => {
         return <div>Loading...</div>;
     }
 
-    let nav = useNavigate()
+    const nav = useNavigate()
 
     return (
         <List>

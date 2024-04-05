@@ -26,7 +26,7 @@ export  class AdminProjectManager {
                 throw 'project does not exists'
             } else {
                 log('Document data:', doc.data());
-                let p:Project = doc.data() as Project
+                const p:Project = doc.data() as Project
                 
                 p.owners.owner_ids.push(user.id)
                 p.owners.users.push({

@@ -8,7 +8,7 @@ import { FirebaseStorage, connectStorageEmulator, getStorage } from 'firebase/st
 
 // export firebase entry points
 export let db: Firestore | undefined = undefined;
-export let firebase: FirebaseApp | undefined = undefined
+export const firebase: FirebaseApp | undefined = undefined
 export let functions: Functions | undefined = undefined
 export let auth: Auth | undefined = undefined;
 export let app: FirebaseApp | undefined = undefined
@@ -63,7 +63,7 @@ export async function testFirestore() {
 export async function testFunctions() {
     if (functions) {
         const test = httpsCallable(functions, 'test');
-        let result = await test({ text: "test parameter helloWorld" })
+        const result = await test({ text: "test parameter helloWorld" })
         console.log("[test cloud function]", result.data)
     }
 }

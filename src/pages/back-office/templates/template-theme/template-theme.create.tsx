@@ -62,10 +62,10 @@ export default function TemplateThemeCreator(props: Props) {
 
         try {
             console.log("custom upload go for", file)
-            let resSnapshot = await uploadBytes(coverRef, file)
+            const resSnapshot = await uploadBytes(coverRef, file)
             console.log('Uploaded a blob or file!', resSnapshot);
 
-            let downloadURL = await getDownloadURL(resSnapshot.ref)
+            const downloadURL = await getDownloadURL(resSnapshot.ref)
             console.log('File available at', downloadURL);
             setCoverImgUrl(downloadURL)
             onSuccess(null, file);

@@ -17,7 +17,7 @@ import { pdfjs } from "react-pdf";
 pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`;
 
 function App() {
-  let navigate = useNavigate();
+  const navigate = useNavigate();
   const [authDone, setAuthDone] = useState(false)
 
   const dispatch = useDispatch();
@@ -27,12 +27,12 @@ function App() {
   const onUserSignIn = async (token: IdTokenResult, user: User) => {
     if (token && user) {
 
-      let data: UserStore = {
+      const data: UserStore = {
         user: user,
         tokenResult: token
       }
 
-      let p = await UserProjectsService.getUserProjects(data)
+      const p = await UserProjectsService.getUserProjects(data)
 
       dispatch(setUserProjects(p))
       dispatch(setUser(data));
@@ -77,18 +77,18 @@ function App() {
 
 
     if ([ERoles.SUPER_ADMIN, ERoles.BIOGRAPHER].includes(tokenResult?.claims.role)) {
-      console.info("redirect to backoffice")
+/*       console.info("redirect to backoffice")
       navigate('/admin')
-    }
+ */    }
 
     if ([ERoles.USER, ERoles.FAMILY].includes(tokenResult?.claims.role)) {
       console.info("redirect to app")
-      navigate('/app')
+     // navigate('/app')
     }
 
     if (!tokenResult) {
       //console.info("redirect to login")
-      navigate('/login')
+      //navigate('/login')
 
 
     }
