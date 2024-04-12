@@ -23,12 +23,12 @@ export default function AppHome({ }: Props) {
                     <li key={p.name} className="flex justify-between gap-x-6 py-5">
                         <div className="flex min-w-0 gap-x-4">
                             <div className="min-w-0 flex-auto">
-                                <p className="text-sm font-semibold leading-6 text-gray-900">{p.name}</p>
+                                <p className="text-sm font-semibold leading-6 text-sky-850">{p.name}</p>
                             </div>
                         </div>
                         <div className=" shrink-0 sm:flex sm:flex-col sm:items-end">
                             <Link to={`/app/projects/${p.id}`}>
-                                <button className='btn btn-primary'>Éditer</button>
+                                <button className='btn btn-block bg-sky-500 text-sky-50 text-xs rounded-3xl'>Éditer</button>
                             </Link>
                         </div>
                     </li>
@@ -40,17 +40,23 @@ export default function AppHome({ }: Props) {
 
 
     return (
-        <>
-            <h2>Mes projects</h2>
-            <div className='m-4 flex flex-end'>
+        <div className='m-5'>
+            <h2 className=' mt-12 text-sky-950  text-xl font-bold'>Bienvenue sur Ma Vie En Livre</h2>
+            <div className='text-sky-950 mt-4'>
+                <p>Capturez et préservez les précieux souvenirs de vos résidents en créant des livres de vie personnalisés.</p>
+                <p className='mt-4'>Prêt à commencer ?</p>
                 {userToken && hasPermission(userToken, EPermission.CREATE_PROJECT) &&
                     <Link to={APP_ROUTES.NEW_PROJECT}>
-                        <button className="btn btn-primary">Créer projet</button>
+                        <button className="mt-8 btn btn-block bg-sky-500 text-sky-50 text-sm rounded-3xl">Commencer</button>
                     </Link>
                 }
 
             </div>
+
+
+            <h2 className=' mt-12 text-sky-950  text-xl font-bold'>Mes projets</h2>
+
             {renderProjectList()}
-        </>
+        </div>
     )
 }

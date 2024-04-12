@@ -12,6 +12,7 @@ import AppLayout from "@app/pages/layout/app.layout";
 import NewProject from "@app/pages/app/projects/new.project.page";
 import { Project } from "@app/modeles/database/project";
 import ShowProjectPage from "@app/pages/app/projects/show.project.page";
+import DashboardLayout from "@app/pages/layout/dashboard.layout";
 
 export const APP_ROUTES = {
   NEW_PROJECT: "/app/projects/new",
@@ -31,7 +32,7 @@ export const AppRoutes = (props: RoutesProps) => {
         <>
           <Route path="/admin/*" element={<RequireAuth><BackOfficeRoutes /></RequireAuth>} />
           <Route element={<InternalAppRedirector><AppLayout /></InternalAppRedirector>} >
-            <Route path="/app" element={<AppHome></AppHome>} />
+            <Route path="/app" element={<DashboardLayout> <AppHome /></DashboardLayout>} />
 
             {/* PROJECTS */}
             <Route path={APP_ROUTES.NEW_PROJECT} element={<NewProject />} />
@@ -70,7 +71,7 @@ function InternalAppRedirector({ children }: { children: JSX.Element }) {
   console.log("nop")
 
 
-  return children;
+  return children
 }
 
 

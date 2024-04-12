@@ -48,9 +48,9 @@ export default function AppLayout(props: Props) {
     }
     return (
         <>
-            {renderNavBar()}
+            {/* {renderNavBar()} */}
 
-            <div className="container mx-auto px-4">
+            <div className="full-w">
                 <Outlet></Outlet >
             </div >
         </>
