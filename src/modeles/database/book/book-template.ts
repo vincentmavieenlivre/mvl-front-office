@@ -3,6 +3,7 @@ import { IBookQuestion } from "./book-question";
 export interface IChapter {
     id?: string;
     name: string; //firebase.firestore.FieldValue.id();
+    index: number
 }
 
 export interface IQuestionsContainer {

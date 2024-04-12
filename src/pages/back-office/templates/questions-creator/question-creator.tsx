@@ -7,6 +7,9 @@ import _ from 'lodash';
 import { IChapter } from '@app/modeles/database/book/book-template';
 import { db } from '@app/init/firebase';
 import { nanoid } from 'nanoid'
+import { render } from 'react-dom';
+
+const NO_CHAPTER_SELECTED = "no_theme"
 
 type Props = {
     questions: IBookQuestion[]
@@ -26,7 +29,7 @@ export default function QuestionCreator(props: Props) {
 
     const [questions, setQuestions] = useState<IBookQuestionEditable[]>([])
     const [questionsToDelete, setQuestionsToDelete] = useState<string[]>([])
-    const [questionsByChapter, setQuestionsByChapter] = useState<{}>([])
+    const [questionsByChapter, setQuestionsByChapter] = useState<any>([])
 
     useEffect(() => {
         if (questions.length == 0) {
@@ -34,7 +37,7 @@ export default function QuestionCreator(props: Props) {
             props.onListChange(questions)
         }
 
-        const grouped = _.groupBy(questions, (q: IBookQuestionEditable) => q.chapterId || "no_theme")
+        const grouped = _.groupBy(questions, (q: IBookQuestionEditable) => q.chapterId || NO_CHAPTER_SELECTED)
         console.log("grouped", grouped)
         setQuestionsByChapter(grouped)
 
@@ -130,7 +133,7 @@ export default function QuestionCreator(props: Props) {
         setQuestions(updatedQuestions);
     };
 
-    const handleKeyDown = (e: any) => {
+    const handleNewQuestionKeyDown = (e: any) => {
         if (e.key === 'Enter') {
             handleAddQuestion();
         }
@@ -138,87 +141,98 @@ export default function QuestionCreator(props: Props) {
 
     const findIndex = (item:any) => props.questions.findIndex((d) => d.questionTitle ==  item.questionTitle ) 
 
+    const renderChapter = (chapter:IChapter, questions:IBookQuestionEditable[]) => {
+        return(
+            <div key={chapter.id}>
+            <Typography.Title className='mb-4 mt-4' level={5} >{ _.capitalize(chapter.name)}</Typography.Title>
+            <List
+                size="large"
+                //header={<div>Liste des questions associées</div>}
+                bordered
+                dataSource={questions}
+                renderItem={(item: IBookQuestion, index) => {
+
+
+
+                    return (
+                        <List.Item>
+                            <Input value={item.questionTitle} onChange={(e) => onExistingQuestionChange("questionTitle", e.target.value, findIndex(item) )} />
+
+                            <Select
+                            dropdownStyle={{width: 200}}
+                                onChange={(value:string) => {   onExistingQuestionChange("chapterId", value, findIndex(item))  }}
+                                value={item.chapterId}
+                                style={{ width: 90 }}
+                                options={props.chapters.map((i:IChapter) => {return{
+                                    label: i.name,
+                                    value: i.id
+                                }})}
+                            />
+                            <div className="flex-shrink-0 ">
+                                <Button
+                                    type="text"
+                                    icon={<ArrowUpOutlined />}
+                                    onClick={() => handleMoveUp( findIndex(item)  )}
+                                    disabled={index === 0}
+                                />
+                                <Button
+                                    type="text"
+                                    className='ant-btn-icon'
+                                    icon={<ArrowDownOutlined />}
+                                    onClick={() => handleMoveDown( findIndex(item) )}
+                                    disabled={index === questions.length - 1}
+                                />
+                                <Button
+                                    type="text"
+                                    icon={<DeleteOutlined />}
+                                    onClick={() => handleDelete(findIndex(item))}
+                                />
+                            </div>
+                        </List.Item>
+                    )
+                }}
+            />
+        </div>
+        )
+    }
+
     return (
         <>
 
             <div className="flex flex-column justify-between">
 
-                <div className='w-1/2'>
+                <div className='w-1/2 mr-4'>
                     <Typography.Title level={5} >Questions associées</Typography.Title>
                     <div>
-                    <Input onKeyDown={handleKeyDown} value={questionInputValue} onChange={onNewQuestionChange} />
+                    <Input onKeyDown={handleNewQuestionKeyDown} value={questionInputValue} onChange={onNewQuestionChange} />
                         <Button className='mt-4 mb-10' type="primary" onClick={handleAddQuestion}>
                             Ajouter une question
                         </Button>
                     </div>
                 </div>
 
-                <div className='w-1/2'>
+                <div className='w-1/2 ml-4'>
                     <Typography.Title level={5} >Chapitre(s)</Typography.Title>
                     <Input  value={themeInputValue} onChange={ (e) => setThemeInputValue(e.target.value)} />
                         <Button className='mt-4 mb-10' type="primary" onClick={handleAddTheme}>
-                            Ajouter un thème 
+                            Ajouter un chapitre 
                         </Button>
                 </div>
             </div>
 
-            {Object.keys(questionsByChapter).map((key: string) => {
+            {/* <pre>{JSON.stringify(props.chapters)}</pre> */}
 
-                const questions = questionsByChapter[key]
-                const chapter = props.chapters.find((c:IChapter) => c.id == key)
+            { questionsByChapter[NO_CHAPTER_SELECTED] &&
+                   renderChapter({
+                    index:0,
+                    name: "Sans chapitre"
+                   }, questionsByChapter[NO_CHAPTER_SELECTED]) 
+            }
+
+            {props.chapters.sort((a,b) => { return a.index - b.index } ).map((chapter: IChapter) => {
+                const questions = questionsByChapter[chapter.id]
                 const chapterName = chapter?.name ?? "pas de chapitre"
-                return (
-                    <>
-                        <Typography.Title className='mb-4 mt-4' level={5} >{ _.capitalize(chapterName)}</Typography.Title>
-                        <List
-                            size="large"
-                            //header={<div>Liste des questions associées</div>}
-                            bordered
-                            dataSource={questions}
-                            renderItem={(item: IBookQuestion, index) => {
-
-
-
-                                return (
-                                    <List.Item>
-                                        <Input value={item.questionTitle} onChange={(e) => onExistingQuestionChange("questionTitle", e.target.value, findIndex(item) )} />
-
-                                        <Select
-                                            onChange={(value:string) => {   onExistingQuestionChange("chapterId", value, findIndex(item))  }}
-                                            value={item.chapterId}
-                                            style={{ width: 120 }}
-                                            //onChange={handleChange}
-                                            options={props.chapters.map((i:IChapter) => {return{
-                                                label: i.name,
-                                                value: i.id
-                                            }})}
-                                        />
-                                        <div className="flex-shrink-0 ">
-                                            <Button
-                                                type="text"
-                                                icon={<ArrowUpOutlined />}
-                                                onClick={() => handleMoveUp( findIndex(item)  )}
-                                                disabled={index === 0}
-                                            />
-                                            <Button
-                                                type="text"
-                                                className='ant-btn-icon'
-                                                icon={<ArrowDownOutlined />}
-                                                onClick={() => handleMoveDown( findIndex(item) )}
-                                                disabled={index === questions.length - 1}
-                                            />
-                                            <Button
-                                                type="text"
-                                                icon={<DeleteOutlined />}
-                                                onClick={() => handleDelete(findIndex(item))}
-                                            />
-                                        </div>
-                                    </List.Item>
-                                )
-                            }}
-                        />
-                    </>
-                )
+                return renderChapter(chapter, questions)
             })
 
             }

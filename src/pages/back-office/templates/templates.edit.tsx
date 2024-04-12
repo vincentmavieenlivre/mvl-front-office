@@ -91,7 +91,7 @@ export const TemplateEdit = () => {
             }
 
             // 3) always save order
-            await templateManager.upsertTemplate(questions, currentTemplate.coverUrl)
+            await templateManager.upsertTemplate(questions, currentTemplate.coverUrl, chapters)
         })
     }
 
@@ -120,7 +120,7 @@ export const TemplateEdit = () => {
             </Card>
             <Card>
                 <QuestionCreator
-                    onChapterAdded={(n) => { setChapters([...chapters, n]); console.log(n) }}
+                    onChapterAdded={(n) => { setChapters([...chapters, {...n, index: chapters.length + 1}]); console.log(n) }}
                     onToDelete={setToDeleteQuestionIds} onListChange={setQuestions}
                     chapters={chapters ?? []}
                     questions={questions}
