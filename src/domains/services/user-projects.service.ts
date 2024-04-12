@@ -1,7 +1,7 @@
 import { db } from "@app/init/firebase"
 import { BookTemplateManager } from "@app/manager/backoffice/book-template.manager"
 import { IBookQuestion } from "@app/modeles/database/book/book-question"
-import { IBookTemplate, IChapter, IChapterQuestions } from "@app/modeles/database/book/book-template"
+import { IBookTemplate, IChapter, IChapterTree } from "@app/modeles/database/book/book-template"
 import { UserOwner } from "@app/modeles/database/embedded/data-owner"
 import { Project } from "@app/modeles/database/project"
 import { ERoles } from "@app/modeles/roles"
@@ -23,8 +23,8 @@ export class UserProjectsService {
 
 
 
-    getQuestionsByChapters(sortedQuestions: IBookQuestion[]): IChapterQuestions[] {
-        let chapters: IChapterQuestions[] = []
+    getQuestionsByChapters(sortedQuestions: IBookQuestion[]): IChapterTree[] {
+        let chapters: IChapterTree[] = []
 
         if (this.loadedProject?.chapters && this.loadedProject?.chapters.length > 0) {
             this.loadedProject?.chapters.forEach((c: IChapter) => {
@@ -33,7 +33,7 @@ export class UserProjectsService {
                     chapters.push({
                         ...c,
                         orderedQuestions: questions
-                    } as IChapterQuestions)
+                    } as IChapterTree)
                 }
             })
         }

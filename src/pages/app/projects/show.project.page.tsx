@@ -11,10 +11,12 @@ import { loadPdf, nestPdf, openInTab } from '@app/utils/pdf/pdf.utils'
 import { Badge, Button, Divider, FloatButton, List } from 'antd'
 import { httpsCallable } from 'firebase/functions'
 import React, { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import { TypeAnimation } from 'react-type-animation'
 import { Document, Page, Thumbnail } from 'react-pdf';
-import { IChapterQuestions } from '@app/modeles/database/book/book-template'
+import { IChapterTree } from '@app/modeles/database/book/book-template'
+import { setChapterTree, setCurrentProject } from '@app/redux/current.project.slice'
+import { useDispatch } from 'react-redux'
 
 const mockData = [
     `Eh bien oui, je me souviens bien que j’étais dans un cours
@@ -71,9 +73,10 @@ type Props = {}
 
 export default function ShowProjectPage({ }: Props) {
     const params: any = useParams()
+    const dispatch = useDispatch();
 
-    const [project, setProject] = useState<Project>()
-    const [chapters, setChapters] = useState<IChapterQuestions[]>([])
+
+    const [chapters, setChapters] = useState<IChapterTree[]>([])
     const micGranted: boolean = useMicrophone()
 
     const [bookPdfUrl, setBookPdfUrl] = useState<string | undefined>(undefined)
@@ -89,13 +92,15 @@ export default function ShowProjectPage({ }: Props) {
         const pm = new UserProjectsService(params.id)
         const p = await pm.loadProject()
         if (p) {
-            const chapters: IChapterQuestions[] = pm.getQuestionsByChapters(await pm.loadQuestions())
+            let questions = await pm.loadQuestions()
+            const chapters: IChapterTree[] = pm.getQuestionsByChapters(questions)
 
             if (chapters.length > 0) {
                 setChapters(chapters)
             }
-            console.log("question length", chapters)
-            setProject(p)
+            p.questions = questions
+            dispatch(setCurrentProject(p))
+            dispatch(setChapterTree(chapters))
         }
     }
 
@@ -122,10 +127,11 @@ export default function ShowProjectPage({ }: Props) {
 
     const renderQuestion = (q: IBookQuestion) => {
         return (
-            <div className='mt-4 ripple bg-sky-50 rounded-xl p-2 text-sky-950 flex flex-row items-center'>
+
+            <Link to={`/app/projects/${params.id}/questions/${q.id}`} key={q.id} className='mt-4  ripple-bg-sky-50 rounded-xl p-2 text-sky-950 flex flex-row items-center'>
                 <div className='text-sm'>{q.questionTitle}</div>
                 <RightCircleOutlined className='text-sky-600 px-4' />
-            </div>
+            </Link>
         )
     }
 
@@ -134,9 +140,9 @@ export default function ShowProjectPage({ }: Props) {
         return (
 
             <div className='mt-4'>
-                {chapters.map((c: IChapterQuestions, index: number) => {
+                {chapters.map((c: IChapterTree, index: number) => {
                     return (
-                        <div className="collapse collapse-arrow bg-sky-100 mt-4">
+                        <div key={c.id} className="collapse collapse-arrow bg-sky-100 mt-4">
                             <input type="checkbox" name={"test"} />
                             <div className="collapse-title text-xl font-medium">
                                 {c.name}

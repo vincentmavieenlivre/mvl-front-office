@@ -5,15 +5,25 @@ export default {
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    extend: {},
+    ripple: theme => ({
+      colors: theme('colors'),
+      darken: 0.05
+  }),
   },
+
 
   daisyui: {
-    themes: ["light", "dark", "cupcake"],
+    themes: [
+      {
+        mytheme: {
+          "primary": "#38bdf8",
+        },
+      },
+   
+    ],
   },
 
 
-
-  plugins: [require("daisyui")],
+  plugins: [require("daisyui"), require('tailwindcss-ripple')()],
 }
 

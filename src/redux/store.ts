@@ -1,9 +1,12 @@
 import { configureStore } from '@reduxjs/toolkit'
 import userReducer from './auth.slice'
 
+import currentProjectReducer from './current.project.slice'
+
 export const store = configureStore({
     reducer: {
         user: userReducer,
+        currentProject: currentProjectReducer
     },
     middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware({ // because we serialize User class in store

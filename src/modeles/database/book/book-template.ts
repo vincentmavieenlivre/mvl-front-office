@@ -20,6 +20,6 @@ export interface IBookTemplate extends IQuestionsContainer {
 }
 
 
-export interface IChapterQuestions extends IChapter {
+export interface IChapterTree extends IChapter {
     orderedQuestions?: IBookQuestion[] // stored in sub collection
 }
