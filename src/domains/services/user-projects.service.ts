@@ -1,7 +1,7 @@
 import { db } from "@app/init/firebase"
 import { BookTemplateManager } from "@app/manager/backoffice/book-template.manager"
 import { IBookQuestion } from "@app/modeles/database/book/book-question"
-import { IBookTemplate, IChapter } from "@app/modeles/database/book/book-template"
+import { IBookTemplate, IChapter, IChapterQuestions } from "@app/modeles/database/book/book-template"
 import { UserOwner } from "@app/modeles/database/embedded/data-owner"
 import { Project } from "@app/modeles/database/project"
 import { ERoles } from "@app/modeles/roles"
@@ -15,9 +15,30 @@ import _ from 'lodash';
 export class UserProjectsService {
 
     private loadedProject: Project | undefined = undefined;
+    private questons: IBookQuestion[] = []
 
     constructor(private projectId: string) {
 
+    }
+
+
+
+    getQuestionsByChapters(sortedQuestions: IBookQuestion[]): IChapterQuestions[] {
+        let chapters: IChapterQuestions[] = []
+
+        if (this.loadedProject?.chapters && this.loadedProject?.chapters.length > 0) {
+            this.loadedProject?.chapters.forEach((c: IChapter) => {
+                let questions = sortedQuestions.filter((q: IBookQuestion) => q.chapterId === c.id)
+                if (questions) {
+                    chapters.push({
+                        ...c,
+                        orderedQuestions: questions
+                    } as IChapterQuestions)
+                }
+            })
+        }
+        console.log("by chapters", chapters)
+        return chapters
     }
 
     async loadQuestions(): Promise<IBookQuestion[]> {
@@ -93,7 +114,7 @@ export class UserProjectsService {
         console.log("db", db, "collection", ECollections.PROJECTS, "userid", user.user?.uid)
         const projects: Project[] = await helper.queryData<Project>(db, ECollections.PROJECTS, ["owners.owner_ids", "array-contains-any", [user.user?.uid]])
 
-        console.log("[getUserProjects] num=", projects.length)
+        console.log("[getUserProjects] num=", projects)
 
         return projects
     }

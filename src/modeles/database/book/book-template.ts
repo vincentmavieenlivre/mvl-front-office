@@ -6,6 +6,7 @@ export interface IChapter {
     index: number
 }
 
+
 export interface IQuestionsContainer {
     questions?: IBookQuestion[] // stored in sub collection
     questionsOrder?: { index: number, id: string }[] // stored in container collection
@@ -16,4 +17,9 @@ export interface IBookTemplate extends IQuestionsContainer {
     id?: string;
     name: string; // mariage
     coverUrl?: string;
+}
+
+
+export interface IChapterQuestions extends IChapter {
+    orderedQuestions?: IBookQuestion[] // stored in sub collection
 }
