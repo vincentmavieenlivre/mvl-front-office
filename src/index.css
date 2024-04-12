@@ -2,8 +2,14 @@
 @tailwind components;
 @tailwind utilities;
 
+.ant-btn-primary:not([disabled]) {
+  @apply !bg-purple-700;
 
+}
+.ant-btn-primary:not([disabled]):hover {
+  @apply !bg-purple-500;
 
+}
 
 .refine-create-button,
 .refine-save-button,
