@@ -1,12 +1,21 @@
 .record-container{
-    position: absolute;
+    position: fixed;
     bottom: 50px;
     width: 100%;
 }
 
+.record-btn-container{
+    left: 0;
+    right: 0;
+    margin: auto;
+    width: 50%;
+    bottom:0px;
+}
+
 .record-bar{
     height: 50px;
-    position: absolute;
+    position: fixed;
     width: 100%;
-    bottom: 0px;;
+    bottom: 0px;
+    left:0px;
 }

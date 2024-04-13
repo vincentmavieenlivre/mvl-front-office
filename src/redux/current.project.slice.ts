@@ -36,13 +36,24 @@ export const authSlice = createSlice({
 // Action creators are generated for each case reducer function
 export const { setCurrentProject, setChapterTree } = authSlice.actions;
 
-export const selectQuestionPosition = (state: RootState, chapterId: string, questionId: string): [number, number] => {
+export const selectQuestionPosition = (state: RootState, chapterId: string, questionId: string): [number, number, string | undefined, string | undefined] => {
     let chapter = state.currentProject.chapterTree?.find((d: IChapterTree) => d.id === chapterId)
-    debugger
     if (chapter) {
         let indexOf = chapter.orderedQuestions?.findIndex((d) => d.id === questionId)
         if (indexOf !== -1 && indexOf !== undefined && chapter.orderedQuestions) {
-            return [indexOf + 1, chapter.orderedQuestions?.length]
+
+            let nextId: string | undefined;
+            let prevId: string | undefined
+            if (indexOf + 1 < chapter.orderedQuestions?.length) {
+                nextId = chapter.orderedQuestions[indexOf + 1].id
+            }
+
+            if (indexOf > 0) {
+                prevId = chapter.orderedQuestions[indexOf + -1].id
+            }
+
+
+            return [indexOf + 1, chapter.orderedQuestions?.length, prevId, nextId]
         }
     }
 
@@ -52,7 +63,6 @@ export const selectQuestionPosition = (state: RootState, chapterId: string, ques
 
 export const selectQuestion = (state: RootState, questionId: string): [IBookQuestion, IChapter] => {
     let res = state.currentProject.project?.questions?.find((q: IBookQuestion) => q.id === questionId)
-    debugger
     if (res) {
         let chapter = state.currentProject.project?.chapters.find((c: IChapter) => c.id === res?.chapterId)
         if (chapter) {
