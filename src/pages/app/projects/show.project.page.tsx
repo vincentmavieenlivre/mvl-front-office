@@ -17,6 +17,8 @@ import { Document, Page, Thumbnail } from 'react-pdf';
 import { IChapterTree } from '@app/modeles/database/book/book-template'
 import { setChapterTree, setCurrentProject } from '@app/redux/current.project.slice'
 import { useDispatch } from 'react-redux'
+import { FaHome } from 'react-icons/fa'
+import { FcPrevious } from 'react-icons/fc'
 
 const mockData = [
     `Eh bien oui, je me souviens bien que j’étais dans un cours
@@ -205,6 +207,12 @@ export default function ShowProjectPage({ }: Props) {
 
     return (
         <div className='m-5'>
+
+            <Link className='flex gap-4 flex-row items-center text-sky-900' to={'/app'}>
+                <FcPrevious size={'1.5em'} className='text-sky-900'></FcPrevious>
+                <span className='text-sky-900'>Mes livres</span>
+            </Link>
+
             <h2 className=' mt-12 text-sky-950  text-xl font-bold'>De quoi aimeriez-vous parler pour commencer ?</h2>
 
             <div className='text-sky-950 mt-4'>

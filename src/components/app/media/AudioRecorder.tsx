@@ -5,6 +5,7 @@ import { IBookQuestion } from "@app/modeles/database/book/book-question";
 import { Button, Spin } from "antd";
 import { httpsCallable } from "firebase/functions";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import React, { useImperativeHandle } from "react";
 import { useState, useRef, Ref, useEffect } from "react";
 import { TypeAnimation } from "react-type-animation";
 
@@ -16,13 +17,25 @@ type Props = {
 	mockedText?: string;
 }
 
-const AudioRecorder = (props: Props) => {
+enum ERecordingStatus {
+	INACTIVE = "INACTIVE",
+	RECORDING = "RECORDING"
+}
+
+export interface IActionRecordRef {
+	startRecording: () => void;
+	stopRecording: () => void;
+}
+
+const AudioRecorder = React.forwardRef<IActionRecordRef, Props>((props: Props, ref) => {
+
+
 
 	const [permission, setPermission] = useState(false);
 
 	const mediaRecorder = useRef<any>(null);
 
-	const [recordingStatus, setRecordingStatus] = useState("inactive");
+	const [recordingStatus, setRecordingStatus] = useState<ERecordingStatus>(ERecordingStatus.INACTIVE);
 
 	const [stream, setStream] = useState<MediaStream | undefined>(undefined);
 
@@ -34,8 +47,30 @@ const AudioRecorder = (props: Props) => {
 
 	const [processing, setProcessing] = useState<boolean>(false)
 
+	useImperativeHandle(ref, () => {
+		return {
+			startRecording() {
+				setRecordingStatus(ERecordingStatus.RECORDING)
+				// console.log("startRecording", recordingStatus)
+			},
+			stopRecording() {
+				// console.log("stopRecording", recordingStatus, " <----------- SOULD BE RECORDING")
+				if (recordingStatus == ERecordingStatus.RECORDING) {
+					stopRecording()
+				}
+			},
+		};
+	}, [recordingStatus, stream, audioChunks]);
 
 
+	useEffect(() => {
+		// console.log("------------------ recording status", recordingStatus)
+	}, [recordingStatus])
+
+	useEffect(() => {
+		/* 	getStream() */
+		getMicrophonePermission()
+	}, [])
 
 	const transcriptAudioToText = async (audioUrl: string) => {
 		if (functions) {
@@ -47,20 +82,21 @@ const AudioRecorder = (props: Props) => {
 	}
 
 	const getMicrophonePermission = async () => {
-		/* 		if ("MediaRecorder" in window) {
-					try {
-						const mediaStream = await navigator.mediaDevices.getUserMedia({
-							audio: true,
-							video: false,
-						});
-						setPermission(true);
-						setStream(mediaStream);
-					} catch (err) {
-						alert(err.message);
-					}
-				} else {
-					alert("The MediaRecorder API is not supported in your browser.");
-				} */
+		if ("MediaRecorder" in window) {
+			try {
+				const mediaStream = await navigator.mediaDevices.getUserMedia({
+					audio: true,
+					video: false,
+				});
+				setPermission(true);
+				setStream(mediaStream);
+
+			} catch (err) {
+				alert(err.message);
+			}
+		} else {
+			alert("The MediaRecorder API is not supported in your browser.");
+		}
 	};
 
 	const getStream = async () => {
@@ -68,22 +104,32 @@ const AudioRecorder = (props: Props) => {
 			audio: true,
 			video: false,
 		});
+		console.log("------- stream is ready")
 		setStream(mediaStream);
 	}
 
+
 	useEffect(() => {
-		getStream()
-	}, [])
+
+		// console.log("<audiorecorder> RECORDING_STATUS", recordingStatus)
+
+		if (recordingStatus == ERecordingStatus.RECORDING) {
+			console.log("use effect getStream => sould start recording", stream)
+			startRecording()
+		}
+	}, [recordingStatus])
+
 
 
 
 	const startRecording = async () => {
+		console.log("<Audiorecorder> startRecording")
 
 		if (!stream) {
+			console.error("stream is null")
 			return
 		}
 
-		setRecordingStatus("recording");
 		const media = new MediaRecorder(stream, { mimeType: audioMimeType });
 
 		mediaRecorder.current = media;
@@ -92,7 +138,7 @@ const AudioRecorder = (props: Props) => {
 		const localAudioChunks: any = [];
 
 		mediaRecorder.current.ondataavailable = (event: any) => {
-
+			// console.log("data chunck", event.size)
 			if (typeof event.data === "undefined") return;
 			if (event.data.size === 0) return;
 			localAudioChunks.push(event.data);
@@ -102,7 +148,7 @@ const AudioRecorder = (props: Props) => {
 	};
 
 
-	const doProcess = async (downloadUrl) => {
+	const transcribeAudioToText = async (downloadUrl) => {
 		console.log("go transcript cloud function")
 		const data = await transcriptAudioToText(downloadUrl)
 		console.log("transcript res", data?.data.text)
@@ -110,24 +156,35 @@ const AudioRecorder = (props: Props) => {
 		setProcessing(false)
 	}
 
+
+	// upload
+	// transcribe
 	const stopRecording = () => {
-		setRecordingStatus("inactive");
+		// console.log("<Audiorecorder> stopRecording")
+
+
 		mediaRecorder.current.stop();
 
 		mediaRecorder.current.onstop = async () => {
+			// console.log("<Audiorecorder> event mediarecorder onStopRecording ")
 
 			try {
 				setProcessing(true)
 				const audioBlob = new Blob(audioChunks, { type: audioMimeType });
+				// console.log("audio blob", audioBlob)
 				const audioUrl = URL.createObjectURL(audioBlob);
-				console.log("audioUrl", audioUrl)
+				// console.log("--------------------- audioUrl for record", audioUrl)
 				setAudio(audioUrl);
 				setAudioChunks([]);
-				const downloadUrl: string = await uploadAudioOnStorage(audioBlob)
-				if (downloadUrl) {
-					doProcess(downloadUrl)
-				}
+				setProcessing(false)
+				setRecordingStatus(ERecordingStatus.INACTIVE)
 
+				// console.warn("do not upload on firestore")
+				/* 	const downloadUrl: string = await uploadAudioOnStorage(audioBlob)
+					if (downloadUrl) {
+						transcribeAudioToText(downloadUrl)
+					}
+	 */
 			} catch (error) {
 				setProcessing(false)
 			}
@@ -143,7 +200,8 @@ const AudioRecorder = (props: Props) => {
 			contentType: audioMimeType
 		}
 
-		const audioStorageRef = ref(storage, `projects/${props.projectId}/questions/${props.question}/answer.webm`);
+		// console.log("<Audiorecorder> uploadAudioOnStorage")
+		const audioStorageRef = ref(storage, `projects/${props.projectId}/questions/${props.question.id}/answer.webm`);
 
 		try {
 			console.log("custom upload go for", audioFileBlob)
@@ -165,7 +223,7 @@ const AudioRecorder = (props: Props) => {
 	};
 
 	return (
-		<div>
+		<div className="flex justify-center">
 
 			{/* <div>
 				{props.question.audioUrl &&
@@ -181,14 +239,15 @@ const AudioRecorder = (props: Props) => {
 							Get Microphone
 						</button>
 					) : null} */}
-					{recordingStatus === "inactive" ? (
+
+					{/* 	{recordingStatus === ERecordingStatus.INACTIVE ? (
 						<Button onClick={startRecording} className="m-4" icon={<SoundOutlined />}>Enregistrer votre réponse</Button>
 
 					) : null}
-					{recordingStatus === "recording" ? (
+					{recordingStatus === ERecordingStatus.RECORDING ? (
 						<Button onClick={stopRecording} className="m-4" icon={<SoundOutlined />}>Terminer l'enregistrement</Button>
 
-					) : null}
+					) : null} */}
 
 					{processing == true &&
 						<Spin size="small" />
@@ -215,9 +274,9 @@ const AudioRecorder = (props: Props) => {
 					</div>
 				}
 
-				{props.question.audioUrl || audio ? (
-					<div className="audio-player mt-4">
-						<audio src={props.question.audioUrl || audio} controls >
+				{audio ? (
+					<div className="audio-player mt-4 ">
+						<audio src={audio} controls >
 
 
 						</audio>
@@ -231,6 +290,6 @@ const AudioRecorder = (props: Props) => {
 
 		</div>
 	);
-};
+});
 
 export default AudioRecorder;

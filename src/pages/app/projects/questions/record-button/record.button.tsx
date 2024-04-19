@@ -1,4 +1,5 @@
 import React from 'react'
+import { FaStopCircle } from 'react-icons/fa'
 import { FaMicrophoneLines } from 'react-icons/fa6'
 
 export enum IActionRecordStates {
@@ -10,8 +11,8 @@ export enum IActionRecordStates {
 }
 
 const help: any = {
-    "WAIT_FOR_RECORD": { helpStr: "Cliquez pour enregistrer", icon: <FaMicrophoneLines size={"2.5em"}></FaMicrophoneLines> },
-    "RECORDING": { helpStr: "Entrain d'enregistrer" },
+    "WAIT_FOR_RECORD": { helpStr: "Cliquez pour enregistrer", icon: <FaMicrophoneLines size={"2.5em"}></FaMicrophoneLines>, classBgColor: "bg-sky-500" },
+    "RECORDING": { helpStr: "Cliquez pour stopper", icon: <FaStopCircle size={"2.5em"} ></FaStopCircle>, classBgColor: "bg-red-500" },
     "UPLOADING": { helpStr: "Sauvegarde de l'audio" },
     "TRANSCRIBING": { helpStr: "Transcription en texte" },
     "END": { helpStr: "Terminé!" }
@@ -22,7 +23,7 @@ type Props = {
     onClick: () => void;
 }
 
-export default function RecordButton({ state = IActionRecordStates.WAIT_FOR_RECORD }: Props) {
+export default function RecordButton({ state = IActionRecordStates.WAIT_FOR_RECORD, onClick }: Props) {
     return (
         <React.Fragment>
             <div className='record-container '>
@@ -35,7 +36,7 @@ export default function RecordButton({ state = IActionRecordStates.WAIT_FOR_RECO
             </div>
 
             <div className='flex flex-row justify-center fixed record-btn-container'>
-                <button className="btn bottom-[5em]  w-[7em] h-[7em] rounded-full bg-sky-500 text-white flex items-center justify-center absolute  z-50  ">
+                <button onClick={onClick} className={`btn bottom-[5em]  w-[7em] h-[7em] rounded-full ${help[state].classBgColor} text-white flex items-center justify-center absolute  z-50  `}>
                     {help[state].icon}
                 </button>
                 <div className="record-bar bg-sky-200 fixed">
