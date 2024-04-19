@@ -7,6 +7,7 @@ import { Project } from "@app/modeles/database/project";
 import { IChapter, IChapterTree } from "@app/modeles/database/book/book-template";
 import { IBookQuestion } from "@app/modeles/database/book/book-question";
 import { IProduct } from "@app/modeles/interfaces/refine.test";
+import { Root } from "react-dom/client";
 
 export interface ProjectStore {
     project?: Project
@@ -35,6 +36,21 @@ export const authSlice = createSlice({
 
 // Action creators are generated for each case reducer function
 export const { setCurrentProject, setChapterTree } = authSlice.actions;
+
+export const selectChapters = (state: RootState): IChapterTree[] => {
+    if (state.currentProject.chapterTree) {
+        return state.currentProject.chapterTree
+    }
+    throw 'no current chapters selected'
+}
+
+
+export const selectProject = (state: RootState): Project => {
+    if (state.currentProject.project) {
+        return state.currentProject.project
+    }
+    throw 'no current project selected'
+}
 
 export const selectQuestionPosition = (state: RootState, chapterId: string, questionId: string): [number, number, string | undefined, string | undefined] => {
     let chapter = state.currentProject.chapterTree?.find((d: IChapterTree) => d.id === chapterId)

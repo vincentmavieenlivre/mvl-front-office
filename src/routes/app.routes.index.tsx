@@ -14,6 +14,7 @@ import { Project } from "@app/modeles/database/project";
 import ShowProjectPage from "@app/pages/app/projects/show.project.page";
 import DashboardLayout from "@app/pages/layout/dashboard.layout";
 import ShowQuestion from "@app/pages/app/projects/questions/show.question";
+import SummaryDrawer from "@app/pages/layout/drawer/summary.layout";
 
 export const APP_ROUTES = {
   NEW_PROJECT: "/app/projects/new",
@@ -39,7 +40,7 @@ export const AppRoutes = (props: RoutesProps) => {
             {/* PROJECTS */}
             <Route path={APP_ROUTES.NEW_PROJECT} element={<NewProject />} />
             <Route path={APP_ROUTES.SHOW_PROJECT} element={<ShowProjectPage />} />
-            <Route path={APP_ROUTES.SHOW_PROJECT_QUESTION} element={<ShowQuestion />} />
+            <Route path={APP_ROUTES.SHOW_PROJECT_QUESTION} element={<SummaryDrawer><ShowQuestion /></SummaryDrawer>} />
 
           </Route>
         </>

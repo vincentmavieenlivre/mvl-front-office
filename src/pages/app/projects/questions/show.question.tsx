@@ -2,12 +2,14 @@ import { selectQuestion, selectQuestionPosition } from '@app/redux/current.proje
 import { RootState } from '@app/redux/store'
 import React, { useEffect, useRef, useState } from 'react'
 import { useSelector } from 'react-redux'
-import { useNavigate, useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import QuestionNavigation from './question-navigation/question.navigation'
 import "./record-container.scss"
 import { FaMicrophoneLines } from "react-icons/fa6";
 import RecordButton, { IActionRecordStates } from './record-button/record.button'
 import AudioRecorder, { IActionRecordRef } from '@app/components/app/media/AudioRecorder'
+import { IBookQuestion } from '@app/modeles/database/book/book-question'
+import { RightCircleOutlined } from '@ant-design/icons'
 
 type Props = {}
 
@@ -58,6 +60,16 @@ export default function ShowQuestion({ }: Props) {
     }, [entries])
 
 
+    const renderQuestion = (q: IBookQuestion) => {
+        return (
+
+            <Link to={`/app/projects/${params.id}/questions/${q.id}`} key={q.id} className='mt-4  ripple-bg-sky-50 rounded-xl p-2 text-sky-950 flex flex-row items-center'>
+                <div className='text-sm'>{q.questionTitle}</div>
+                <RightCircleOutlined className='text-sky-600 px-4' />
+            </Link>
+        )
+    }
+
     const onRecordButtonClicked = () => {
 
         console.log("onRecordButtonClicked STATE=", actionState)
@@ -86,6 +98,7 @@ export default function ShowQuestion({ }: Props) {
             <div className='m-5 mt-7 text-sky-950'>
                 {question.questionTitle}
             </div>
+
 
 
             <div style={{ marginBottom: 220 }}>

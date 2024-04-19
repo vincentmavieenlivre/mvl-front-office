@@ -34,12 +34,9 @@ export default function QuestionNavigation(props: Props) {
                     </button>
                 }
 
-                <Link to={`/app/projects/${props.projectId}`}>
+                <label htmlFor="my-drawer" className="btn border-transparent bg-sky-50 b-sky-900 text-sky-600 uppercase shadow-sky-200">Sommaire</label>
 
-                    <button className='btn bg-sky-50 text-sky-100 b-sky-900 shadow-sky-200'>
-                        <div className='uppercase text-sky-600'>sommaire</div>
-                    </button>
-                </Link>
+
                 {
                     props.nextId &&
                     <Link to={`/app/projects/${props.projectId}/questions/${props.nextId}`}>
