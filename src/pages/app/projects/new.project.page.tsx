@@ -73,11 +73,11 @@ export default function NewProject({ }: Props) {
                             src={t.coverUrl}
                         />
                     }
-                 /*    actions={[
-                        <SettingOutlined key="setting" />,
-                        <EditOutlined key="edit" />,
-                        <EllipsisOutlined key="ellipsis" />,
-                    ]} */
+                /*    actions={[
+                       <SettingOutlined key="setting" />,
+                       <EditOutlined key="edit" />,
+                       <EllipsisOutlined key="ellipsis" />,
+                   ]} */
                 >
                     <Meta
                         title={t.name}
