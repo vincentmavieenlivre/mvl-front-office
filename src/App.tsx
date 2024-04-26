@@ -74,16 +74,17 @@ function App() {
 
   useEffect(() => {
 
+    if (tokenResult && tokenResult?.claims?.role) {
 
-
-    if ([ERoles.SUPER_ADMIN, ERoles.BIOGRAPHER].includes(tokenResult?.claims.role)) {
+      if ([ERoles.SUPER_ADMIN, ERoles.BIOGRAPHER].includes((tokenResult?.claims as any).role)) {
 /*       console.info("redirect to backoffice")
       navigate('/admin')
  */    }
 
-    if ([ERoles.USER, ERoles.FAMILY].includes(tokenResult?.claims.role)) {
-      console.info("redirect to app")
-     // navigate('/app')
+      if ([ERoles.USER, ERoles.FAMILY].includes((tokenResult?.claims as any).role)) {
+        console.info("redirect to app")
+        // navigate('/app')
+      }
     }
 
     if (!tokenResult) {

@@ -8,6 +8,9 @@ import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import React, { useImperativeHandle } from "react";
 import { useState, useRef, Ref, useEffect } from "react";
 import { TypeAnimation } from "react-type-animation";
+import { TbTrashXFilled } from "react-icons/tb";
+import Player, { playerIconSize } from "./player";
+import { IActionRecordStates } from "@app/pages/app/projects/questions/record-button/record.button";
 
 const audioMimeType = "audio/webm";
 
@@ -15,6 +18,9 @@ type Props = {
 	question: IBookQuestion;
 	projectId: string;
 	mockedText?: string;
+	onNewAudioRecorded: (audio: any) => void
+	onDelete: () => void;
+	state: IActionRecordStates
 }
 
 enum ERecordingStatus {
@@ -25,6 +31,7 @@ enum ERecordingStatus {
 export interface IActionRecordRef {
 	startRecording: () => void;
 	stopRecording: () => void;
+	getFinished: () => boolean
 }
 
 const AudioRecorder = React.forwardRef<IActionRecordRef, Props>((props: Props, ref) => {
@@ -47,6 +54,17 @@ const AudioRecorder = React.forwardRef<IActionRecordRef, Props>((props: Props, r
 
 	const [processing, setProcessing] = useState<boolean>(false)
 
+	const [finish, setFinish] = useState(false)
+
+	useEffect(() => {
+		if (audio) {
+			props.onNewAudioRecorded(audio)
+			setFinish(true)
+		}
+
+	}, [audio])
+
+
 	useImperativeHandle(ref, () => {
 		return {
 			startRecording() {
@@ -59,8 +77,11 @@ const AudioRecorder = React.forwardRef<IActionRecordRef, Props>((props: Props, r
 					stopRecording()
 				}
 			},
+			getFinished() {
+				return finish
+			}
 		};
-	}, [recordingStatus, stream, audioChunks]);
+	}, [recordingStatus, stream, audioChunks, finish]);
 
 
 	useEffect(() => {
@@ -223,7 +244,7 @@ const AudioRecorder = React.forwardRef<IActionRecordRef, Props>((props: Props, r
 	};
 
 	return (
-		<div className="flex justify-center">
+		<div className="">
 
 			{/* <div>
 				{props.question.audioUrl &&
@@ -231,64 +252,45 @@ const AudioRecorder = React.forwardRef<IActionRecordRef, Props>((props: Props, r
 				}
 			</div>
 			 */}
-			<main>
 
-				<div className="audio-controls flex flex-row items-center">
-					{/* 	{!permission ? (
-						<button onClick={getMicrophonePermission} type="button">
-							Get Microphone
-						</button>
-					) : null} */}
 
-					{/* 	{recordingStatus === ERecordingStatus.INACTIVE ? (
-						<Button onClick={startRecording} className="m-4" icon={<SoundOutlined />}>Enregistrer votre réponse</Button>
 
-					) : null}
-					{recordingStatus === ERecordingStatus.RECORDING ? (
-						<Button onClick={stopRecording} className="m-4" icon={<SoundOutlined />}>Terminer l'enregistrement</Button>
 
-					) : null} */}
 
-					{processing == true &&
-						<Spin size="small" />
-					}
 
-					<div onClick={() => setTranscribedText(props.mockedText)} style={{ width: 100, height: 20, cursor: "pointer" }}></div>
+			{transcribedText &&
+				<div>
+
+					<TypeAnimation
+						sequence={[
+							transcribedText
+						]}
+						wrapper="span"
+						speed={75}
+						style={{ fontSize: '2em', display: 'inline-block' }}
+
+					/>
 				</div>
+			}
 
+			{audio ? (
+				<div className="audio-player mt-4 flex flex-row items-center justify-around ">
+					{/* <audio  src={audio}  ></audio> */}
+					<button disabled={props.state == IActionRecordStates.RECORDING} className="btn btn-circle border-none">
+						<Player url={audio}></Player>
+					</button>
+					<button disabled={props.state == IActionRecordStates.RECORDING} className="btn btn-circle border-none">
 
-
-
-				{transcribedText &&
-					<div>
-
-						<TypeAnimation
-							sequence={[
-								transcribedText
-							]}
-							wrapper="span"
-							speed={75}
-							style={{ fontSize: '2em', display: 'inline-block' }}
-
-						/>
-					</div>
-				}
-
-				{audio ? (
-					<div className="audio-player mt-4 ">
-						<audio src={audio} controls >
-
-
-						</audio>
-						{/* <a download href={audio}>
+						<TbTrashXFilled onClick={() => props.onDelete()} size={playerIconSize} color="red"></TbTrashXFilled>
+					</button>
+					{/* <a download href={audio}>
 							Download Recording
 						</a> */}
-					</div>
-				) : null}
-			</main>
-
-
+				</div>
+			) : null}
 		</div>
+
+
 	);
 });
 

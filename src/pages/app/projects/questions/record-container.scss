@@ -1,6 +1,12 @@
+$height: 100px;
+
+.record-btn{
+    bottom: calc($height + 0.75em);
+}
+
 .record-container{
     position: fixed;
-    bottom: 50px;
+    bottom: $height;
     width: 100%;
 }
 
@@ -13,7 +19,7 @@
 }
 
 .record-bar{
-    height: 50px;
+    height: $height;
     position: fixed;
     width: 100%;
     bottom: 0px;

@@ -1,4 +1,5 @@
 import { LeftCircleOutlined, RightCircleOutlined, RightOutlined } from '@ant-design/icons';
+import ButtonChapter from '@app/components/app/ui/buttons/button-chapter';
 import React from 'react'
 import { Link } from 'react-router-dom';
 
@@ -21,7 +22,7 @@ export default function QuestionNavigation(props: Props) {
         <div className='mt-4 gap-3 flex flex-col ml-5 mr-5 items-center'>
             <div className='text-gray-500 uppercase text-sm'>nombre de réponses {props.currentIndex}/{props.lastIndex}</div>
             <progress className="progress progress-primary w-80 bg-sky-100" value="10" max="100"></progress>
-            <button className='btn btn-block bg-sky-300 text-sky-50 text-1xl w-80 rounded-3xl'>{props.chapterStr}</button>
+            <ButtonChapter >{props.chapterStr}</ButtonChapter>
 
             <div className="w-full !important flex flex-row justify-between mt-4 items-center">
 
