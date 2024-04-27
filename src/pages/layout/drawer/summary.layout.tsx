@@ -6,6 +6,7 @@ import { Project } from '@app/modeles/database/project';
 import { selectChapters, selectProject } from '@app/redux/current.project.slice';
 import { RootState } from '@app/redux/store';
 import React, { useRef } from 'react'
+import { FaHome } from 'react-icons/fa';
 import { useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 
@@ -29,12 +30,12 @@ export default function SummaryDrawer({ children }: Props) {
     })
 
 
-    const renderQuestion = (q: IBookQuestion) => {
+    const renderQuestion = (q: IBookQuestion, index) => {
 
 
 
         return (
-            <label
+            <label id={q.id + index}
                 onClick={() => {
                     nav(`/app/projects/${project.id}/questions/${q.id}`)
                 }}
@@ -60,7 +61,7 @@ export default function SummaryDrawer({ children }: Props) {
                                 {c.name}
                             </div>
                             <div className="collapse-content">
-                                {c.orderedQuestions?.map((q: IBookQuestion) => renderQuestion(q))}
+                                {c.orderedQuestions?.map((q: IBookQuestion, index) => renderQuestion(q, index))}
                             </div>
                         </div>
 
@@ -81,8 +82,15 @@ export default function SummaryDrawer({ children }: Props) {
                 <label htmlFor="my-drawer" aria-label="close sidebar" className="drawer-overlay"></label>
                 <div className='menu p-4 w-80 min-h-full bg-sky-50 text-base-content'>
 
-                    <h2 className=' mt-4 text-sky-950  text-3xl font-bold'>Sommaire</h2>
+                    <div className='mt-4 flex flex-row items-center justify-between'>
+                        <h2 className='  text-sky-950  text-3xl font-bold'>Sommaire</h2>
+                        <Link to={`/app/`}>
 
+                            <button className="mr-4 btn btn-circle btn-outline border-sky-900">
+                                <FaHome className=' text-sky-900' size={22} />
+                            </button>
+                        </Link>
+                    </div>
                     <div className='text-sky-950 mt-4 text-lg'>
                         <p>Parcourez et choisissez parmi ces différents chapitres, les questions auxquelles vous souhaitez répondre.</p>
                     </div>

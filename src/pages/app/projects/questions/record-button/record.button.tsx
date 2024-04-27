@@ -1,5 +1,5 @@
 import ButtonChapter from '@app/components/app/ui/buttons/button-chapter'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { FaStopCircle } from 'react-icons/fa'
 import { FaMicrophoneLines } from 'react-icons/fa6'
 import Lottie from 'react-lottie';
@@ -7,7 +7,8 @@ import recordAnimationData from '../../../../../assets/animations/recording-butt
 import uploadAnimationData from '../../../../../assets/animations/uploading.json'
 import transcribingAnimationData from '../../../../../assets/animations/transcribing.json'
 import { MdMenuBook } from 'react-icons/md';
-import './record.buttons.scss'
+import './record-button.scss'
+import { IEntry } from '../show.question';
 
 
 export enum IActionRecordStates {
@@ -21,7 +22,7 @@ export enum IActionRecordStates {
 const help: any = {
     "WAIT_FOR_RECORD": { helpStr: "Cliquez pour enregistrer", icon: <FaMicrophoneLines size={"2.5em"}></FaMicrophoneLines>, classBgColor: "bg-sky-500" },
     "RECORDING": { helpStr: "Cliquez pour stopper", icon: <FaStopCircle size={"2.5em"} ></FaStopCircle>, classBgColor: "bg-red-500" },
-    "UPLOADING": { helpStr: "Sauvegarde de l'audio" },
+    "UPLOADING": { helpStr: "Sauvegarde de l'audio", classBgColor: "bg-sky-500" },
     "TRANSCRIBING": { helpStr: "Transcription en texte", icon: <MdMenuBook size={"2.5em"} ></MdMenuBook>, classBgColor: "bg-sky-500" },
     "END": { helpStr: "Terminé!" }
 }
@@ -29,12 +30,19 @@ const help: any = {
 type Props = {
     state: IActionRecordStates;
     onClick: () => void;
+    entries: IEntry[];
 }
 
-export default function RecordButton({ state = IActionRecordStates.WAIT_FOR_RECORD, onClick }: Props) {
+export default function RecordButton({ entries, state = IActionRecordStates.WAIT_FOR_RECORD, onClick }: Props) {
 
-    const [isStopped, setIsStopped] = useState(true)
-    const [isPaused, setIsPaused] = useState(false)
+    const [initialRenderDone, setInitialRenderDone] = useState(false)
+
+    useEffect(() => {
+        if (state == IActionRecordStates.TRANSCRIBING) {
+            setInitialRenderDone(true)
+
+        }
+    }, [state])
 
     const transcribingAnimationOptions = {
         loop: true,
@@ -63,6 +71,24 @@ export default function RecordButton({ state = IActionRecordStates.WAIT_FOR_RECO
           } */
     };
 
+    const getHelpStr = () => {
+
+        const inject = (str, size) => {
+            return (
+                <div className={`w-full ${size} text-center text-sky-500 font-bold m-auto`}>
+                    {str}
+                </div>
+            )
+        }
+
+
+        if (state == IActionRecordStates.WAIT_FOR_RECORD && entries.length > 0) {
+            return inject("Cliquez pour compléter votre réponse", 'text-lg')
+        } else {
+            return inject(help[state].helpStr, 'text-xl')
+        }
+    }
+
 
     return (
         <React.Fragment>
@@ -77,50 +103,57 @@ export default function RecordButton({ state = IActionRecordStates.WAIT_FOR_RECO
 
             <div className='flex flex-row justify-center fixed record-btn-container'>
                 {state == IActionRecordStates.WAIT_FOR_RECORD &&
-                    <button onClick={onClick} className={`btn record-btn  w-[7em] h-[7em] rounded-full ${help[state].classBgColor} text-white flex items-center justify-center absolute  z-50  `}>
+                    <button onClick={onClick} className={`btn record-btn  w-[7em] h-[7em] rounded-full 
+                     ${help[state].classBgColor} text-white flex items-center justify-center absolute  z-50 ${initialRenderDone ? 'box-to-circle' : 'no-animation'}   `}>
                         {help[state].icon}
                     </button>
                 }
 
                 {state == IActionRecordStates.TRANSCRIBING &&
-                    <div className={` record-btn  rounded-full flex items-center  ${help[state].classBgColor} justify-center absolute `}>
-                        <Lottie options={transcribingAnimationOptions}
-                            height={"7em"}
+                    <div style={{ borderRadius: 20 }} className={`
+                   
+                    record-btn flex flex-col w-1/2 flex items-center  ${help[state].classBgColor} justify-center absolute  `}>
+
+
+                        <Lottie isClickToPauseDisabled={true} options={transcribingAnimationOptions}
+                            height={"3em"}
                             width={"7em"}
-                            style={{ zIndex: 9000, backgroundColor: "rgb(14, 165, 233)", borderRadius: "3.5em" }}
+                            style={{ zIndex: 9000 }}
                         />
                     </div>
                 }
 
                 {state == IActionRecordStates.UPLOADING &&
-                    <div className={` record-btn  rounded-full flex items-center  ${help[state].classBgColor} justify-center absolute `}>
-                        <Lottie options={uploadAnimationOptions}
-                            height={"7em"}
-                            width={"7em"}
-                            style={{ zIndex: 9000, backgroundColor: "rgb(14, 165, 233)", borderRadius: "3.5em" }}
+                    <div style={{ /* width: "200px" */ borderRadius: 20 }} className={` record-btn  w-1/2 flex items-center 
+                     ${help[state].classBgColor} justify-center absolute circle-to-box `}>
+                        <Lottie isClickToPauseDisabled={true} options={uploadAnimationOptions}
+                            height={"3em"}
+                            width={"3em"}
+                            style={{ zIndex: 9000 }}
                         />
                     </div>
                 }
 
                 {state == IActionRecordStates.RECORDING &&
                     <div onClick={onClick} className=' record-btn  flex items-center justify-center absolute '>
-                        <Lottie options={recordAnimationOptions}
+                        <Lottie isClickToPauseDisabled={true} options={recordAnimationOptions}
                             height={"7em"}
                             width={"7em"}
                             style={{ zIndex: 9000 }}
                         />
                     </div>
                 }
+
+
+
                 <div className="record-bar bg-sky-200 fixed">
-                    <div className='w-full text-xl text-center text-sky-500 font-bold m-auto'>
-                        {help[state].helpStr}
-                    </div>
+                    {getHelpStr()}
                 </div>
 
                 <ButtonChapter className="z-20 mb-2">Sauvegarder</ButtonChapter>
 
             </div>
 
-        </React.Fragment>
+        </React.Fragment >
     )
 }

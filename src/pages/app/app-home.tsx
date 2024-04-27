@@ -20,7 +20,7 @@ export default function AppHome({ }: Props) {
         return (
             <ul role="list" className="divide-y divide-gray-100">
                 {userProjects.map((p: Project) => (
-                    <li key={p.name} className="flex justify-between gap-x-6 py-5">
+                    <li key={p.id} className="flex justify-between gap-x-6 py-5">
                         <div className="flex min-w-0 gap-x-4">
                             <div className="min-w-0 flex-auto">
                                 <p className="text-sm font-semibold leading-6 text-sky-850">{p.name}</p>

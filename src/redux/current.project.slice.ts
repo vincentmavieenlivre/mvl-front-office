@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSelector, createSlice } from "@reduxjs/toolkit";
 import { IdTokenResult, ParsedToken, User } from "firebase/auth";
 import type { PayloadAction } from '@reduxjs/toolkit'
 import { RootState } from "./store";
@@ -82,6 +82,7 @@ export const selectQuestion = (state: RootState, questionId: string): [IBookQues
     if (res) {
         let chapter = state.currentProject.project?.chapters.find((c: IChapter) => c.id === res?.chapterId)
         if (chapter) {
+            console.log("return HOOB", res, chapter)
             return [res, chapter]
         } else {
             throw 'chapter not found'
@@ -90,6 +91,9 @@ export const selectQuestion = (state: RootState, questionId: string): [IBookQues
         throw 'question not found ' + questionId
     }
 }
+
+
+
 
 
 export default authSlice.reducer;

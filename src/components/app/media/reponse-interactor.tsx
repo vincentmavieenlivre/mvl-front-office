@@ -34,6 +34,8 @@ type Props = {
     isLast: boolean
 }
 
+const debugWait = 2000;
+
 export default function ResponseInteractor({
     entry,
     onTextAnimationEnd, state, isLast, index, question, projectId, onDelete, changeState }: Props) {
@@ -45,12 +47,12 @@ export default function ResponseInteractor({
     const [displayPlayer, setDisplayPlayer] = useState(false)
 
     const onNewAudio = async (audio: any): Promise<any> => {
-        console.log("new audio", audio)
+        console.log("ON new audio", audio)
         changeState(IActionRecordStates.UPLOADING)
-        await new Promise(resolve => setTimeout(resolve, 1000));
+        await new Promise(resolve => setTimeout(resolve, debugWait));
         // transcribed
         changeState(IActionRecordStates.TRANSCRIBING)
-        await new Promise(resolve => setTimeout(resolve, 1000));
+        await new Promise(resolve => setTimeout(resolve, debugWait));
         setText(generateString(400))
         setAnimateText(true)
         changeState(IActionRecordStates.END)

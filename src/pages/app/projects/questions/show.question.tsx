@@ -1,4 +1,4 @@
-import { selectQuestion, selectQuestionPosition } from '@app/redux/current.project.slice'
+import { selectQuestion, selectQuestion2, selectQuestionPosition } from '@app/redux/current.project.slice'
 import { RootState } from '@app/redux/store'
 import React, { useEffect, useRef, useState } from 'react'
 import { useSelector } from 'react-redux'
@@ -13,7 +13,7 @@ import { RightCircleOutlined } from '@ant-design/icons'
 import { TypeAnimation } from 'react-type-animation'
 import ResponseInteractor from '@app/components/app/media/reponse-interactor'
 import { nanoid } from 'nanoid'
-import { isAllOf } from '@reduxjs/toolkit'
+import { createSelector, isAllOf } from '@reduxjs/toolkit'
 
 type Props = {}
 
@@ -33,7 +33,6 @@ export default function ShowQuestion({ }: Props) {
     const [actionState, setActionState] = useState<IActionRecordStates>(IActionRecordStates.WAIT_FOR_RECORD)
 
     let { id: projectId, questionId } = params;
-    console.log("test, id: ", projectId, "questions", questionId)
 
     useEffect(() => {
         setEntries([])
@@ -58,6 +57,7 @@ export default function ShowQuestion({ }: Props) {
 
 
     let [question, chapter] = useSelector((state: RootState) => { return selectQuestion(state, questionId) })
+
 
     let [index, totalCount, prevId, nextId] = useSelector((state: RootState) => {
         return selectQuestionPosition(state, chapter.id, questionId)
@@ -162,7 +162,7 @@ export default function ShowQuestion({ }: Props) {
             </div>
 
 
-            <RecordButton state={actionState} onClick={onRecordButtonClicked}></RecordButton>
+            <RecordButton entries={entries} state={actionState} onClick={onRecordButtonClicked}></RecordButton>
 
 
         </React.Fragment >

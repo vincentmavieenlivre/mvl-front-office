@@ -1,0 +1,57 @@
+.no-animation {
+  animation: none;
+}
+
+.circle-to-box {
+  width: 7em;
+  height: 3em;
+  border-radius: 20px;
+  transition: all 1s;
+  animation-name: roundToBox;
+  animation-duration: 0.4s;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: 1;
+  animation-fill-mode: forwards;
+}
+
+@keyframes roundToBox {
+  0% {
+    width: 7em;
+    height: 7em;
+    border-radius: 3.5em;
+    //background-color: red;
+  }
+
+  100% {
+    width: 50%;
+    height: 3em;
+    border-radius: 20px;
+    background-color: rgb(14 165 233);
+  }
+}
+
+.box-to-circle {
+  width: 50%;
+  height: 7em;
+  border-radius: 20px;
+  transition: all 1s;
+  animation-name: boxToRound;
+  animation-duration: 0.4s;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: 1;
+  animation-fill-mode: forwards;
+}
+
+@keyframes boxToRound {
+  0% {
+    width: 50%;
+    height: 3em;
+    border-radius: 20px;
+  }
+
+  100% {
+    width: 7em;
+    height: 7em;
+    border-radius: 3.5em;
+  }
+}
