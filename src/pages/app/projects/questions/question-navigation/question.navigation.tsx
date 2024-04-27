@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 type Props = {
     currentIndex: number;
     lastIndex: number;
-    chapterStr: number;
+    chapterStr: string;
     prevId: string | undefined;
     nextId: string | undefined;
     projectId: string;

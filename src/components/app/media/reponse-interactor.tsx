@@ -1,11 +1,14 @@
 import { IBookQuestion } from '@app/modeles/database/book/book-question';
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import AudioRecorder from './audio-recorder';
 import { TypeAnimation } from 'react-type-animation';
 import { Spin } from 'antd';
 import TextareaAutosize from 'react-textarea-autosize';
 import "./response-interactor.scss"
 import { IActionRecordStates } from '@app/pages/app/projects/questions/record-button/record.button';
+import { IEntry } from '@app/pages/app/projects/questions/show.question';
+import Player, { playerIconSize } from './player';
+import { TbTrashXFilled } from 'react-icons/tb';
 const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
 
 function generateString(length: number) {
@@ -23,92 +26,100 @@ type Props = {
     index: number;
     question: IBookQuestion;
     projectId: string;
-    onAudioRef: (ref: any, index: number) => void
-    onDelete: (index: number) => void
+    onDelete: (id: string) => void
     state: IActionRecordStates
     changeState: (newState: IActionRecordStates) => void
-    isLast: boolean;
     onTextAnimationEnd: () => void;
+    entry: IEntry,
+    isLast: boolean
 }
 
-export default function ResponseInteractor({ onTextAnimationEnd, isLast, state, index, question, projectId, onAudioRef, onDelete, changeState }: Props) {
+export default function ResponseInteractor({
+    entry,
+    onTextAnimationEnd, state, isLast, index, question, projectId, onDelete, changeState }: Props) {
 
     const [isTranscribing, setIsTranscribing] = useState<boolean>(false)
     const [transcribedText, setTranscribedText] = useState<string | undefined>(undefined)
     const [animateText, setAnimateText] = useState<boolean>(false)
     const [text, setText] = useState<string | undefined>(undefined)
-
+    const [displayPlayer, setDisplayPlayer] = useState(false)
 
     const onNewAudio = async (audio: any): Promise<any> => {
         console.log("new audio", audio)
-
         changeState(IActionRecordStates.UPLOADING)
-
         await new Promise(resolve => setTimeout(resolve, 1000));
-
-
         // transcribed
         changeState(IActionRecordStates.TRANSCRIBING)
-
         await new Promise(resolve => setTimeout(resolve, 1000));
-
-
         setText(generateString(400))
         setAnimateText(true)
         changeState(IActionRecordStates.END)
-
-
         return true
-
     }
+
+    useEffect(() => {
+        console.log("new audio", entry.audio)
+        if (entry.audio) {
+            onNewAudio(entry.audio)
+        }
+    }, [entry.audio])
+
+
+
 
     const textStyle = { fontSize: '1em' }
 
 
     return (
         <div>
-            <AudioRecorder
-                isLast={isLast}
-                state={state}
-                onNewAudioRecorded={onNewAudio} onDelete={() => {
-                    onDelete(index)
-                }}
-                key={index} ref={(ref) => onAudioRef(ref, index)} question={question} projectId={projectId}>
 
-            </AudioRecorder>
-            <div>
+            {entry.audio && displayPlayer ? (
+                <div className="audio-player mt-4 flex flex-row items-center justify-around ">
+                    {/* <audio  src={audio}  ></audio> */}
+                    <button disabled={state == IActionRecordStates.RECORDING} className="btn btn-circle border-none">
+                        <Player url={entry.audio}></Player>
+                    </button>
+                    <button disabled={state == IActionRecordStates.RECORDING} className="btn btn-circle border-none">
 
-                {state == IActionRecordStates.TRANSCRIBING && isLast == true &&
-                    <div className='flex flex-row justify-center mt-4'>
+                        <TbTrashXFilled onClick={() => onDelete(entry.id)} size={playerIconSize} color="red"></TbTrashXFilled>
+                    </button>
+                    {/* <a download href={audio}>
+							Download Recording
+						</a> */}
+                </div>
+            ) : null}
 
-                        <span className="loading loading-dots loading-xl text-sky-500 "></span>
-                    </div>
+            {state == IActionRecordStates.TRANSCRIBING && isLast == true &&
+                <div className='flex flex-row justify-center mt-4'>
+
+                    <span className="loading loading-dots loading-xl text-sky-500 "></span>
+                </div>
+            }
+
+            <div className='w-full  p-6 text-sky-950 ' style={textStyle}>
+
+                {animateText == true &&
+                    <TypeAnimation
+                        className='break-all text-wrapper' style={{}}
+                        sequence={[() => { setDisplayPlayer(true) }, 0,
+                            text, () => {
+                                setAnimateText(false)
+                                onTextAnimationEnd()
+                            },
+
+                        ]}
+                        wrapper="span"
+                        speed={95}
+                    //style={ }
+
+                    />
+                }
+                {animateText == false &&
+                    <TextareaAutosize className='text-wrapper w-full break-all rounded-md focus:border-blue-500' defaultValue={text}></TextareaAutosize>
                 }
 
-                <div className='w-full max-w-screen-sm p-6 text-sky-950 ' style={textStyle}>
-
-                    {animateText == true &&
-                        <TypeAnimation
-                            className='break-all text-wrapper' style={{}}
-                            sequence={[0,
-                                text, () => {
-                                    setAnimateText(false)
-                                    onTextAnimationEnd()
-                                },
-
-                            ]}
-                            wrapper="span"
-                            speed={95}
-                        //style={ }
-
-                        />
-                    }
-                    {animateText == false &&
-                        <TextareaAutosize className='text-wrapper w-full break-all rounded-md focus:border-blue-500' defaultValue={text}></TextareaAutosize>
-                    }
-
-                </div>
             </div>
+
         </div>
     )
 }

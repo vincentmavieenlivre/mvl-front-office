@@ -17,14 +17,15 @@ import { isAllOf } from '@reduxjs/toolkit'
 
 type Props = {}
 
-interface IEntry {
+export interface IEntry {
     id: string;
+    audio: any;
 }
 
 export default function ShowQuestion({ }: Props) {
 
     const [entries, setEntries] = useState<IEntry[]>([])
-    const entriesRef = useRef<IActionRecordRef[]>([]);
+    const audioRecordRef = useRef<IActionRecordRef | undefined>(undefined);
 
     const navigate = useNavigate()
     const params: any = useParams()
@@ -64,25 +65,11 @@ export default function ShowQuestion({ }: Props) {
 
     console.log("question", question.id, "chapter", chapter.id, `${index}/${totalCount} prev=${prevId} next=${nextId}`)
 
-    const addRef = (ref, index, id) => {
-        if (ref) {
-            entriesRef.current[index] = ref
-            console.log("add ref", ref, " at ", index)
 
-        }
-
-    }
 
     useEffect(() => {
         if (entries.length) {
-            setTimeout(() => {
-                let last = entriesRef.current[entries.length - 1]
-                if (last.getFinished() == false) {
-                    console.log("last finished", last.getFinished())
-                    entriesRef.current[entries.length - 1]?.startRecording()
-                    setActionState(IActionRecordStates.RECORDING)
-                }
-            }, 100);
+
         }
 
     }, [entries])
@@ -103,12 +90,14 @@ export default function ShowQuestion({ }: Props) {
         console.log("onRecordButtonClicked STATE=", actionState)
 
         if (actionState == IActionRecordStates.WAIT_FOR_RECORD) {
-            setEntries([...entries, { id: nanoid() }])
+            audioRecordRef?.current?.startRecording()
+            setActionState(IActionRecordStates.RECORDING)
         }
 
         if (actionState == IActionRecordStates.RECORDING) {
-            entriesRef.current[entries.length - 1]?.stopRecording()
-            /*  setActionState(IActionRecordStates.WAIT_FOR_RECORD) */
+            console.log("try to stop record")
+            audioRecordRef?.current?.stopRecording()
+            setActionState(IActionRecordStates.UPLOADING)
 
         }
 
@@ -135,28 +124,38 @@ export default function ShowQuestion({ }: Props) {
                 {question.questionTitle}
             </div>
 
+            <AudioRecorder
+                state={actionState}
+                onNewAudioRecorded={async (a: any) => {
+                    setEntries([...entries, { id: nanoid(), audio: a }])
+                    return
+                }
+                }
+
+                ref={audioRecordRef} question={question} projectId={projectId}>
+
+            </AudioRecorder>
+
 
             <div style={{ marginBottom: 300 }}>
-                {entries.map((d, index) => {
+                {entries.map((entry, index) => {
 
                     let isLast = entries.length == index + 1
-                    let isFinished = entriesRef.current[index]?.getFinished()
 
                     return (
-                        <div key={d.id} id={d.id}
-                            style={{ display: (isLast && isFinished) || isLast == false ? 'block' : 'none' }}
+                        <div key={entry.id} id={entry.id}
+                            style={{ display: (isLast && entry.audio && actionState !== IActionRecordStates.UPLOADING) || isLast == false ? 'block' : 'none' }}
 
-                            className='bg-white shadow-lg rounded-md m-2 mt-8 bg-red'>
+                            className='bg-white shadow-lg rounded-md m-2 mt-8'>
                             <ResponseInteractor
-                                onTextAnimationEnd={onTextAnimationEnd}
+                                entry={entry}
                                 isLast={isLast}
+                                onTextAnimationEnd={onTextAnimationEnd}
                                 changeState={(newState: IActionRecordStates) => setActionState(newState)}
                                 state={actionState}
-                                onDelete={(indexToDelete) => {
-                                    entries.splice(indexToDelete, 1)
-                                    setEntries([...entries])
-                                    entriesRef.current.splice(indexToDelete, 1)
-                                }} onAudioRef={(r, index) => addRef(r, index, d.id)} index={index} question={question} projectId={projectId}></ResponseInteractor>
+                                onDelete={(idToDelete) => {
+                                    setEntries([...entries.filter((r) => r.id !== idToDelete)])
+                                }} index={index} question={question} projectId={projectId}></ResponseInteractor>
                         </div>
                     )
                 })}

@@ -19,9 +19,7 @@ type Props = {
 	projectId: string;
 	mockedText?: string;
 	onNewAudioRecorded: (audio: any) => Promise<any>
-	onDelete: () => void;
 	state: IActionRecordStates
-	isLast: boolean;
 }
 
 enum ERecordingStatus {
@@ -208,6 +206,7 @@ const AudioRecorder = React.forwardRef<IActionRecordRef, Props>((props: Props, r
 						transcribeAudioToText(downloadUrl)
 					}
 	 */
+
 			} catch (error) {
 				setProcessing(false)
 			}
@@ -248,48 +247,8 @@ const AudioRecorder = React.forwardRef<IActionRecordRef, Props>((props: Props, r
 	return (
 		<div className="">
 
-			{/* <div>
-				{props.question.audioUrl &&
-					<div>	{props.question.audioUrl} </div>
-				}
-			</div>
-			 */}
 
 
-
-
-
-
-			{transcribedText &&
-				<div>
-
-					<TypeAnimation
-						sequence={[
-							transcribedText
-						]}
-						wrapper="span"
-						speed={75}
-						style={{ fontSize: '2em', display: 'inline-block' }}
-
-					/>
-				</div>
-			}
-
-			{audio ? (
-				<div className="audio-player mt-4 flex flex-row items-center justify-around ">
-					{/* <audio  src={audio}  ></audio> */}
-					<button disabled={props.state == IActionRecordStates.RECORDING} className="btn btn-circle border-none">
-						<Player url={audio}></Player>
-					</button>
-					<button disabled={props.state == IActionRecordStates.RECORDING} className="btn btn-circle border-none">
-
-						<TbTrashXFilled onClick={() => props.onDelete()} size={playerIconSize} color="red"></TbTrashXFilled>
-					</button>
-					{/* <a download href={audio}>
-							Download Recording
-						</a> */}
-				</div>
-			) : null}
 		</div>
 
 
