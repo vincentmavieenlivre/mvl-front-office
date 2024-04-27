@@ -27,9 +27,11 @@ type Props = {
     onDelete: (index: number) => void
     state: IActionRecordStates
     changeState: (newState: IActionRecordStates) => void
+    isLast: boolean;
+    onTextAnimationEnd: () => void;
 }
 
-export default function ResponseInteractor({ state, index, question, projectId, onAudioRef, onDelete, changeState }: Props) {
+export default function ResponseInteractor({ onTextAnimationEnd, isLast, state, index, question, projectId, onAudioRef, onDelete, changeState }: Props) {
 
     const [isTranscribing, setIsTranscribing] = useState<boolean>(false)
     const [transcribedText, setTranscribedText] = useState<string | undefined>(undefined)
@@ -37,22 +39,26 @@ export default function ResponseInteractor({ state, index, question, projectId, 
     const [text, setText] = useState<string | undefined>(undefined)
 
 
-    const onNewAudio = async (audio: any) => {
+    const onNewAudio = async (audio: any): Promise<any> => {
         console.log("new audio", audio)
 
         changeState(IActionRecordStates.UPLOADING)
 
-        await new Promise(resolve => setTimeout(resolve, 4000));
+        await new Promise(resolve => setTimeout(resolve, 1000));
 
 
         // transcribed
         changeState(IActionRecordStates.TRANSCRIBING)
-        setTimeout(() => {
-            setText(generateString(100))
-            setAnimateText(true)
-            changeState(IActionRecordStates.WAIT_FOR_RECORD)
 
-        }, 2000);
+        await new Promise(resolve => setTimeout(resolve, 1000));
+
+
+        setText(generateString(400))
+        setAnimateText(true)
+        changeState(IActionRecordStates.END)
+
+
+        return true
 
     }
 
@@ -62,6 +68,7 @@ export default function ResponseInteractor({ state, index, question, projectId, 
     return (
         <div>
             <AudioRecorder
+                isLast={isLast}
                 state={state}
                 onNewAudioRecorded={onNewAudio} onDelete={() => {
                     onDelete(index)
@@ -71,7 +78,7 @@ export default function ResponseInteractor({ state, index, question, projectId, 
             </AudioRecorder>
             <div>
 
-                {state == IActionRecordStates.TRANSCRIBING &&
+                {state == IActionRecordStates.TRANSCRIBING && isLast == true &&
                     <div className='flex flex-row justify-center mt-4'>
 
                         <span className="loading loading-dots loading-xl text-sky-500 "></span>
@@ -86,11 +93,12 @@ export default function ResponseInteractor({ state, index, question, projectId, 
                             sequence={[0,
                                 text, () => {
                                     setAnimateText(false)
+                                    onTextAnimationEnd()
                                 },
 
                             ]}
                             wrapper="span"
-                            speed={75}
+                            speed={95}
                         //style={ }
 
                         />

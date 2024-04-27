@@ -13,6 +13,7 @@ import { RightCircleOutlined } from '@ant-design/icons'
 import { TypeAnimation } from 'react-type-animation'
 import ResponseInteractor from '@app/components/app/media/reponse-interactor'
 import { nanoid } from 'nanoid'
+import { isAllOf } from '@reduxjs/toolkit'
 
 type Props = {}
 
@@ -37,6 +38,22 @@ export default function ShowQuestion({ }: Props) {
         setEntries([])
     }, [params])
 
+    const scrollToEnd = () => {
+        const { scrollHeight, clientHeight } = document.documentElement;
+        const maxScroll = scrollHeight - clientHeight;
+        window.scrollTo({ top: maxScroll, behavior: 'smooth' });
+    }
+
+    useEffect(() => {
+
+        if (actionState == IActionRecordStates.END) {
+            setActionState(IActionRecordStates.WAIT_FOR_RECORD)
+            setTimeout(() => {
+                scrollToEnd()
+            }, 300);
+
+        }
+    }, [actionState])
 
 
     let [question, chapter] = useSelector((state: RootState) => { return selectQuestion(state, questionId) })
@@ -47,9 +64,13 @@ export default function ShowQuestion({ }: Props) {
 
     console.log("question", question.id, "chapter", chapter.id, `${index}/${totalCount} prev=${prevId} next=${nextId}`)
 
-    const addRef = (ref, index) => {
-        console.log("add ref", ref, " at ", index)
-        entriesRef.current[index] = ref
+    const addRef = (ref, index, id) => {
+        if (ref) {
+            entriesRef.current[index] = ref
+            console.log("add ref", ref, " at ", index)
+
+        }
+
     }
 
     useEffect(() => {
@@ -87,10 +108,14 @@ export default function ShowQuestion({ }: Props) {
 
         if (actionState == IActionRecordStates.RECORDING) {
             entriesRef.current[entries.length - 1]?.stopRecording()
-            setActionState(IActionRecordStates.WAIT_FOR_RECORD)
+            /*  setActionState(IActionRecordStates.WAIT_FOR_RECORD) */
 
         }
 
+    }
+
+    const onTextAnimationEnd = () => {
+        scrollToEnd()
     }
 
     const text = "faux texte standard de l'imprimerie depuis les années 1500, quand un imprimeur anonyme assembla ensemble des morceaux de texte pour réaliser un livre spécimen de polices de texte. Il n'a pas fait que survivre cinq siècles, mais s'est aussi adapté à la bureautique informatique, sans que son contenu n'en soit modifié. Il a été popularisé dans les années 1960 grâce à la vente"
@@ -111,22 +136,27 @@ export default function ShowQuestion({ }: Props) {
             </div>
 
 
-
-            <div style={{ marginBottom: 220 }}>
+            <div style={{ marginBottom: 300 }}>
                 {entries.map((d, index) => {
+
+                    let isLast = entries.length == index + 1
+                    let isFinished = entriesRef.current[index]?.getFinished()
+
                     return (
-                        <div key={d.id} className='bg-white shadow-lg rounded-md m-2 mt-8'>
+                        <div key={d.id} id={d.id}
+                            style={{ display: (isLast && isFinished) || isLast == false ? 'block' : 'none' }}
+
+                            className='bg-white shadow-lg rounded-md m-2 mt-8 bg-red'>
                             <ResponseInteractor
+                                onTextAnimationEnd={onTextAnimationEnd}
+                                isLast={isLast}
                                 changeState={(newState: IActionRecordStates) => setActionState(newState)}
                                 state={actionState}
                                 onDelete={(indexToDelete) => {
-                                    console.log("delete", indexToDelete)
-                                    console.log("entries before", entries.length)
-                                    let newEntries = entries.splice(indexToDelete, 1)
-                                    console.log("modified entry length", entries.length)
+                                    entries.splice(indexToDelete, 1)
                                     setEntries([...entries])
-                                    delete entriesRef.current[indexToDelete]
-                                }} onAudioRef={addRef} index={index} question={question} projectId={projectId}></ResponseInteractor>
+                                    entriesRef.current.splice(indexToDelete, 1)
+                                }} onAudioRef={(r, index) => addRef(r, index, d.id)} index={index} question={question} projectId={projectId}></ResponseInteractor>
                         </div>
                     )
                 })}

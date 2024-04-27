@@ -18,9 +18,10 @@ type Props = {
 	question: IBookQuestion;
 	projectId: string;
 	mockedText?: string;
-	onNewAudioRecorded: (audio: any) => void
+	onNewAudioRecorded: (audio: any) => Promise<any>
 	onDelete: () => void;
 	state: IActionRecordStates
+	isLast: boolean;
 }
 
 enum ERecordingStatus {
@@ -58,8 +59,9 @@ const AudioRecorder = React.forwardRef<IActionRecordRef, Props>((props: Props, r
 
 	useEffect(() => {
 		if (audio) {
-			props.onNewAudioRecorded(audio)
-			setFinish(true)
+			props.onNewAudioRecorded(audio).then(() => {
+				setFinish(true)
+			})
 		}
 
 	}, [audio])
