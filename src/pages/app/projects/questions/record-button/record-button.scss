@@ -2,6 +2,18 @@
   animation: none;
 }
 
+.chapter-anchor + div {
+  width: 100% !important;
+}
+
+.sticky {
+  left: 0;
+  width: 100% !important;
+  background-color: white;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+}
 .circle-to-box {
   width: 7em;
   height: 3em;

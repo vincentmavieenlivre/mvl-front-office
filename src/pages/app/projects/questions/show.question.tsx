@@ -92,6 +92,19 @@ export default function ShowQuestion({ }: Props) {
         if (actionState == IActionRecordStates.WAIT_FOR_RECORD) {
             audioRecordRef?.current?.startRecording()
             setActionState(IActionRecordStates.RECORDING)
+
+            /*     setTimeout(() => {
+                    setActionState(IActionRecordStates.UPLOADING)
+                }, 2000);
+    
+                setTimeout(() => {
+                    setActionState(IActionRecordStates.TRANSCRIBING)
+                }, 4000);
+    
+                setTimeout(() => {
+                    setActionState(IActionRecordStates.END)
+                }, 5000);
+     */
         }
 
         if (actionState == IActionRecordStates.RECORDING) {

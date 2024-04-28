@@ -40,7 +40,8 @@ export default function SummaryDrawer({ children }: Props) {
                     nav(`/app/projects/${project.id}/questions/${q.id}`)
                 }}
 
-                htmlFor="my-drawer" className=" mt-4  ripple-bg-sky-50 rounded-xl p-2 text-sky-950 flex flex-row items-center">
+                htmlFor="my-drawer" className=" mt-4  ripple-bg-sky-50 rounded-xl p-2 text-sky-950 flex flex-row items-center justify-around
+                ">
                 {/* <Link to={`/app/projects/${project.id}/questions/${q.id}`} key={q.id} className='mt-4  ripple-bg-sky-50 rounded-xl p-2 text-sky-950 flex flex-row items-center'> */}
                 <div className='text-sm'>{q.questionTitle}</div>
                 <RightCircleOutlined className='text-sky-600 px-4' />
