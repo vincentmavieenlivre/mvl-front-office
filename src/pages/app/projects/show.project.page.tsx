@@ -144,8 +144,8 @@ export default function ShowProjectPage({ }: Props) {
             <div className='mt-4'>
                 {chapters.map((c: IChapterTree, index: number) => {
                     return (
-                        <div key={c.id} className="collapse collapse-arrow bg-sky-100 mt-4">
-                            <input type="checkbox" name={"test"} />
+                        <div key={c.id} className="collapse collapse-arrow  bg-sky-100 mt-4">
+                            <input type="checkbox" name={"test"} defaultChecked={index == 0} />
                             <div className="collapse-title text-xl font-medium">
                                 {c.name}
                             </div>
