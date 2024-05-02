@@ -153,7 +153,8 @@ export default function ResponseInteractor({
                         onChange={() => {
                             if (textArea?.current?.value) {
                                 const textAreaContent = textArea.current.value;
-                                onEntryChange(entry, textAreaContent)
+                                let updatedEntry = { ...entry, text: textAreaContent }
+                                onEntryChange(updatedEntry)
                             }
                         }} className='text-wrapper w-full break-all rounded-md focus:border-blue-500' defaultValue={text}></TextareaAutosize>
                 }
