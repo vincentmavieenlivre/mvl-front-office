@@ -3,14 +3,24 @@ import { MdOutlinePauseCircle, MdOutlinePlayCircle } from "react-icons/md";
 
 export const playerIconSize = 30
 
-const useAudio = (url: string): [boolean, () => void] => {
-    const [audio] = useState(new Audio(url));
+const useAudio = (url: string): [boolean, () => void, () => void] => {
+    const [audio] = useState(new Audio());
     const [playing, setPlaying] = useState(false);
 
     const toggle = () => setPlaying(!playing);
 
+    const stop = () => {
+        audio.pause()
+    }
+
     useEffect(() => {
-        playing ? audio.play() : audio.pause();
+        if (playing) {
+            audio.src = url
+            audio.play()
+        } else {
+
+            audio.pause();
+        }
     },
         [playing]
     );
@@ -22,13 +32,23 @@ const useAudio = (url: string): [boolean, () => void] => {
         };
     }, []);
 
-    return [playing, toggle];
+    return [playing, toggle, stop];
 };
 
 
 
 const Player = ({ url }: { url: string }) => {
-    const [playing, toggle] = useAudio(url);
+    const [playing, toggle, stop] = useAudio(url);
+
+    useEffect(() => {
+
+
+        return () => {
+            console.log("delete")
+            stop()
+        }
+    }, [])
+
 
     return (
         <div>
