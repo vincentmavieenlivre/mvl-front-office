@@ -4,7 +4,7 @@ type Props = {
     children: React.ReactNode;
     className?: string;
     hide?: boolean;
-    onClick: (e: any) => Promise<any>;
+    onClick?: (e: any) => Promise<any>;
 }
 
 export default function ButtonChapter(props: Props) {
@@ -16,9 +16,11 @@ export default function ButtonChapter(props: Props) {
     }
     return (
         <button onClick={async (e) => {
-            setLoading(true)
-            await props.onClick(e)
-            setLoading(false)
+            if (props.onClick) {
+                setLoading(true)
+                await props.onClick(e)
+                setLoading(false)
+            }
         }} disabled={props.hide ?? false} className={`btn btn-block  text-sky-50 text-1xl w-80 rounded-3xl ${props.className}  bg-sky-300`}>
 
             {loading == false &&

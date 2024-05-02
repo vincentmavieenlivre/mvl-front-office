@@ -30,16 +30,45 @@ export const authSlice = createSlice({
 
         setChapterTree: (state, action: PayloadAction<IChapterTree[] | undefined>) => {
             state.chapterTree = action.payload
+        },
+
+        setQuestionResponse: (state, action: PayloadAction<IBookQuestion | undefined>) => {
+            if (state && state.project && state.project.questions) {
+                let index = state.project.questions.findIndex((q: IBookQuestion) => q.id === action.payload?.id)
+                if (index != -1) {
+                    state.project.questions[index].responses = action.payload?.responses
+                }
+            }
         }
     },
 });
 
 // Action creators are generated for each case reducer function
-export const { setCurrentProject, setChapterTree } = authSlice.actions;
+export const { setCurrentProject, setChapterTree, setQuestionResponse } = authSlice.actions;
 
 export const selectChapters = (state: RootState): IChapterTree[] => {
-    if (state.currentProject.chapterTree) {
-        return state.currentProject.chapterTree
+    if (state.currentProject.chapterTree && state.currentProject.project?.questionsOrder && state.currentProject.project?.questions) {
+
+
+        let chapters: IChapterTree[] = []
+
+        if (state.currentProject?.project?.chapters && state.currentProject?.project?.chapters.length > 0) {
+            let sortedQuestions = sortQuestions(state.currentProject.project?.questionsOrder, state.currentProject.project?.questions)
+
+            state.currentProject?.project?.chapters.forEach((c: IChapter) => {
+                let questions = sortedQuestions.filter((q: IBookQuestion) => q.chapterId === c.id)
+                if (questions) {
+                    chapters.push({
+                        ...c,
+                        orderedQuestions: questions
+                    } as IChapterTree)
+                }
+            })
+        }
+        console.log("by chapters", chapters)
+        return chapters
+
+
     }
     throw 'no current chapters selected'
 }
@@ -77,6 +106,10 @@ export const selectQuestionPosition = (state: RootState, chapterId: string, ques
 
 }
 
+export const selectAllQuestions = (state: RootState): IBookQuestion[] => {
+    return state.currentProject.project?.questions ?? []
+}
+
 export const selectQuestion = (state: RootState, questionId: string): [IBookQuestion, IChapter] => {
     let res = state.currentProject.project?.questions?.find((q: IBookQuestion) => q.id === questionId)
     if (res) {
@@ -91,7 +124,29 @@ export const selectQuestion = (state: RootState, questionId: string): [IBookQues
     }
 }
 
+export function sortQuestions(questionsOrder: { index: number, id: string }[], questions: IBookQuestion[]): IBookQuestion[] {
 
+    // if there is an order : return sorted questions
+
+    if (questionsOrder && questionsOrder.length > 0 && questions.length > 0) {
+
+        let sortedIds = [...questionsOrder]?.sort((a, b) => {
+            return a.index - b.index
+        })
+
+        const sortedQuestions: IBookQuestion[] = []
+        if (sortedIds) {
+            for (const s of sortedIds) {
+                const q = questions.find((q) => q.template_question_id == s.id)
+                if (q) {
+                    sortedQuestions.push(q)
+                }
+            }
+            return sortedQuestions
+        }
+    }
+    return []
+}
 
 
 

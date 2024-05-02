@@ -6,12 +6,14 @@ import { UserOwner } from "@app/modeles/database/embedded/data-owner"
 import { Project } from "@app/modeles/database/project"
 import { ERoles } from "@app/modeles/roles"
 import { UserStore } from "@app/redux/auth.slice"
+import { sortQuestions } from "@app/redux/current.project.slice"
 import { ECollections } from "@app/utils/firebase/firestore-collections"
 import { FirestoreHelper } from "@app/utils/firebase/firestore-helper"
 import { IdTokenResult, User } from "firebase/auth"
 import { ParsedToken } from "firebase/auth/cordova"
 import { addDoc, collection, getDocs, query } from "firebase/firestore"
-import _ from 'lodash';
+import { clone } from 'lodash';
+
 export class UserProjectsService {
 
     private loadedProject: Project | undefined = undefined;
@@ -58,31 +60,7 @@ export class UserProjectsService {
             questions.push(d)
         });
 
-
-        // if there is an order : return sorted questions
-        if (this.loadedProject?.questionsOrder && this.loadedProject?.questionsOrder.length > 0) {
-            const sortedIds = this.loadedProject.questionsOrder?.sort((a, b) => {
-                return a.index - b.index
-            })
-
-            const sortedQuestions: IBookQuestion[] = []
-            if (sortedIds) {
-                console.log("sorted", sortedIds.map((d) => d.id + " => " + d.index))
-                console.log("questions", questions)
-                for (const s of sortedIds) {
-                    const q = questions.find((q) => q.template_question_id == s.id)
-                    if (q) {
-                        sortedQuestions.push(q)
-                    } else {
-                        console.warn("not found")
-                    }
-                }
-                console.log("sorted final", sortedQuestions.map((d) => d.template_question_id))
-                return sortedQuestions
-            }
-        }
-
-        //return questions
+        return sortQuestions(this.loadedProject?.questionsOrder, questions)
     }
 
 
@@ -98,7 +76,7 @@ export class UserProjectsService {
 
     async createQuestionInProject(q: IBookQuestion) {
         const collectionRef = collection(db, ECollections.PROJECTS, this.projectId, ECollections.QUESTIONS);
-        q.template_question_id = _.clone(q.id)
+        q.template_question_id = clone(q.id)
         delete q['id']
         const res = await addDoc(collectionRef, q);
         console.log("question saved => new ID=", res.id)

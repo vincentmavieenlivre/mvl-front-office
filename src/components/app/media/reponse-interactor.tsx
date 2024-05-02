@@ -33,19 +33,18 @@ type Props = {
     onTextAnimationEnd: () => void;
     entry: IResponse,
     isLast: boolean
-    onEntryChange: (entry: IResponse) => void;
+    onEntryChange: (entry: IResponse, text: string) => void;
 }
 
 const debugWait = 500;
 
-const DO_FAKE = true
+const DO_FAKE = false
 
 export default function ResponseInteractor({
     entry,
     onTextAnimationEnd, state, isLast, index, question, projectId, onDelete, changeState, onEntryChange }: Props) {
 
-    const [isTranscribing, setIsTranscribing] = useState<boolean>(false)
-    const [transcribedText, setTranscribedText] = useState<string | undefined>(undefined)
+
     const [animateText, setAnimateText] = useState<boolean>(false)
     const [text, setText] = useState<string | undefined>(undefined)
     const [displayPlayer, setDisplayPlayer] = useState(false)
@@ -63,7 +62,7 @@ export default function ResponseInteractor({
         setText(entry.text)
         setAnimateText(true)
         changeState(IActionRecordStates.END)
-        onEntryChange(entry)
+        onEntryChange(entry, "text")
     }
 
     const onNewAudio = async (audio: any): Promise<any> => {
@@ -80,7 +79,7 @@ export default function ResponseInteractor({
                 setText(transcribed)
                 setAnimateText(true)
                 changeState(IActionRecordStates.END)
-                onEntryChange(ap.getEntry())
+                onEntryChange(ap.getEntry(), transcribed)
             }
         }
         return true
@@ -149,8 +148,7 @@ export default function ResponseInteractor({
                         onChange={() => {
                             if (textArea?.current?.value) {
                                 const textAreaContent = textArea.current.value;
-                                entry.text = textAreaContent
-                                onEntryChange(entry)
+                                onEntryChange(entry, textAreaContent)
                             }
                         }} className='text-wrapper w-full break-all rounded-md focus:border-blue-500' defaultValue={text}></TextareaAutosize>
                 }

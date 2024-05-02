@@ -3,12 +3,14 @@ import Alert from '@app/components/app/alert/alert';
 import { IBookQuestion } from '@app/modeles/database/book/book-question';
 import { IChapterTree } from '@app/modeles/database/book/book-template';
 import { Project } from '@app/modeles/database/project';
-import { selectChapters, selectProject } from '@app/redux/current.project.slice';
+import { selectAllQuestions, selectChapters, selectProject } from '@app/redux/current.project.slice';
 import { RootState } from '@app/redux/store';
-import React, { useRef } from 'react'
+import { pluralize } from '@app/utils/diverse.utils';
+import React, { useEffect, useRef } from 'react'
 import { FaHome } from 'react-icons/fa';
 import { useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
+import { isEqual } from "lodash";
 
 type Props = {
     children: React.ReactNode
@@ -32,19 +34,24 @@ export default function SummaryDrawer({ children }: Props) {
 
     const renderQuestion = (q: IBookQuestion, index) => {
 
-
+        const hasAnswers = (q.responses?.length > 0) ?? false;
+        const numAnswers = q.responses?.length || 0
 
         return (
-            <label id={q.id + index}
+            <label id={q.id} key={q.id}
                 onClick={() => {
                     nav(`/app/projects/${project.id}/questions/${q.id}`)
                 }}
-
-                htmlFor="my-drawer" className=" mt-4  ripple-bg-sky-50 rounded-xl p-2 text-sky-950 flex flex-row items-center justify-around
-                ">
+                className={`mt-4  ripple-bg-sky-50 rounded-xl p-2 text-sky-950 flex flex-col ${hasAnswers ? "border-green-400 border-2" : ''}`}
+                htmlFor="my-drawer">
                 {/* <Link to={`/app/projects/${project.id}/questions/${q.id}`} key={q.id} className='mt-4  ripple-bg-sky-50 rounded-xl p-2 text-sky-950 flex flex-row items-center'> */}
-                <div className='text-sm'>{q.questionTitle}</div>
-                <RightCircleOutlined className='text-sky-600 px-4' />
+                <div className='flex flex-row items-center justify-around'>
+                    <div className='text-sm'>{q.questionTitle}</div>
+                    <RightCircleOutlined className='text-sky-600 px-4' />
+                </div>
+                {hasAnswers &&
+                    <div className='mt-2 self-end text-green-400'><b>{numAnswers}</b> {pluralize('réponse', numAnswers)} {pluralize('sauvegardée', numAnswers)} </div>
+                }
 
             </label>
         )

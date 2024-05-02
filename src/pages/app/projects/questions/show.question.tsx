@@ -1,7 +1,7 @@
-import { selectQuestion, selectQuestion2, selectQuestionPosition } from '@app/redux/current.project.slice'
+import { selectQuestion, selectQuestion2, selectQuestionPosition, setQuestionResponse } from '@app/redux/current.project.slice'
 import { RootState } from '@app/redux/store'
 import React, { useEffect, useRef, useState } from 'react'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import QuestionNavigation from './question-navigation/question.navigation'
 import "./record-container.scss"
@@ -26,6 +26,7 @@ export interface IResponse {
 }
 
 export default function ShowQuestion({ }: Props) {
+    const dispatch = useDispatch();
 
     const [entries, setEntries] = useState<IResponse[]>([])
     const audioRecordRef = useRef<IActionRecordRef | undefined>(undefined);
@@ -69,10 +70,12 @@ export default function ShowQuestion({ }: Props) {
         let trick = new Promise((resolve) => setTimeout(resolve, 500))
         await Promise.all([m.updateAllResponses(entries), trick])
 
-        setEntries([...entries.map((e) => {
-            e.modified = false
-            return e
-        })])
+        dispatch(setQuestionResponse({
+            ...question, responses: [...entries.map((e) => {
+                e.modified = false
+                return e
+            })]
+        }))
     }
 
 
@@ -143,10 +146,10 @@ export default function ShowQuestion({ }: Props) {
 
                             className='bg-white shadow-lg rounded-md m-2 mt-8'>
                             <ResponseInteractor
-                                onEntryChange={(newEntry: IResponse) => {
+                                onEntryChange={(newEntry: IResponse, text: string) => {
                                     setEntries([...entries.map((e: IResponse) => {
                                         if (e.id === newEntry.id) {
-                                            return { ...newEntry, modified: true }
+                                            return { ...newEntry, modified: true, text: text }
                                         } else {
                                             return e
                                         }
@@ -159,7 +162,9 @@ export default function ShowQuestion({ }: Props) {
                                 state={actionState}
 
                                 onDelete={(idToDelete) => {
-                                    setEntries([...entries.filter((r) => r.id !== idToDelete)])
+                                    let updatedOnes = [...entries.filter((r) => r.id !== idToDelete)]
+                                    dispatch(setQuestionResponse({ ...question, responses: updatedOnes }))
+                                    setEntries(updatedOnes)
                                 }} index={index} question={question} projectId={projectId}></ResponseInteractor>
                         </div>
                     )

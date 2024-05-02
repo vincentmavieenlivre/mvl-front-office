@@ -60,7 +60,7 @@ export class AudioProcessor {
             const result = await transcribeFromCloudFunction({ audioUrl: this.remoteAudioUrl })
             this.entry.text = (result.data as any)?.text as string
             console.log("[transcripted text]", this.entry.text)
-            return this.transcribedText
+            return this.entry.text
         }
     }
 
