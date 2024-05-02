@@ -36,7 +36,7 @@ export interface IActionRecordRef {
 
 export interface IRecord {
 	audioUrl: any;
-	audioBlob: any;
+	audioBlob?: any;
 }
 const AudioRecorder = React.forwardRef<IActionRecordRef, Props>((props: Props, ref) => {
 

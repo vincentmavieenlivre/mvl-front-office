@@ -46,10 +46,6 @@ export default function RecordButton({ entries, state = IActionRecordStates.WAIT
         }
     }, [state])
 
-    useEffect(() => {
-        console.log("modified", _.some(entries, (e: IResponse) => e.modified == true))
-    }, [entries])
-
 
     const transcribingAnimationOptions = {
         loop: true,
@@ -157,8 +153,9 @@ export default function RecordButton({ entries, state = IActionRecordStates.WAIT
                     {getHelpStr()}
 
                     {/* save */}
-                    <ButtonChapter onClick={onSaveAll} hide={!_.some(entries, (e: IResponse) => e.modified == true)} className="z-20 mb-2 text-sky-500 bg-sky-50">Sauvegarder</ButtonChapter>
-
+                    {state == IActionRecordStates.WAIT_FOR_RECORD &&
+                        <ButtonChapter onClick={onSaveAll} hide={!_.some(entries, (e: IResponse) => e.modified == true)} className="z-20 mb-2 text-sky-500 bg-sky-50">Sauvegarder</ButtonChapter>
+                    }
                 </div>
 
             </div>

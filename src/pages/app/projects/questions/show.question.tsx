@@ -14,6 +14,7 @@ import { TypeAnimation } from 'react-type-animation'
 import ResponseInteractor from '@app/components/app/media/reponse-interactor'
 import { nanoid } from 'nanoid'
 import { createSelector, isAllOf } from '@reduxjs/toolkit'
+import { UserProjectQuestionManager } from '@app/manager/client/user-project-question.manager'
 
 type Props = {}
 
@@ -60,6 +61,20 @@ export default function ShowQuestion({ }: Props) {
 
     let [question, chapter] = useSelector((state: RootState) => { return selectQuestion(state, questionId) })
 
+    const onSaveAll = async () => {
+
+        let m = new UserProjectQuestionManager(projectId, question)
+
+        // trick to min display loader for one sec
+        let trick = new Promise((resolve) => setTimeout(resolve, 500))
+        await Promise.all([m.updateAllResponses(entries), trick])
+
+        setEntries([...entries.map((e) => {
+            e.modified = false
+            return e
+        })])
+    }
+
 
     let [index, totalCount, prevId, nextId] = useSelector((state: RootState) => {
         return selectQuestionPosition(state, chapter.id, questionId)
@@ -69,24 +84,6 @@ export default function ShowQuestion({ }: Props) {
 
 
 
-    useEffect(() => {
-        if (entries.length) {
-
-        }
-
-    }, [entries])
-
-
-    const renderQuestion = (q: IBookQuestion) => {
-        return (
-
-            <Link to={`/app/projects/${params.id}/questions/${q.id}`} key={q.id} className='mt-4  ripple-bg-sky-50 rounded-xl p-2 text-sky-950 flex flex-row items-center'>
-                <div className='text-sm'>{q.questionTitle}</div>
-                <RightCircleOutlined className='text-sky-600 px-4' />
-            </Link>
-        )
-    }
-
     const onRecordButtonClicked = () => {
 
         console.log("onRecordButtonClicked STATE=", actionState)
@@ -94,19 +91,6 @@ export default function ShowQuestion({ }: Props) {
         if (actionState == IActionRecordStates.WAIT_FOR_RECORD) {
             audioRecordRef?.current?.startRecording()
             setActionState(IActionRecordStates.RECORDING)
-
-            /*     setTimeout(() => {
-                    setActionState(IActionRecordStates.UPLOADING)
-                }, 2000);
-    
-                setTimeout(() => {
-                    setActionState(IActionRecordStates.TRANSCRIBING)
-                }, 4000);
-    
-                setTimeout(() => {
-                    setActionState(IActionRecordStates.END)
-                }, 5000);
-     */
         }
 
         if (actionState == IActionRecordStates.RECORDING) {
@@ -121,10 +105,6 @@ export default function ShowQuestion({ }: Props) {
     const onTextAnimationEnd = () => {
         scrollToEnd()
     }
-
-    const text = "faux texte standard de l'imprimerie depuis les années 1500, quand un imprimeur anonyme assembla ensemble des morceaux de texte pour réaliser un livre spécimen de polices de texte. Il n'a pas fait que survivre cinq siècles, mais s'est aussi adapté à la bureautique informatique, sans que son contenu n'en soit modifié. Il a été popularisé dans les années 1960 grâce à la vente"
-
-
 
     return (
         <React.Fragment>
@@ -190,17 +170,7 @@ export default function ShowQuestion({ }: Props) {
                 console.log(entries)
             }} >debug</button> */}
 
-            <RecordButton onSaveAll={async () => {
-                return new Promise((resolve) => {
-                    setTimeout(() => {
-                        setEntries([...entries.map((e: IResponse) => {
-                            return { ...e, modified: false }
-                        })])
-                        resolve(true)
-                    }, 2000)
-                })
-
-            }} entries={entries} state={actionState} onClick={onRecordButtonClicked}></RecordButton>
+            <RecordButton onSaveAll={async () => onSaveAll()} entries={entries} state={actionState} onClick={onRecordButtonClicked}></RecordButton>
 
 
         </React.Fragment >
