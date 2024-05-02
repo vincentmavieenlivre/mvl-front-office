@@ -74,11 +74,10 @@ export const selectChapters = (state: RootState): IChapterTree[] => {
 }
 
 
-export const selectProject = (state: RootState): Project => {
+export const selectProject = (state: RootState): Project | undefined => {
     if (state.currentProject.project) {
         return state.currentProject.project
     }
-    throw 'no current project selected'
 }
 
 export const selectQuestionPosition = (state: RootState, chapterId: string, questionId: string): [number, number, string | undefined, string | undefined] => {

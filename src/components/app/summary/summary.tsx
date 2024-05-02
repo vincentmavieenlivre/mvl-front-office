@@ -1,23 +1,18 @@
 import { RightCircleOutlined } from '@ant-design/icons';
-import Alert from '@app/components/app/alert/alert';
 import { IBookQuestion } from '@app/modeles/database/book/book-question';
 import { IChapterTree } from '@app/modeles/database/book/book-template';
 import { Project } from '@app/modeles/database/project';
-import { selectAllQuestions, selectChapters, selectProject } from '@app/redux/current.project.slice';
+import { selectProject, selectChapters } from '@app/redux/current.project.slice';
 import { RootState } from '@app/redux/store';
 import { pluralize } from '@app/utils/diverse.utils';
-import React, { useEffect, useRef } from 'react'
-import { FaHome } from 'react-icons/fa';
+import React, { useRef } from 'react'
 import { useSelector } from 'react-redux';
-import { Link, useNavigate } from 'react-router-dom';
-import { isEqual } from "lodash";
-import Summary from '@app/components/app/summary/summary';
+import { useNavigate } from 'react-router-dom';
 
-type Props = {
-    children: React.ReactNode
-}
+type Props = {}
 
-export default function SummaryDrawer({ children }: Props) {
+export default function Summary({ }: Props) {
+
 
     const checkboxRef = useRef(null);
 
@@ -31,7 +26,6 @@ export default function SummaryDrawer({ children }: Props) {
     let chapters: IChapterTree[] = useSelector((state: RootState) => {
         return selectChapters(state)
     })
-
 
     const renderQuestion = (q: IBookQuestion, index) => {
 
@@ -65,7 +59,7 @@ export default function SummaryDrawer({ children }: Props) {
                 {chapters.map((c: IChapterTree, index: number) => {
                     return (
                         <div key={c.id} className="collapse collapse-arrow bg-sky-100 mt-4">
-                            <input type="checkbox" name={"test"} />
+                            <input type="checkbox" name={"test"} defaultChecked={index == 0} />
                             <div className="collapse-title text-xl font-medium">
                                 {c.name}
                             </div>
@@ -81,34 +75,6 @@ export default function SummaryDrawer({ children }: Props) {
         )
     }
 
-    return (
-        <div className="drawer">
-            <input ref={checkboxRef} id="my-drawer" type="checkbox" className="drawer-toggle" />
-            <div className="drawer-content">
-                {children}
-            </div>
-            <div className="drawer-side" >
-                <label htmlFor="my-drawer" aria-label="close sidebar" className="drawer-overlay"></label>
-                <div className='menu p-4 w-80 min-h-full bg-sky-50 text-base-content'>
+    return renderChapters()
 
-                    <div className='mt-4 flex flex-row items-center justify-between'>
-                        <h2 className='  text-sky-950  text-3xl font-bold'>Sommaire</h2>
-                        <Link to={`/app/`}>
-
-                            <button className="mr-4 btn btn-circle btn-outline border-sky-900">
-                                <FaHome className=' text-sky-900' size={22} />
-                            </button>
-                        </Link>
-                    </div>
-                    <div className='text-sky-950 mt-4 text-lg'>
-                        <p>Parcourez et choisissez parmi ces différents chapitres, les questions auxquelles vous souhaitez répondre.</p>
-                    </div>
-
-                    <Alert className='mt-4' message1="Recommandation : Répondez à 3 ou 4 questions par chapitre."></Alert>
-
-                    <Summary></Summary>
-                </div>
-            </div>
-        </div>
-    )
 }
