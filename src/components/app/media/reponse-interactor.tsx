@@ -1,5 +1,5 @@
 import { IBookQuestion } from '@app/modeles/database/book/book-question';
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import AudioRecorder from './audio-recorder';
 import { TypeAnimation } from 'react-type-animation';
 import { Spin } from 'antd';
@@ -9,6 +9,7 @@ import { IActionRecordStates } from '@app/pages/app/projects/questions/record-bu
 import { IEntry } from '@app/pages/app/projects/questions/show.question';
 import Player, { playerIconSize } from './player';
 import { TbTrashXFilled } from 'react-icons/tb';
+import { AudioProcessor } from '@app/domains/services/audio-processor.service';
 const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
 
 function generateString(length: number) {
@@ -32,13 +33,16 @@ type Props = {
     onTextAnimationEnd: () => void;
     entry: IEntry,
     isLast: boolean
+    onEntryChange: (entry: IEntry) => void;
 }
 
-const debugWait = 2000;
+const debugWait = 500;
+
+const DO_FAKE = true
 
 export default function ResponseInteractor({
     entry,
-    onTextAnimationEnd, state, isLast, index, question, projectId, onDelete, changeState }: Props) {
+    onTextAnimationEnd, state, isLast, index, question, projectId, onDelete, changeState, onEntryChange }: Props) {
 
     const [isTranscribing, setIsTranscribing] = useState<boolean>(false)
     const [transcribedText, setTranscribedText] = useState<string | undefined>(undefined)
@@ -46,25 +50,48 @@ export default function ResponseInteractor({
     const [text, setText] = useState<string | undefined>(undefined)
     const [displayPlayer, setDisplayPlayer] = useState(false)
 
-    const onNewAudio = async (audio: any): Promise<any> => {
+    const textArea = useRef<HTMLTextAreaElement>(null)
+
+    const fake = async (audio: any) => {
         console.log("ON new audio", audio)
         changeState(IActionRecordStates.UPLOADING)
         await new Promise(resolve => setTimeout(resolve, debugWait));
         // transcribed
         changeState(IActionRecordStates.TRANSCRIBING)
         await new Promise(resolve => setTimeout(resolve, debugWait));
-        setText(generateString(400))
+        entry.text = generateString(400)
+        setText(entry.text)
         setAnimateText(true)
         changeState(IActionRecordStates.END)
+        onEntryChange(entry)
+    }
+
+    const onNewAudio = async (audio: any): Promise<any> => {
+
+        if (DO_FAKE) {
+            await fake(audio)
+        } else {
+            if (question.id) {
+                let ap = new AudioProcessor(projectId, question.id, entry)
+                changeState(IActionRecordStates.UPLOADING)
+                await ap.upload()
+                changeState(IActionRecordStates.TRANSCRIBING)
+                let transcribed = await ap.transcribe()
+                setText(transcribed)
+                setAnimateText(true)
+                changeState(IActionRecordStates.END)
+                onEntryChange(ap.getEntry())
+            }
+        }
         return true
     }
 
     useEffect(() => {
-        console.log("new audio", entry.audio)
-        if (entry.audio) {
-            onNewAudio(entry.audio)
+        console.log("new audio", entry.audioRecord)
+        if (entry.audioRecord) {
+            onNewAudio(entry.audioRecord)
         }
-    }, [entry.audio])
+    }, [entry.audioRecord])
 
 
 
@@ -75,11 +102,11 @@ export default function ResponseInteractor({
     return (
         <div>
 
-            {entry.audio && displayPlayer ? (
+            {entry.audioRecord && displayPlayer ? (
                 <div className="audio-player mt-4 flex flex-row items-center justify-around ">
                     {/* <audio  src={audio}  ></audio> */}
                     <button disabled={state == IActionRecordStates.RECORDING} className="btn btn-circle border-none">
-                        <Player url={entry.audio}></Player>
+                        <Player url={entry.audioRecord.audioUrl}></Player>
                     </button>
                     <button disabled={state == IActionRecordStates.RECORDING} className="btn btn-circle border-none">
 
@@ -117,7 +144,15 @@ export default function ResponseInteractor({
                     />
                 }
                 {animateText == false &&
-                    <TextareaAutosize className='text-wrapper w-full break-all rounded-md focus:border-blue-500' defaultValue={text}></TextareaAutosize>
+                    <TextareaAutosize
+                        ref={textArea}
+                        onChange={() => {
+                            if (textArea?.current?.value) {
+                                const textAreaContent = textArea.current.value;
+                                entry.text = textAreaContent
+                                onEntryChange(entry)
+                            }
+                        }} className='text-wrapper w-full break-all rounded-md focus:border-blue-500' defaultValue={text}></TextareaAutosize>
                 }
 
             </div>

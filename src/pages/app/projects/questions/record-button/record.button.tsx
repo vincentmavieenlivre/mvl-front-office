@@ -150,7 +150,7 @@ export default function RecordButton({ entries, state = IActionRecordStates.WAIT
                     {getHelpStr()}
                 </div>
 
-                <ButtonChapter className="z-20 mb-2">Sauvegarder</ButtonChapter>
+                <ButtonChapter className="z-20 mb-2 text-sky-500 bg-sky-50">Sauvegarder</ButtonChapter>
 
             </div>
 

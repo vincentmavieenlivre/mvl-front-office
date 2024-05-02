@@ -38,7 +38,7 @@ storage = getStorage();
 
 
 if (getEnv() == Env.DEVELOPMENT) {
-    const ip = '192.168.248.212'
+    const ip = '127.0.0.1'
 
     console.log("[firebase emulator] bind firestore to local emulator db")
     connectFirestoreEmulator(db, ip, 8080)

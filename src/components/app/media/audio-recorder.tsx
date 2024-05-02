@@ -18,7 +18,7 @@ type Props = {
 	question: IBookQuestion;
 	projectId: string;
 	mockedText?: string;
-	onNewAudioRecorded: (audio: any) => Promise<any>
+	onNewAudioRecorded: (audio: IRecord) => Promise<any>
 	state: IActionRecordStates
 }
 
@@ -33,6 +33,11 @@ export interface IActionRecordRef {
 	getFinished: () => boolean
 }
 
+
+export interface IRecord {
+	audioUrl: any;
+	audioBlob: any;
+}
 const AudioRecorder = React.forwardRef<IActionRecordRef, Props>((props: Props, ref) => {
 
 
@@ -45,7 +50,7 @@ const AudioRecorder = React.forwardRef<IActionRecordRef, Props>((props: Props, r
 
 	const [stream, setStream] = useState<MediaStream | undefined>(undefined);
 
-	const [audio, setAudio] = useState(null);
+	const [audio, setAudio] = useState<IRecord | null>(null);
 
 	const [audioChunks, setAudioChunks] = useState([]);
 
@@ -195,7 +200,12 @@ const AudioRecorder = React.forwardRef<IActionRecordRef, Props>((props: Props, r
 				// console.log("audio blob", audioBlob)
 				const audioUrl = URL.createObjectURL(audioBlob);
 				// console.log("--------------------- audioUrl for record", audioUrl)
-				setAudio(audioUrl);
+				setAudio(
+					{
+						audioUrl: audioUrl,
+						audioBlob: audioBlob
+					}
+				);
 				setAudioChunks([]);
 				setProcessing(false)
 				setRecordingStatus(ERecordingStatus.INACTIVE)

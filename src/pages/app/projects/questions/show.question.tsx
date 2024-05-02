@@ -7,7 +7,7 @@ import QuestionNavigation from './question-navigation/question.navigation'
 import "./record-container.scss"
 import { FaMicrophoneLines } from "react-icons/fa6";
 import RecordButton, { IActionRecordStates } from './record-button/record.button'
-import AudioRecorder, { IActionRecordRef } from '@app/components/app/media/audio-recorder'
+import AudioRecorder, { IActionRecordRef, IRecord } from '@app/components/app/media/audio-recorder'
 import { IBookQuestion } from '@app/modeles/database/book/book-question'
 import { RightCircleOutlined } from '@ant-design/icons'
 import { TypeAnimation } from 'react-type-animation'
@@ -19,7 +19,8 @@ type Props = {}
 
 export interface IEntry {
     id: string;
-    audio: any;
+    audioRecord: IRecord;
+    text?: string;
 }
 
 export default function ShowQuestion({ }: Props) {
@@ -139,8 +140,8 @@ export default function ShowQuestion({ }: Props) {
 
             <AudioRecorder
                 state={actionState}
-                onNewAudioRecorded={async (a: any) => {
-                    setEntries([...entries, { id: nanoid(), audio: a }])
+                onNewAudioRecorded={async (a: IRecord) => {
+                    setEntries([...entries, { id: nanoid(), audioRecord: a }])
                     return
                 }
                 }
@@ -157,15 +158,25 @@ export default function ShowQuestion({ }: Props) {
 
                     return (
                         <div key={entry.id} id={entry.id}
-                            style={{ display: (isLast && entry.audio && actionState !== IActionRecordStates.UPLOADING) || isLast == false ? 'block' : 'none' }}
+                            style={{ display: (isLast && entry.audioRecord && actionState !== IActionRecordStates.UPLOADING) || isLast == false ? 'block' : 'none' }}
 
                             className='bg-white shadow-lg rounded-md m-2 mt-8'>
                             <ResponseInteractor
+                                onEntryChange={(newEntry: IEntry) => {
+                                    setEntries([...entries.map((e: IEntry) => {
+                                        if (e.id === newEntry.id) {
+                                            return newEntry
+                                        } else {
+                                            return e
+                                        }
+                                    })])
+                                }}
                                 entry={entry}
                                 isLast={isLast}
                                 onTextAnimationEnd={onTextAnimationEnd}
                                 changeState={(newState: IActionRecordStates) => setActionState(newState)}
                                 state={actionState}
+
                                 onDelete={(idToDelete) => {
                                     setEntries([...entries.filter((r) => r.id !== idToDelete)])
                                 }} index={index} question={question} projectId={projectId}></ResponseInteractor>
@@ -174,6 +185,9 @@ export default function ShowQuestion({ }: Props) {
                 })}
             </div>
 
+            {/*         <button className="btn btn-primary fixed z-50 bottom-2" onClick={() => {
+                console.log(entries)
+            }} >debug</button> */}
 
             <RecordButton entries={entries} state={actionState} onClick={onRecordButtonClicked}></RecordButton>
 
