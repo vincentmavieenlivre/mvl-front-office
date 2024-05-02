@@ -42,11 +42,7 @@ export class AudioProcessor {
             const downloadURL = await getDownloadURL(resSnapshot.ref)
             console.log('audio file available at', downloadURL);
 
-            /*  const qm = new UserProjectQuestionManager(this.projectId, this.question)
-             const audioUrl: string = await qm.updateAudioUrl(downloadURL)
-             console.log("audio url", audioUrl)
-  */
-            this.remoteAudioUrl = downloadURL
+            this.entry.audioRecord.audioUrl = downloadURL
 
             return downloadURL
         } catch (e) {
@@ -57,7 +53,7 @@ export class AudioProcessor {
     public async transcribe(): Promise<any> {
         if (functions) {
             const transcribeFromCloudFunction = httpsCallable(functions, 'speechToText');
-            const result = await transcribeFromCloudFunction({ audioUrl: this.remoteAudioUrl })
+            const result = await transcribeFromCloudFunction({ audioUrl: this.entry.audioRecord.audioUrl })
             this.entry.text = (result.data as any)?.text as string
             console.log("[transcripted text]", this.entry.text)
             return this.entry.text

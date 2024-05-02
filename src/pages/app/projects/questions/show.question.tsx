@@ -38,9 +38,18 @@ export default function ShowQuestion({ }: Props) {
 
     let { id: projectId, questionId } = params;
 
+    let [question, chapter] = useSelector((state: RootState) => { return selectQuestion(state, questionId) })
+
+
+
     useEffect(() => {
-        setEntries([])
-    }, [params])
+        setEntries(question.responses?.map((d) => {
+            return {
+                ...d,
+                modified: false
+            }
+        }) ?? [])
+    }, [questionId])
 
     const scrollToEnd = () => {
         const { scrollHeight, clientHeight } = document.documentElement;
@@ -60,7 +69,6 @@ export default function ShowQuestion({ }: Props) {
     }, [actionState])
 
 
-    let [question, chapter] = useSelector((state: RootState) => { return selectQuestion(state, questionId) })
 
     const onSaveAll = async () => {
 
@@ -146,10 +154,10 @@ export default function ShowQuestion({ }: Props) {
 
                             className='bg-white shadow-lg rounded-md m-2 mt-8'>
                             <ResponseInteractor
-                                onEntryChange={(newEntry: IResponse, text: string) => {
+                                onEntryChange={(newEntry: IResponse) => {
                                     setEntries([...entries.map((e: IResponse) => {
                                         if (e.id === newEntry.id) {
-                                            return { ...newEntry, modified: true, text: text }
+                                            return { ...newEntry, modified: true }
                                         } else {
                                             return e
                                         }

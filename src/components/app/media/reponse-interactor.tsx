@@ -33,7 +33,7 @@ type Props = {
     onTextAnimationEnd: () => void;
     entry: IResponse,
     isLast: boolean
-    onEntryChange: (entry: IResponse, text: string) => void;
+    onEntryChange: (entry: IResponse) => void;
 }
 
 const debugWait = 500;
@@ -62,7 +62,7 @@ export default function ResponseInteractor({
         setText(entry.text)
         setAnimateText(true)
         changeState(IActionRecordStates.END)
-        onEntryChange(entry, "text")
+        onEntryChange(entry)
     }
 
     const onNewAudio = async (audio: any): Promise<any> => {
@@ -79,16 +79,21 @@ export default function ResponseInteractor({
                 setText(transcribed)
                 setAnimateText(true)
                 changeState(IActionRecordStates.END)
-                onEntryChange(ap.getEntry(), transcribed)
+                onEntryChange(ap.getEntry())
             }
         }
         return true
     }
 
     useEffect(() => {
-        console.log("new audio", entry.audioRecord)
-        if (entry.audioRecord) {
+        console.log("new audio", entry.audioRecord, state)
+        if (entry.audioRecord && state == IActionRecordStates.UPLOADING) {
             onNewAudio(entry.audioRecord)
+        } else {
+            console.log("not recording")
+            setText(entry.text)
+            setDisplayPlayer(true)
+            changeState(IActionRecordStates.END)
         }
     }, [entry.audioRecord])
 
