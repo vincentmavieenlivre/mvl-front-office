@@ -18,14 +18,19 @@ export const speechToText = onRequest({ cors: true }, async (req, res) => {
     let params = req.body.data
     log("audio url", params.audioUrl)
 
-    const FILE_URL = params.audioUrl; 
+    const FILE_URL = params.audioUrl;
     //"https://firebasestorage.googleapis.com/v0/b/front-office-staging-f55fa.appspot.com/o/mariage.webm?alt=media&token=16d4c1be-72de-44b6-bf00-d5ae1f2c49c4"
-     
 
-    const data = { audio_url: FILE_URL,   language_detection: true }
+
+    const data = {
+        audio_url: FILE_URL,
+        language_code: 'fr',
+    }
 
     const transcript = await client.transcripts.transcribe(data);
-    
+
+    console.log("transcript", transcript)
+
     res.status(200).send({
         data: { text: transcript.text }
     });
