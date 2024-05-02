@@ -216,7 +216,7 @@ export default function ShowProjectPage({ }: Props) {
             <h2 className=' mt-12 text-sky-950  text-xl font-bold'>De quoi aimeriez-vous parler pour commencer ?</h2>
 
             <div className='text-sky-950 mt-4'>
-                <p>Voiçi le sommaire de votre livrexx</p>
+                <p>Voiçi le sommaire de votre livre</p>
                 <p className='mt-4'>Composez le en choisissant librement vos thèmes préférés</p>
             </div>
 
