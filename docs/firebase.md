@@ -12,7 +12,11 @@
 #### hosting
 ```firebase deploy --only hosting ```
 
-#### functions
+#### functions live reload
+```
+ cd functions
+ tsc --watch
+```
 
 
 # emulator 
