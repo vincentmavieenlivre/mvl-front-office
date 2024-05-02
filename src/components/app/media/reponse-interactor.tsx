@@ -6,7 +6,7 @@ import { Spin } from 'antd';
 import TextareaAutosize from 'react-textarea-autosize';
 import "./response-interactor.scss"
 import { IActionRecordStates } from '@app/pages/app/projects/questions/record-button/record.button';
-import { IEntry } from '@app/pages/app/projects/questions/show.question';
+import { IResponse } from '@app/pages/app/projects/questions/show.question';
 import Player, { playerIconSize } from './player';
 import { TbTrashXFilled } from 'react-icons/tb';
 import { AudioProcessor } from '@app/domains/services/audio-processor.service';
@@ -31,9 +31,9 @@ type Props = {
     state: IActionRecordStates
     changeState: (newState: IActionRecordStates) => void
     onTextAnimationEnd: () => void;
-    entry: IEntry,
+    entry: IResponse,
     isLast: boolean
-    onEntryChange: (entry: IEntry) => void;
+    onEntryChange: (entry: IResponse) => void;
 }
 
 const debugWait = 500;

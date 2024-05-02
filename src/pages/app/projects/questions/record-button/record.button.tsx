@@ -8,8 +8,9 @@ import uploadAnimationData from '../../../../../assets/animations/uploading.json
 import transcribingAnimationData from '../../../../../assets/animations/transcribing.json'
 import { MdMenuBook } from 'react-icons/md';
 import './record-button.scss'
-import { IEntry } from '../show.question';
+import { IResponse } from '../show.question';
 
+import _ from 'lodash';
 
 export enum IActionRecordStates {
     WAIT_FOR_RECORD = "WAIT_FOR_RECORD",
@@ -30,10 +31,11 @@ const help: any = {
 type Props = {
     state: IActionRecordStates;
     onClick: () => void;
-    entries: IEntry[];
+    entries: IResponse[];
+    onSaveAll: () => Promise<any>
 }
 
-export default function RecordButton({ entries, state = IActionRecordStates.WAIT_FOR_RECORD, onClick }: Props) {
+export default function RecordButton({ entries, state = IActionRecordStates.WAIT_FOR_RECORD, onClick, onSaveAll }: Props) {
 
     const [initialRenderDone, setInitialRenderDone] = useState(false)
 
@@ -43,6 +45,11 @@ export default function RecordButton({ entries, state = IActionRecordStates.WAIT
 
         }
     }, [state])
+
+    useEffect(() => {
+        console.log("modified", _.some(entries, (e: IResponse) => e.modified == true))
+    }, [entries])
+
 
     const transcribingAnimationOptions = {
         loop: true,
@@ -146,11 +153,13 @@ export default function RecordButton({ entries, state = IActionRecordStates.WAIT
 
 
 
-                <div className="record-bar bg-sky-200 fixed">
+                <div className="record-bar bg-sky-200 flex flex-col items-center">
                     {getHelpStr()}
-                </div>
 
-                <ButtonChapter className="z-20 mb-2 text-sky-500 bg-sky-50">Sauvegarder</ButtonChapter>
+                    {/* save */}
+                    <ButtonChapter onClick={onSaveAll} hide={!_.some(entries, (e: IResponse) => e.modified == true)} className="z-20 mb-2 text-sky-500 bg-sky-50">Sauvegarder</ButtonChapter>
+
+                </div>
 
             </div>
 

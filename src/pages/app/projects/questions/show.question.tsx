@@ -17,15 +17,16 @@ import { createSelector, isAllOf } from '@reduxjs/toolkit'
 
 type Props = {}
 
-export interface IEntry {
+export interface IResponse {
     id: string;
     audioRecord: IRecord;
     text?: string;
+    modified: boolean;
 }
 
 export default function ShowQuestion({ }: Props) {
 
-    const [entries, setEntries] = useState<IEntry[]>([])
+    const [entries, setEntries] = useState<IResponse[]>([])
     const audioRecordRef = useRef<IActionRecordRef | undefined>(undefined);
 
     const navigate = useNavigate()
@@ -141,7 +142,7 @@ export default function ShowQuestion({ }: Props) {
             <AudioRecorder
                 state={actionState}
                 onNewAudioRecorded={async (a: IRecord) => {
-                    setEntries([...entries, { id: nanoid(), audioRecord: a }])
+                    setEntries([...entries, { id: nanoid(), audioRecord: a, modified: true }])
                     return
                 }
                 }
@@ -162,10 +163,10 @@ export default function ShowQuestion({ }: Props) {
 
                             className='bg-white shadow-lg rounded-md m-2 mt-8'>
                             <ResponseInteractor
-                                onEntryChange={(newEntry: IEntry) => {
-                                    setEntries([...entries.map((e: IEntry) => {
+                                onEntryChange={(newEntry: IResponse) => {
+                                    setEntries([...entries.map((e: IResponse) => {
                                         if (e.id === newEntry.id) {
-                                            return newEntry
+                                            return { ...newEntry, modified: true }
                                         } else {
                                             return e
                                         }
@@ -189,7 +190,17 @@ export default function ShowQuestion({ }: Props) {
                 console.log(entries)
             }} >debug</button> */}
 
-            <RecordButton entries={entries} state={actionState} onClick={onRecordButtonClicked}></RecordButton>
+            <RecordButton onSaveAll={async () => {
+                return new Promise((resolve) => {
+                    setTimeout(() => {
+                        setEntries([...entries.map((e: IResponse) => {
+                            return { ...e, modified: false }
+                        })])
+                        resolve(true)
+                    }, 2000)
+                })
+
+            }} entries={entries} state={actionState} onClick={onRecordButtonClicked}></RecordButton>
 
 
         </React.Fragment >

@@ -1,6 +1,6 @@
 import { functions, storage } from "@app/init/firebase";
 import { UserProjectQuestionManager } from "@app/manager/client/user-project-question.manager";
-import { IEntry } from "@app/pages/app/projects/questions/show.question";
+import { IResponse } from "@app/pages/app/projects/questions/show.question";
 import { httpsCallable } from "firebase/functions";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 
@@ -9,17 +9,17 @@ const audioMimeType = "audio/webm";
 
 export class AudioProcessor {
 
-    private entry: IEntry;
+    private entry: IResponse;
     private remoteAudioUrl: string | undefined;
 
     constructor(
         private projectId: string,
         private questionId: string,
-        entry: IEntry) {
+        entry: IResponse) {
         this.entry = entry
     }
 
-    public getEntry(): IEntry {
+    public getEntry(): IResponse {
         return this.entry
     }
 
