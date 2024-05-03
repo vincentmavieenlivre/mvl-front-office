@@ -78,31 +78,8 @@ type Props = {}
 export default function ShowProjectPage({ }: Props) {
     const params: any = useParams()
 
-    const dispatch = useDispatch();
-
-    let project: Project | undefined = useSelector((state: RootState) => {
-        return selectProject(state)
-    })
 
 
-    const [chapters, setChapters] = useState<IChapterTree[]>([])
-
-
-    const loadProject = async () => {
-        const pm = new UserProjectsService(params.id)
-        const p = await pm.loadProject()
-        if (p) {
-            let questions = await pm.loadQuestions()
-            const chapters: IChapterTree[] = pm.getQuestionsByChapters(questions)
-
-            if (chapters.length > 0) {
-                setChapters(chapters)
-            }
-            p.questions = questions
-            dispatch(setCurrentProject(p))
-            dispatch(setChapterTree(chapters))
-        }
-    }
 
     const onInvite = async () => {
         const email = "family@test.com"
@@ -112,14 +89,6 @@ export default function ShowProjectPage({ }: Props) {
             console.log("[invite family result]", result)
         }
     }
-
-
-
-
-    useEffect(() => {
-        loadProject()
-    }, [])
-
 
     /*   const renderBook = () => {
           return (
@@ -179,9 +148,9 @@ export default function ShowProjectPage({ }: Props) {
                 <p>Voiçi le sommaire de votre livre</p>
                 <p className='mt-4'>Composez le en choisissant librement vos thèmes préférés</p>
             </div>
-            {project &&
-                <Summary></Summary>
-            }
+
+            <Summary projectId={params.id}></Summary>
+
         </div>
     )
 }

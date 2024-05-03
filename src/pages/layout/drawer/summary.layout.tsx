@@ -35,7 +35,7 @@ export default function SummaryDrawer({ children }: Props) {
 
     const renderQuestion = (q: IBookQuestion, index) => {
 
-        const hasAnswers = (q.responses?.length > 0) ?? false;
+        const hasAnswers = (q.responses && q.responses.length > 0) ?? false;
         const numAnswers = q.responses?.length || 0
 
         return (

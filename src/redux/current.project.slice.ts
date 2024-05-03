@@ -46,7 +46,7 @@ export const authSlice = createSlice({
 // Action creators are generated for each case reducer function
 export const { setCurrentProject, setChapterTree, setQuestionResponse } = authSlice.actions;
 
-export const selectChapters = (state: RootState): IChapterTree[] => {
+export const selectChapters = (state: RootState): IChapterTree[] | undefined => {
     if (state.currentProject.chapterTree && state.currentProject.project?.questionsOrder && state.currentProject.project?.questions) {
 
 
@@ -70,7 +70,6 @@ export const selectChapters = (state: RootState): IChapterTree[] => {
 
 
     }
-    throw 'no current chapters selected'
 }
 
 

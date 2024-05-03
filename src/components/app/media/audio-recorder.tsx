@@ -11,6 +11,7 @@ import { TypeAnimation } from "react-type-animation";
 import { TbTrashXFilled } from "react-icons/tb";
 import Player, { playerIconSize } from "./player";
 import { IActionRecordStates } from "@app/pages/app/projects/questions/record-button/record.button";
+import { IRecord } from "@app/modeles/database/book/response";
 
 const audioMimeType = "audio/webm";
 
@@ -34,10 +35,6 @@ export interface IActionRecordRef {
 }
 
 
-export interface IRecord {
-	audioUrl: any;
-	audioBlob?: any;
-}
 const AudioRecorder = React.forwardRef<IActionRecordRef, Props>((props: Props, ref) => {
 
 

@@ -90,10 +90,9 @@ export default function ResponseInteractor({
         if (entry.audioRecord && state == IActionRecordStates.UPLOADING) {
             onNewAudio(entry.audioRecord)
         } else {
-            console.log("not recording")
+            console.log("[init new response screen]")
             setText(entry.text)
             setDisplayPlayer(true)
-            changeState(IActionRecordStates.END)
         }
     }, [entry.audioRecord])
 
@@ -109,6 +108,9 @@ export default function ResponseInteractor({
             {entry.audioRecord && displayPlayer ? (
                 <div className="audio-player mt-4 flex flex-row items-center justify-around ">
                     {/* <audio  src={audio}  ></audio> */}
+
+                    <div className='uppercase text-gray-500 text-xs'>réponse {index + 1}</div>
+
                     <button disabled={state == IActionRecordStates.RECORDING} className="btn btn-circle border-none">
                         <Player url={entry.audioRecord.audioUrl}></Player>
                     </button>
@@ -129,7 +131,7 @@ export default function ResponseInteractor({
                 </div>
             }
 
-            <div className='w-full  p-6 text-sky-950 ' style={textStyle}>
+            <div className='w-full  p-2  text-sky-950 ' style={textStyle}>
 
                 {animateText == true &&
                     <TypeAnimation

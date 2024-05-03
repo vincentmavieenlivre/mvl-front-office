@@ -1,4 +1,5 @@
 import { RightCircleOutlined } from '@ant-design/icons';
+import UseProject from '@app/hook/use-project';
 import { IBookQuestion } from '@app/modeles/database/book/book-question';
 import { IChapterTree } from '@app/modeles/database/book/book-template';
 import { Project } from '@app/modeles/database/project';
@@ -9,21 +10,20 @@ import React, { useRef } from 'react'
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
-type Props = {}
+type Props = { projectId: string }
 
-export default function Summary({ }: Props) {
+export default function Summary(props: Props) {
 
-
-    const checkboxRef = useRef(null);
+    UseProject(props.projectId)
 
     let nav = useNavigate()
 
-    let project: Project = useSelector((state: RootState) => {
+    let project: Project | undefined = useSelector((state: RootState) => {
         return selectProject(state)
     })
 
 
-    let chapters: IChapterTree[] = useSelector((state: RootState) => {
+    let chapters: IChapterTree[] | undefined = useSelector((state: RootState) => {
         return selectChapters(state)
     })
 
@@ -56,7 +56,7 @@ export default function Summary({ }: Props) {
         return (
 
             <div className='mt-4'>
-                {chapters.map((c: IChapterTree, index: number) => {
+                {chapters?.map((c: IChapterTree, index: number) => {
                     return (
                         <div key={c.id} className="collapse collapse-arrow bg-sky-100 mt-4">
                             <input type="checkbox" name={"test"} defaultChecked={index == 0} />

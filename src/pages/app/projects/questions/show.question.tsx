@@ -1,29 +1,19 @@
-import { selectQuestion, selectQuestion2, selectQuestionPosition, setQuestionResponse } from '@app/redux/current.project.slice'
+import { selectQuestion, selectQuestionPosition, setQuestionResponse } from '@app/redux/current.project.slice'
 import { RootState } from '@app/redux/store'
 import React, { useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { Link, useNavigate, useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import QuestionNavigation from './question-navigation/question.navigation'
 import "./record-container.scss"
-import { FaMicrophoneLines } from "react-icons/fa6";
 import RecordButton, { IActionRecordStates } from './record-button/record.button'
 import AudioRecorder, { IActionRecordRef, IRecord } from '@app/components/app/media/audio-recorder'
-import { IBookQuestion } from '@app/modeles/database/book/book-question'
-import { RightCircleOutlined } from '@ant-design/icons'
-import { TypeAnimation } from 'react-type-animation'
 import ResponseInteractor from '@app/components/app/media/reponse-interactor'
 import { nanoid } from 'nanoid'
-import { createSelector, isAllOf } from '@reduxjs/toolkit'
 import { UserProjectQuestionManager } from '@app/manager/client/user-project-question.manager'
+import { IResponse } from '@app/modeles/database/book/response'
 
 type Props = {}
 
-export interface IResponse {
-    id: string;
-    audioRecord: IRecord;
-    text?: string;
-    modified: boolean;
-}
 
 export default function ShowQuestion({ }: Props) {
     const dispatch = useDispatch();
@@ -126,7 +116,7 @@ export default function ShowQuestion({ }: Props) {
 
             </QuestionNavigation>
 
-            <div className='m-5 mt-7 text-sky-950'>
+            <div className='m-5 mt-7 text-sky-950 text-md font-bold'>
                 {question.questionTitle}
             </div>
 
