@@ -1,6 +1,9 @@
 import { LeftCircleOutlined, RightCircleOutlined, RightOutlined } from '@ant-design/icons';
 import ButtonChapter from '@app/components/app/ui/buttons/button-chapter';
+import { selectShouldSave, setDisplaySaveDialog } from '@app/redux/current.project.slice';
+import { RootState } from '@app/redux/store';
 import React from 'react'
+import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import Sticky from 'react-sticky-el';
 type Props = {
@@ -16,7 +19,25 @@ const navBtnIconSize = 25;
 
 export default function QuestionNavigation(props: Props) {
 
+    let dispatch = useDispatch()
 
+    let shouldSave: boolean = useSelector((state: RootState) => {
+        return selectShouldSave(state)
+    })
+
+
+    const preventNavigation = (e, wantedRoute: string) => {
+        if (shouldSave) {
+            e.preventDefault()
+            dispatch(setDisplaySaveDialog({
+                wantedRoute: wantedRoute,
+                displaySaveDialog: true
+            }))
+        }
+    }
+
+    let prev = `/app/projects/${props.projectId}/questions/${props.prevId}`
+    let next = `/app/projects/${props.projectId}/questions/${props.nextId}`
 
     return (
         <div className='mt-4 gap-3 flex flex-col ml-5 mr-5 items-center'>
@@ -29,7 +50,7 @@ export default function QuestionNavigation(props: Props) {
 
                         {props.prevId &&
                             <button className='btn bg-sky-50 text-sky-100 b-sky-900 shadow-sky-200'>
-                                <Link to={`/app/projects/${props.projectId}/questions/${props.prevId}`}>
+                                <Link onClick={(e) => preventNavigation(e, prev)} to={prev}>
                                     <LeftCircleOutlined className='text-sky-300 ' style={{ fontSize: navBtnIconSize }} />
                                 </Link>
 
@@ -41,7 +62,7 @@ export default function QuestionNavigation(props: Props) {
 
                         {
                             props.nextId &&
-                            <Link to={`/app/projects/${props.projectId}/questions/${props.nextId}`}>
+                            <Link onClick={(e) => preventNavigation(e, next)} to={next}>
 
                                 < button className='btn bg-sky-50 text-sky-100 b-sky-900 shadow-sky-200'>
                                     <RightCircleOutlined className='text-sky-300' style={{ fontSize: navBtnIconSize }} />

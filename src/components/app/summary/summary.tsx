@@ -3,20 +3,30 @@ import useProject from '@app/hook/use-project';
 import { IBookQuestion } from '@app/modeles/database/book/book-question';
 import { IChapterTree } from '@app/modeles/database/book/book-template';
 import { Project } from '@app/modeles/database/project';
-import { selectProject, selectChapters } from '@app/redux/current.project.slice';
+import { selectProject, selectChapters, selectShouldSave, setDisplaySaveDialog } from '@app/redux/current.project.slice';
 import { RootState } from '@app/redux/store';
 import { pluralize } from '@app/utils/diverse.utils';
 import React, { useRef } from 'react'
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import SaveDialog from '../studio/save-dialog/save-dialog';
 
-type Props = { projectId: string }
+type Props = {
+    saveDialog?: boolean;
+    projectId?: string
+}
 
 export default function Summary(props: Props) {
+
+    let shouldSave: boolean = useSelector((state: RootState) => {
+        return selectShouldSave(state)
+    })
+
 
     useProject(props.projectId)
 
     let nav = useNavigate()
+    let dispatch = useDispatch()
 
     let project: Project | undefined = useSelector((state: RootState) => {
         return selectProject(state)
@@ -29,13 +39,22 @@ export default function Summary(props: Props) {
 
     const renderQuestion = (q: IBookQuestion, index) => {
 
-        const hasAnswers = (q.responses?.length > 0) ?? false;
+        const hasAnswers = (q.responses && q.responses?.length > 0) ?? false;
         const numAnswers = q.responses?.length || 0
+
+        const wantedRoute = `/app/projects/${project.id}/questions/${q.id}`
 
         return (
             <label id={q.id} key={q.id}
                 onClick={() => {
-                    nav(`/app/projects/${project.id}/questions/${q.id}`)
+                    if (props.saveDialog && shouldSave) {
+                        dispatch(setDisplaySaveDialog({
+                            wantedRoute: wantedRoute,
+                            displaySaveDialog: true
+                        }))
+                    } else {
+                        nav(wantedRoute)
+                    }
                 }}
                 className={`mt-4  ripple-bg-sky-50 rounded-xl p-2 text-sky-950 flex flex-col ${hasAnswers ? "border-green-400 border-2" : ''}`}
                 htmlFor="my-drawer">

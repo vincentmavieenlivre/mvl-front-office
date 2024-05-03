@@ -9,14 +9,29 @@ import { IBookQuestion } from "@app/modeles/database/book/book-question";
 import { IProduct } from "@app/modeles/interfaces/refine.test";
 import { Root } from "react-dom/client";
 
+export interface ISaveDialog {
+    shouldSave: boolean
+    displaySaveDialog: boolean
+    wantedRoute: string | undefined
+}
+
 export interface ProjectStore {
     project?: Project
     chapterTree?: IChapterTree[]
+    saveDialog: ISaveDialog;
+
 }
 
 const initialState: ProjectStore = {
     project: undefined,
-    chapterTree: undefined
+    chapterTree: undefined,
+    saveDialog: {
+        shouldSave: false,
+        displaySaveDialog: false,
+        wantedRoute: undefined
+    }
+
+
 };
 
 export const authSlice = createSlice({
@@ -39,12 +54,22 @@ export const authSlice = createSlice({
                     state.project.questions[index].responses = action.payload?.responses
                 }
             }
+        },
+
+        setDisplaySaveDialog: (state, action: PayloadAction<{ displaySaveDialog: boolean, wantedRoute: string | undefined }>) => {
+            state.saveDialog.displaySaveDialog = action.payload.displaySaveDialog
+            state.saveDialog.wantedRoute = action.payload.wantedRoute
+
+        },
+
+        setShouldSave: (state, action: PayloadAction<boolean>) => {
+            state.saveDialog.shouldSave = action.payload
         }
     },
 });
 
 // Action creators are generated for each case reducer function
-export const { setCurrentProject, setChapterTree, setQuestionResponse } = authSlice.actions;
+export const { setCurrentProject, setChapterTree, setQuestionResponse, setShouldSave, setDisplaySaveDialog } = authSlice.actions;
 
 export const selectChapters = (state: RootState): IChapterTree[] | undefined => {
     if (state.currentProject.chapterTree && state.currentProject.project?.questionsOrder && state.currentProject.project?.questions) {
@@ -70,6 +95,14 @@ export const selectChapters = (state: RootState): IChapterTree[] | undefined => 
 
 
     }
+}
+
+export const selectSaveDialog = (state: RootState): ISaveDialog => {
+    return state.currentProject.saveDialog
+}
+
+export const selectShouldSave = (state: RootState): boolean => {
+    return state.currentProject.saveDialog.shouldSave
 }
 
 
@@ -108,7 +141,7 @@ export const selectAllQuestions = (state: RootState): IBookQuestion[] => {
     return state.currentProject.project?.questions ?? []
 }
 
-export const selectQuestion = (state: RootState, questionId: string): [IBookQuestion, IChapter] => {
+export const selectQuestion = (state: RootState, questionId: string): [IBookQuestion | undefined, IChapter | undefined] => {
     let res = state.currentProject.project?.questions?.find((q: IBookQuestion) => q.id === questionId)
     if (res) {
         let chapter = state.currentProject.project?.chapters.find((c: IChapter) => c.id === res?.chapterId)

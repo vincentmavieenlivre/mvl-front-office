@@ -1,4 +1,4 @@
-import { selectQuestion, selectQuestionPosition, setQuestionResponse } from '@app/redux/current.project.slice'
+import { selectSaveDialog, selectQuestion, selectQuestionPosition, selectShouldSave, setDisplaySaveDialog, setQuestionResponse, setShouldSave, ISaveDialog } from '@app/redux/current.project.slice'
 import { RootState } from '@app/redux/store'
 import React, { useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
@@ -10,8 +10,10 @@ import AudioRecorder, { IActionRecordRef, IRecord } from '@app/components/app/me
 import ResponseInteractor from '@app/components/app/media/reponse-interactor'
 import { nanoid } from 'nanoid'
 import { UserProjectQuestionManager } from '@app/manager/client/user-project-question.manager'
-import { IResponse } from '@app/modeles/database/book/response'
+import { IResponse, shouldBeSaved } from '@app/modeles/database/book/response'
 import useProject from '@app/hook/use-project'
+import { render } from 'react-dom'
+import SaveDialog from '@app/components/app/studio/save-dialog/save-dialog'
 
 type Props = {}
 
@@ -44,7 +46,11 @@ export default function ShowQuestion({ }: Props) {
                 modified: false
             }
         }) ?? [])
-    }, [questionId])
+
+        dispatch(setShouldSave(false))
+
+
+    }, [question])
 
     const scrollToEnd = () => {
         const { scrollHeight, clientHeight } = document.documentElement;
@@ -73,12 +79,26 @@ export default function ShowQuestion({ }: Props) {
         let trick = new Promise((resolve) => setTimeout(resolve, 500))
         await Promise.all([m.updateAllResponses(entries), trick])
 
-        dispatch(setQuestionResponse({
-            ...question, responses: [...entries.map((e) => {
+        if (question) {
+
+            let responses: IResponse[] = [...entries.map((e) => {
                 e.modified = false
                 return e
             })]
-        }))
+
+            dispatch(
+                setQuestionResponse(
+                    {
+                        ...question,
+                        responses: responses
+                    }
+                )
+            )
+
+            dispatch(setShouldSave(false))
+
+
+        }
     }
 
 
@@ -122,6 +142,9 @@ export default function ShowQuestion({ }: Props) {
 
     return (
         <React.Fragment>
+
+            <SaveDialog onSave={onSaveAll}></SaveDialog>
+
             <QuestionNavigation
                 prevId={prevId} nextId={nextId}
                 projectId={projectId}
@@ -137,9 +160,9 @@ export default function ShowQuestion({ }: Props) {
                 state={actionState}
                 onNewAudioRecorded={async (a: IRecord) => {
                     setEntries([...entries, { id: nanoid(), audioRecord: a, modified: true }])
+                    dispatch(setShouldSave(true))
                     return
-                }
-                }
+                }}
 
                 ref={audioRecordRef} question={question} projectId={projectId}>
 
@@ -165,6 +188,9 @@ export default function ShowQuestion({ }: Props) {
                                             return e
                                         }
                                     })])
+
+                                    dispatch(setShouldSave(true))
+
                                 }}
                                 entry={entry}
                                 isLast={isLast}

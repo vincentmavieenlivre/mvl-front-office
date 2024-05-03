@@ -8,7 +8,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 type Props = {}
 
-export default function useProject(projectId: string) {
+export default function useProject(projectId: string | undefined) {
 
 
     let project: Project = useSelector((state: RootState) => {
@@ -19,6 +19,9 @@ export default function useProject(projectId: string) {
 
 
     const loadProject = async () => {
+        if (!projectId) {
+            return
+        }
         const pm = new UserProjectsService(projectId)
         const p = await pm.loadProject()
         if (p) {
