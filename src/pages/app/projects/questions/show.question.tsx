@@ -11,12 +11,14 @@ import ResponseInteractor from '@app/components/app/media/reponse-interactor'
 import { nanoid } from 'nanoid'
 import { UserProjectQuestionManager } from '@app/manager/client/user-project-question.manager'
 import { IResponse } from '@app/modeles/database/book/response'
+import useProject from '@app/hook/use-project'
 
 type Props = {}
 
 
 export default function ShowQuestion({ }: Props) {
     const dispatch = useDispatch();
+
 
     const [entries, setEntries] = useState<IResponse[]>([])
     const audioRecordRef = useRef<IActionRecordRef | undefined>(undefined);
@@ -28,12 +30,15 @@ export default function ShowQuestion({ }: Props) {
 
     let { id: projectId, questionId } = params;
 
+    useProject(projectId)
+
+
     let [question, chapter] = useSelector((state: RootState) => { return selectQuestion(state, questionId) })
 
 
 
     useEffect(() => {
-        setEntries(question.responses?.map((d) => {
+        setEntries(question?.responses?.map((d) => {
             return {
                 ...d,
                 modified: false
@@ -78,10 +83,10 @@ export default function ShowQuestion({ }: Props) {
 
 
     let [index, totalCount, prevId, nextId] = useSelector((state: RootState) => {
-        return selectQuestionPosition(state, chapter.id, questionId)
+        return selectQuestionPosition(state, chapter?.id, questionId)
     })
 
-    console.log("question", question.id, "chapter", chapter.id, `${index}/${totalCount} prev=${prevId} next=${nextId}`)
+    console.log("question", question?.id, "chapter", chapter?.id, `${index}/${totalCount} prev=${prevId} next=${nextId}`)
 
 
 
@@ -105,6 +110,14 @@ export default function ShowQuestion({ }: Props) {
 
     const onTextAnimationEnd = () => {
         scrollToEnd()
+    }
+
+    if (!question) {
+        return (
+            <div className='flex flex-row justify-center items-center h-screen'>
+                <span className="loading loading-spinner loading-xs"></span>
+            </div>
+        )
     }
 
     return (

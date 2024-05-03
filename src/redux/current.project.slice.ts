@@ -100,7 +100,7 @@ export const selectQuestionPosition = (state: RootState, chapterId: string, ques
         }
     }
 
-    throw [0, 0]
+    return [0, 0, undefined, undefined]
 
 }
 
@@ -117,9 +117,9 @@ export const selectQuestion = (state: RootState, questionId: string): [IBookQues
         } else {
             throw 'chapter not found'
         }
-    } else {
-        throw 'question not found ' + questionId
     }
+
+    return [undefined, undefined]
 }
 
 export function sortQuestions(questionsOrder: { index: number, id: string }[], questions: IBookQuestion[]): IBookQuestion[] {

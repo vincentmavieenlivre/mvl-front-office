@@ -1,5 +1,5 @@
 import { RightCircleOutlined } from '@ant-design/icons';
-import UseProject from '@app/hook/use-project';
+import useProject from '@app/hook/use-project';
 import { IBookQuestion } from '@app/modeles/database/book/book-question';
 import { IChapterTree } from '@app/modeles/database/book/book-template';
 import { Project } from '@app/modeles/database/project';
@@ -14,7 +14,7 @@ type Props = { projectId: string }
 
 export default function Summary(props: Props) {
 
-    UseProject(props.projectId)
+    useProject(props.projectId)
 
     let nav = useNavigate()
 

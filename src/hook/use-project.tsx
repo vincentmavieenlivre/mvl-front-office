@@ -1,15 +1,22 @@
 import { UserProjectsService } from '@app/domains/services/user-projects.service';
 import { IChapterTree } from '@app/modeles/database/book/book-template';
-import { setCurrentProject, setChapterTree } from '@app/redux/current.project.slice';
+import { Project } from '@app/modeles/database/project';
+import { setCurrentProject, setChapterTree, selectProject } from '@app/redux/current.project.slice';
+import { RootState } from '@app/redux/store';
 import React, { useEffect, useState } from 'react'
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 type Props = {}
 
-export default function UseProject(projectId: string) {
+export default function useProject(projectId: string) {
+
+
+    let project: Project = useSelector((state: RootState) => {
+        return selectProject(state)
+    })
+
     const dispatch = useDispatch();
 
-    const [project, setProject] = useState(null)
 
     const loadProject = async () => {
         const pm = new UserProjectsService(projectId)
@@ -26,7 +33,11 @@ export default function UseProject(projectId: string) {
     }
 
     useEffect(() => {
-        loadProject()
+        if (!project) {
+            loadProject()
+        } else {
+            console.log("project ever loaded")
+        }
     }, [])
 
 

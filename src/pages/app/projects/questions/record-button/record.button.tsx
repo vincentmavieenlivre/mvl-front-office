@@ -9,8 +9,8 @@ import transcribingAnimationData from '../../../../../assets/animations/transcri
 import { MdMenuBook } from 'react-icons/md';
 import './record-button.scss'
 import { IResponse } from '../show.question';
+import { shouldBeSaved } from '@app/modeles/database/book/response';
 
-import _ from 'lodash';
 
 export enum IActionRecordStates {
     WAIT_FOR_RECORD = "WAIT_FOR_RECORD",
@@ -154,7 +154,7 @@ export default function RecordButton({ entries, state = IActionRecordStates.WAIT
 
                     {/* save */}
                     {state == IActionRecordStates.WAIT_FOR_RECORD &&
-                        <ButtonChapter onClick={onSaveAll} hide={!_.some(entries, (e: IResponse) => e.modified == true)} className="z-20 mb-2 text-sky-500 bg-sky-50">Sauvegarder</ButtonChapter>
+                        <ButtonChapter onClick={onSaveAll} hide={!shouldBeSaved(entries)} className="z-20 mb-2 text-sky-500 bg-sky-50">Sauvegarder</ButtonChapter>
                     }
                 </div>
 
