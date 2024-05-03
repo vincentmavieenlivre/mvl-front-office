@@ -36,7 +36,7 @@ export default function SaveDialog(props: Props) {
 
     return (
         <>
-            <input type="checkbox" checked={displaySaveDialog.displaySaveDialog} id="save_dialog" className="modal-toggle" />
+            <input type="checkbox" checked={displaySaveDialog.displaySaveDialog ?? false} onChange={() => { }} id="save_dialog" className="modal-toggle" />
             <div className="modal" role="dialog">
                 <div className="modal-box">
                     <h3 className="font-bold text-lg">Voulez vous sauvegarder votre question ?</h3>

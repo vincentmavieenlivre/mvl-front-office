@@ -21,7 +21,7 @@ type Props = {}
 export default function ShowQuestion({ }: Props) {
     const dispatch = useDispatch();
 
-
+    const [isHeaderFixed, setIsHeaderFixed] = useState(false)
     const [entries, setEntries] = useState<IResponse[]>([])
     const audioRecordRef = useRef<IActionRecordRef | undefined>(undefined);
 
@@ -140,21 +140,32 @@ export default function ShowQuestion({ }: Props) {
         )
     }
 
+    let seed = question.id
+
     return (
         <React.Fragment>
 
             <SaveDialog onSave={onSaveAll}></SaveDialog>
 
+
+
             <QuestionNavigation
+                onHeaderFixed={setIsHeaderFixed}
+                question={question}
                 prevId={prevId} nextId={nextId}
                 projectId={projectId}
                 currentIndex={index} lastIndex={totalCount} chapterStr={chapter.name}>
 
             </QuestionNavigation>
+            <div className='flex flex-row justify-center mt-4'>
+                <img className='rounded-lg' src={`https://picsum.photos/seed/${seed}/300/200`}></img>
+            </div>
 
-            <div className='m-5 mt-7 text-sky-950 text-md font-bold'>
+
+            <div className={`m-5 mt-7    text-sky-950 text-md font-bold ${isHeaderFixed ? 'opacity-0 transition-opacity duration-1000 ' : ''}`}>
                 {question.questionTitle}
             </div>
+
 
             <AudioRecorder
                 state={actionState}
