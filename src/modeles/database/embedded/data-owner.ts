@@ -1,5 +1,5 @@
-import { ERoles } from "../../roles";
 import { Organization } from "../organization";
+import { ERoles } from "../roles";
 
 export interface DataOwner {
     organisation_id?: string

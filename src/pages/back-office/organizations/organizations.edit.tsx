@@ -4,15 +4,15 @@ import { Form, Input, Select, InputNumber, Button, Typography } from "antd";
 import { useEffect, useState } from "react";
 import { Transfer } from 'antd';
 import type { TransferProps } from 'antd';
-import { ERoles } from "@app/modeles/roles";
 import { collection, getDocs, query, where } from "firebase/firestore";
 import { db } from "@app/init/firebase";
 import { User } from "@app/modeles/database/user";
 import { FirestoreHelper, index, removeUndefinedRecursive } from "@app/utils/firebase/firestore-helper";
 import { useResource, useUpdate } from "@refinedev/core";
-import { ECollections } from "@app/utils/firebase/firestore-collections";
 import { Organization } from "@app/modeles/database/organization";
 import { AdminUser, addOrganizationAdmin, removeOrganizationAdmin } from "@app/modeles/database/embedded/data-owner";
+import { ERoles } from "@app/modeles/database/roles";
+import { ECollections } from "@app/modeles/database/firestore-collections";
 
 interface RecordType extends AdminUser {
     key: string | undefined;

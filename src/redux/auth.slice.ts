@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import { IdTokenResult, ParsedToken, User } from "firebase/auth";
 import type { PayloadAction } from '@reduxjs/toolkit'
 import { RootState } from "./store";
-import { ERoles } from "@app/modeles/roles";
+import { ERoles } from "@app/manager/admin/roles";
 import { Project } from "@app/modeles/database/project";
 
 export interface UserStore {
@@ -27,7 +27,7 @@ export const authSlice = createSlice({
     reducers: {
         setUser: (state, action: PayloadAction<UserStore | undefined>) => {
             if (action.payload) {
-                console.info("[login ok] user:", action.payload.user?.email, "claim", action.payload.tokenResult?.claims.role)
+                console.info("[login ok] user:", action.payload.user?.email, "claim", action.payload.tokenResult?.claims.role, "token", action.payload.tokenResult?.token)
                 state.user = action.payload.user;
                 state.tokenResult = action.payload.tokenResult
             } else {

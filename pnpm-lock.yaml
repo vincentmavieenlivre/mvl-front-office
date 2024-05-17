@@ -59,6 +59,9 @@ dependencies:
   react-lottie:
     specifier: ^1.2.4
     version: 1.2.4(react@18.2.0)
+  react-pageflip:
+    specifier: ^2.0.3
+    version: 2.0.3
   react-pdf:
     specifier: ^7.7.1
     version: 7.7.1(@types/react@18.2.55)(react-dom@18.2.0)(react@18.2.0)
@@ -8166,6 +8169,10 @@ packages:
     engines: {node: '>=6'}
     dev: false
 
+  /page-flip@2.0.7:
+    resolution: {integrity: sha512-96lQFUUz7r/LZzEUZJ3yBIMEKU9+m8HMFDzTvTdD6P7Ag/wXINjp9n0W7b4wanwnDbQETo4uNUoL3zMqpFxwGA==}
+    dev: false
+
   /papaparse@5.4.1:
     resolution: {integrity: sha512-HipMsgJkZu8br23pW15uvo6sib6wne/4woLZPlFf3rpDyMe9ywEXUsuD7+6K9PRkJlVT51j/sCOYDKGGS3ZJrw==}
 
@@ -9177,6 +9184,12 @@ packages:
       vfile: 4.2.1
     transitivePeerDependencies:
       - supports-color
+    dev: false
+
+  /react-pageflip@2.0.3:
+    resolution: {integrity: sha512-k81mHhRvUM52y8jyzTCh5t4O0lepkLhp+XGSUzq2C3uD+iW99Cv0jfRlqFCjZbD5N3jKkIFr7/3giucoXKDP3Q==}
+    dependencies:
+      page-flip: 2.0.7
     dev: false
 
   /react-pdf@7.7.1(@types/react@18.2.55)(react-dom@18.2.0)(react@18.2.0):

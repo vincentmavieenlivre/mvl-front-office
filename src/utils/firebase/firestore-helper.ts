@@ -15,7 +15,7 @@ export async function index<Type>(lambda: Query<unknown, DocumentData>): Promise
     const data: Type[] = []
     const querySnapshot = await getDocs(lambda);
     querySnapshot.forEach((doc) => {
-        data.push({ ...doc.data(), id: doc.id })
+        data.push({ ...doc.data() as any, id: doc.id })
     });
     return data;
 }
@@ -59,7 +59,7 @@ export class FirestoreHelper {
     async createNewDocument(
         db: Firestore,
         collectionName: string,
-        data: Object
+        data: any
     ): Promise<any> {
         const docRef = await addDoc(collection(db, collectionName), data);
         data.id = docRef.id
@@ -97,7 +97,7 @@ export class FirestoreHelper {
         db: any,
         collectionName: string,
         docId: string,
-        data: Object
+        data: any
     ): Promise<any> {
 
         collection(db, collectionName)

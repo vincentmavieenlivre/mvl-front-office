@@ -1,13 +1,13 @@
 import { CreateRequest, getAuth } from "firebase-admin/auth";
 import { getFirestore } from "firebase-admin/firestore";
 import { log } from "firebase-functions/logger";
-import { ECollections } from "../../utils/firebase/firestore-collections";
-import { ERoles } from "../../modeles/roles";
+import { ECollections } from "../../modeles/database/firestore-collections";
+import { ERoles } from "./roles.manager";
 import { User } from "../../modeles/database/user";
 
-export  class AdminUserManager {
+export class AdminUserManager {
 
-    public userId:string|undefined
+    public userId: string | undefined
 
     constructor() {
 
@@ -37,15 +37,15 @@ export  class AdminUserManager {
             email: blob.email,
             name: blob.displayName,
             role: userRole,
-            id:userRecord.uid
+            id: userRecord.uid
         }
 
         log("[user create] insert document", userDocument)
 
-       
+
 
         await getFirestore().collection(ECollections.USERS).doc(userRecord.uid).set(userDocument);
-        
+
         this.userId = userDocument.id
 
         return customToken

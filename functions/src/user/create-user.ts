@@ -1,9 +1,9 @@
 import { CreateRequest, getAuth } from "firebase-admin/auth";
 import { log } from "firebase-functions/logger";
 import { onRequest } from "firebase-functions/v2/https";
-import { ERoles } from "../../../src/modeles/roles";
+import { ERoles } from "../../../src/manager/admin/roles.manager";
 import { User } from "../../../src/modeles/database/user";
-import { ECollections } from "../../../src/utils/firebase/firestore-collections";
+import { ECollections } from "../../../src/modeles/database/firestore-collections";
 import { getFirestore } from 'firebase-admin/firestore';
 import { AdminUserManager } from "../../../src/manager/admin/user.manager.admin";
 

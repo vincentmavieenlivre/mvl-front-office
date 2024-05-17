@@ -1,27 +1,15 @@
+import { EPermission, ERoles } from "@app/modeles/database/roles";
 import { IdTokenResult } from "firebase/auth";
 
-export enum ERoles {
-    SUPER_ADMIN = "super_admin",
-    ORGANIZATION_ADMIN = "organization_admin",
-    BIOGRAPHER = "biographer",
-    USER = "user",
-    FAMILY = "family"
-}
-
-export enum EPermission{
-    CREATE_PROJECT
-}
-
-
 export const permissionsByRole = {
-    "user":  [EPermission.CREATE_PROJECT]
+    "user": [EPermission.CREATE_PROJECT]
 }
 
-export function hasPermission(token:IdTokenResult, permission:EPermission):boolean{
-    const r:ERoles = getRoleFromToken(token)
+export function hasPermission(token: IdTokenResult, permission: EPermission): boolean {
+    const r: ERoles = getRoleFromToken(token)
     console.log("ROLE OF CURRENT USER", r)
     const roleString = r.toString()
-    
+
     return permissionsByRole[roleString] && permissionsByRole[roleString].includes(permission)
 
 }

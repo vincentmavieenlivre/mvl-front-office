@@ -1,25 +1,26 @@
-import { db } from "@app/init/firebase"
-import { BookTemplateManager } from "@app/manager/backoffice/book-template.manager"
-import { IBookQuestion } from "@app/modeles/database/book/book-question"
+
+
 import { IBookTemplate, IChapter, IChapterTree } from "@app/modeles/database/book/book-template"
 import { UserOwner } from "@app/modeles/database/embedded/data-owner"
 import { Project } from "@app/modeles/database/project"
-import { ERoles } from "@app/modeles/roles"
-import { UserStore } from "@app/redux/auth.slice"
-import { sortQuestions } from "@app/redux/current.project.slice"
-import { ECollections } from "@app/utils/firebase/firestore-collections"
-import { FirestoreHelper } from "@app/utils/firebase/firestore-helper"
+import { ERoles } from "@app/modeles/database/roles"
 import { IdTokenResult, User } from "firebase/auth"
-import { ParsedToken } from "firebase/auth/cordova"
-import { addDoc, collection, getDocs, query } from "firebase/firestore"
+import { Firestore, addDoc, collection, getDocs, query } from "firebase/firestore"
 import { clone } from 'lodash';
+import { sortQuestions } from "@app/redux/helpers/project.slice.helpers"
+
+import { BookTemplateManager } from "@app/manager/backoffice/book-template.manager"
+import { FirestoreHelper } from "@app/utils/firebase/firestore-helper"
+import { ECollections } from "@app/modeles/database/firestore-collections"
+import { IBookQuestion } from "@app/modeles/database/book/book-question"
+
 
 export class UserProjectsService {
 
     private loadedProject: Project | undefined = undefined;
     private questons: IBookQuestion[] = []
 
-    constructor(private projectId: string) {
+    constructor(private projectId: string, private db: Firestore) {
 
     }
 
@@ -44,7 +45,7 @@ export class UserProjectsService {
     }
 
     async loadQuestions(): Promise<IBookQuestion[]> {
-        const collectionRef = collection(db, ECollections.PROJECTS, this.projectId, ECollections.QUESTIONS);
+        const collectionRef = collection(this.db, ECollections.PROJECTS, this.projectId, ECollections.QUESTIONS);
         const subcollectionQuery = query(collectionRef);
 
         const snapshot = await getDocs(subcollectionQuery);
@@ -64,7 +65,8 @@ export class UserProjectsService {
     }
 
 
-    public async loadProject(): Promise<Project> {
+    public async loadProject(db: Firestore): Promise<Project> {
+        console.log("firestore", this.projectId)
         const p = await FirestoreHelper.getDocument<Project>(db, ECollections.PROJECTS, this.projectId)
         this.loadedProject = p
         if (p) {
@@ -75,7 +77,7 @@ export class UserProjectsService {
     }
 
     async createQuestionInProject(q: IBookQuestion) {
-        const collectionRef = collection(db, ECollections.PROJECTS, this.projectId, ECollections.QUESTIONS);
+        const collectionRef = collection(this.db, ECollections.PROJECTS, this.projectId, ECollections.QUESTIONS);
         q.template_question_id = clone(q.id)
         delete q['id']
         const res = await addDoc(collectionRef, q);
@@ -84,20 +86,20 @@ export class UserProjectsService {
     }
 
 
-    static getUserProjects = async (user: UserStore) => {
+    static getUserProjects = async (db: Firestore, userUid: string) => {
         // if user is admin || user || family etc...
 
 
         const helper = new FirestoreHelper()
-        console.log("db", db, "collection", ECollections.PROJECTS, "userid", user.user?.uid)
-        const projects: Project[] = await helper.queryData<Project>(db, ECollections.PROJECTS, ["owners.owner_ids", "array-contains-any", [user.user?.uid]])
+        console.log("db", db, "collection", ECollections.PROJECTS, "userid", userUid)
+        const projects: Project[] = await helper.queryData<Project>(db, ECollections.PROJECTS, ["owners.owner_ids", "array-contains-any", [userUid]])
 
         console.log("[getUserProjects] num=", projects)
 
         return projects
     }
 
-    static async createProject(projectName: string, creator: User, token: IdTokenResult, templateId: string): Promise<Project> {
+    static async createProject(db: Firestore, projectName: string, creator: User, token: IdTokenResult, templateId: string): Promise<Project> {
 
         if (!creator.displayName || !creator.uid || !token.claims.role) {
             throw 'projectFactory one param is undefined'
@@ -139,7 +141,7 @@ export class UserProjectsService {
 
         // add all the questions (& order) to the created project
         if (createdProject.id) {
-            const ups: UserProjectsService = new UserProjectsService(createdProject.id)
+            const ups: UserProjectsService = new UserProjectsService(createdProject.id, db)
 
             // add questions
             for (const q of questions) {

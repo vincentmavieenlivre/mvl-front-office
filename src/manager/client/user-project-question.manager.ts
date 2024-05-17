@@ -1,7 +1,7 @@
 import { db } from "@app/init/firebase";
 import { IBookQuestion } from "@app/modeles/database/book/book-question";
-import { IResponse } from "@app/pages/app/projects/questions/show.question";
-import { ECollections } from "@app/utils/firebase/firestore-collections";
+import { IResponse } from "@app/modeles/database/book/response";
+import { ECollections } from "@app/modeles/database/firestore-collections";
 import { addDoc, collection, doc, updateDoc } from "firebase/firestore";
 
 

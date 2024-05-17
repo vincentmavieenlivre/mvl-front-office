@@ -6,7 +6,6 @@ import { IdTokenResult, User } from "firebase/auth";
 import { useSelector } from "react-redux";
 import BackOfficeRoutes from "./backoffice.routes";
 import { TokenRole, selectToken, selectUser, selectUserProjects } from "../redux/auth.slice";
-import { ERoles } from "@app/modeles/roles";
 import AppHome from "@app/pages/app/app-home";
 import AppLayout from "@app/pages/layout/app.layout";
 import NewProject from "@app/pages/app/projects/new.project.page";
@@ -15,10 +14,13 @@ import ShowProjectPage from "@app/pages/app/projects/show.project.page";
 import DashboardLayout from "@app/pages/layout/dashboard.layout";
 import ShowQuestion from "@app/pages/app/projects/questions/show.question";
 import SummaryDrawer from "@app/pages/layout/drawer/summary.layout";
+import { ERoles } from "@app/modeles/database/roles";
+import ShowBookPage from "@app/pages/app/books/show.book.page";
 
 export const APP_ROUTES = {
   NEW_PROJECT: "/app/projects/new",
   SHOW_PROJECT: "/app/projects/:id",
+  SHOW_BOOK: "/app/books/:id",
   LIST_PROJECTS: "/app",
   SHOW_PROJECT_QUESTION: "/app/projects/:id/questions/:questionId"
 }
@@ -41,6 +43,8 @@ export const AppRoutes = (props: RoutesProps) => {
             <Route path={APP_ROUTES.NEW_PROJECT} element={<NewProject />} />
             <Route path={APP_ROUTES.SHOW_PROJECT} element={<ShowProjectPage />} />
             <Route path={APP_ROUTES.SHOW_PROJECT_QUESTION} element={<SummaryDrawer><ShowQuestion /></SummaryDrawer>} />
+            <Route path={APP_ROUTES.SHOW_BOOK} element={<ShowBookPage />} />
+
 
           </Route>
         </>

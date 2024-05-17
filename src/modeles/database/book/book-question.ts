@@ -1,4 +1,4 @@
-import { IResponse } from "@app/pages/app/projects/questions/show.question";
+import { IResponse } from "./response";
 
 export interface IBookQuestion {
 

@@ -1,6 +1,7 @@
 import { functions } from '@app/init/firebase'
+import { hasPermission } from '@app/manager/admin/roles.manager'
 import { Project } from '@app/modeles/database/project'
-import { EPermission, hasPermission, isRole, permissionsByRole } from '@app/modeles/roles'
+import { EPermission } from '@app/modeles/database/roles'
 import { selectToken, selectUser, selectUserProjects } from '@app/redux/auth.slice'
 import { APP_ROUTES } from '@app/routes/app.routes.index'
 import { httpsCallable } from 'firebase/functions'

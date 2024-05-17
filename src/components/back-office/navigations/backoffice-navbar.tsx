@@ -1,5 +1,5 @@
 import { auth } from '@app/init/firebase'
-import { getRoleColor } from '@app/modeles/roles'
+import { getRoleColor } from '@app/manager/admin/roles.manager'
 import { selectToken, selectUser } from '@app/redux/auth.slice'
 import { Avatar, Space, Tag } from 'antd'
 import { IdTokenResult } from 'firebase/auth'

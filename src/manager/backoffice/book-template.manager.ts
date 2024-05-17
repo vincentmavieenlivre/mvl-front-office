@@ -1,10 +1,8 @@
 
 
-import { db } from "@app/init/firebase";
 import { IBookQuestion, IBookQuestionEditable } from "@app/modeles/database/book/book-question";
 import { IBookTemplate, IChapter } from "@app/modeles/database/book/book-template";
-import { ECollections } from "@app/utils/firebase/firestore-collections";
-import { FirestoreHelper } from "@app/utils/firebase/firestore-helper";
+import { ECollections } from "@app/modeles/database/firestore-collections";
 import { Firestore, addDoc, collection, deleteDoc, doc, getDoc, getDocs, query, updateDoc } from "firebase/firestore";
 
 export class BookTemplateManager {
@@ -68,7 +66,7 @@ export class BookTemplateManager {
         // if there is an order : return sorted questions
         if (this.template?.questionsOrder && this.template?.questionsOrder.length > 0) {
             const sortedIds = this.template.questionsOrder?.sort((a, b) => {
-                return a.index > b.index
+                return a.index - b.index
             })
 
             const sortedQuestions: IBookQuestion[] = []

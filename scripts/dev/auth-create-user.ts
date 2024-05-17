@@ -1,6 +1,6 @@
 import { httpsCallable } from "firebase/functions";
 import { auth, functions, scriptBootstrap } from "../bootstrap";
-import { ERoles } from "@app/modeles/roles";
+import { ERoles } from "@app/manager/admin/roles";
 import { signInWithCustomToken } from "firebase/auth";
 
 scriptBootstrap()

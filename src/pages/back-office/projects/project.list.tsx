@@ -14,7 +14,6 @@ import {
     ShowButton,
 } from "@refinedev/antd";
 import { Project } from "@app/modeles/database/project";
-import { getRoleColor } from "@app/modeles/roles";
 import { FieldPath } from "firebase/firestore";
 import { IdTokenResult } from "firebase/auth";
 import { useSelector } from "react-redux";
@@ -22,6 +21,7 @@ import { selectToken, selectUser } from "@app/redux/auth.slice";
 import { getOwnerFilter } from "@app/utils/refine-helpers/owner-filter"
 import { Link, useNavigate } from "react-router-dom";
 import { APP_ROUTES } from "@app/routes/app.routes.index";
+import { getRoleColor } from "@app/manager/admin/roles.manager";
 export const ProjectList = () => {
 
     const tokenResult: IdTokenResult | undefined = useSelector(selectToken)
@@ -126,7 +126,7 @@ export const ProjectList = () => {
                         return (
                             record.owners && record.owners.users.map((u: UserOwner, index) =>
                                 <Space key={u.user_id} className="mt-3">
-                                    <ShowButton size="small" 
+                                    <ShowButton size="small"
                                         recordItemId={u.user_id} resource="user" >{u.user_name}</ShowButton>
                                     <Tag color={getRoleColor(u.user_role)} key={u.user_role}>
                                         {u.user_role}

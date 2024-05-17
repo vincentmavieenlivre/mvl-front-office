@@ -15,7 +15,8 @@ import BackOfficeNavBar from "@app/components/back-office/navigations/backoffice
 import { selectUser, selectToken } from "@app/redux/auth.slice";
 import { IdTokenResult } from "firebase/auth";
 import { useSelector } from "react-redux";
-import { ERoles, isRole } from "@app/modeles/roles";
+import { ERoles } from "@app/modeles/database/roles";
+import { isRole } from "@app/manager/admin/roles.manager";
 
 //import "@refinedev/antd/dist/reset.css"
 

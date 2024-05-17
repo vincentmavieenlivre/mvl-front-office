@@ -21,7 +21,11 @@ import { FaHome } from 'react-icons/fa'
 import { FcPrevious } from 'react-icons/fc'
 import Summary from '@app/components/app/summary/summary'
 import { RootState } from '@app/redux/store'
-
+import { render } from 'react-dom'
+import useProject from '@app/hook/use-project'
+import { IdTokenResult } from 'firebase/auth'
+import { selectToken } from '@app/redux/auth.slice'
+import HTMLFlipBook from "react-pageflip";
 const mockData = [
     `Eh bien oui, je me souviens bien que j’étais dans un cours
     privé, le cours Bossuet. Ça commençait en... on appelait ça
@@ -78,8 +82,20 @@ type Props = {}
 export default function ShowProjectPage({ }: Props) {
     const params: any = useParams()
 
+    useProject(params.id)
+
+    const tokenResult: IdTokenResult | undefined = useSelector(selectToken)
 
 
+    const [bookPdfUrl, setBookPdfUrl] = useState<string | undefined>(undefined)
+    const [numPages, setNumPages] = useState<number>();
+    const [pageNumber, setPageNumber] = useState<number>(1);
+
+    const [bookPagesImages, setBookPagesImages] = useState<string[]>([])
+
+    function onDocumentLoadSuccess({ numPages }: { numPages: number }): void {
+        setNumPages(numPages);
+    }
 
     const onInvite = async () => {
         const email = "family@test.com"
@@ -90,48 +106,45 @@ export default function ShowProjectPage({ }: Props) {
         }
     }
 
-    /*   const renderBook = () => {
-          return (
-              <div>
-                  <button onClick={async () => {
-                      const url = await nestPdf()
-                      console.log("final url book", url)
-                      setBookPdfUrl(url)
-                  }}
-                      style={{ zIndex: 9999, position: "fixed", bottom: 40, right: 40 }} className="btn btn-primary">
-                      <ReadOutlined style={{ fontSize: 25 }} size={500} /> Générer votre livre </button>
-  
-  
-                  {bookPdfUrl &&
-                      <div className='flex flex-row justify-center mt-20'>
-                          <div className='document' >
-  
-                              <Document className={"p-4 document"} renderMode="canvas" file={bookPdfUrl} onLoadSuccess={onDocumentLoadSuccess}>
-                                  <Thumbnail width={500} pageNumber={pageNumber} />
-  
-                                  <div className="flex flex-row justify-around mt-6">
-  
-                                      <button onClick={() => setPageNumber(pageNumber - 1 >= 1 ? pageNumber - 1 : 1)} className="btn btn-circle btn-outline">
-                                          {'<'}
-                                      </button>
-  
-                                      <button onClick={() => openInTab(bookPdfUrl)} className="btn btn-outline">
-                                          {'Télécharger'}
-                                      </button>
-  
-  
-                                      <button onClick={() => setPageNumber(pageNumber < (numPages as number) ? pageNumber + 1 : numPages as number)} className="btn btn-circle btn-outline">
-                                          {'>'}
-                                      </button>
-                                  </div>
-  
-                              </Document>
-                          </div>
-                      </div>
-                  }
-              </div>
-          )
-      } */
+    const renderPdf = () => {
+        return (
+            <div className='flex flex-row justify-center mt-20'>
+                <div className='document' >
+
+                    <Document className={"p-4 document"} renderMode="canvas" file={bookPdfUrl} onLoadSuccess={onDocumentLoadSuccess}>
+                        <Thumbnail width={500} pageNumber={pageNumber} />
+
+                        <div className="flex flex-row justify-around mt-6">
+
+                            <button onClick={() => setPageNumber(pageNumber - 1 >= 1 ? pageNumber - 1 : 1)} className="btn btn-circle btn-outline">
+                                {'<'}
+                            </button>
+
+                            <button onClick={() => openInTab(bookPdfUrl)} className="btn btn-outline">
+                                {'Télécharger'}
+                            </button>
+
+
+                            <button onClick={() => setPageNumber(pageNumber < (numPages as number) ? pageNumber + 1 : numPages as number)} className="btn btn-circle btn-outline">
+                                {'>'}
+                            </button>
+                        </div>
+
+                    </Document>
+                </div>
+            </div>
+        )
+    }
+
+    const renderBook = () => {
+        return (
+            <Link className='m-5 flex gap-4 flex-row items-center text-sky-900' to={`/app/books/${params.id}`}>
+                <button
+                    style={{ zIndex: 9999, bottom: 40, right: 40 }} className="btn btn-primary">
+                    <ReadOutlined style={{ fontSize: 25 }} size={500} /> Générer votre livre </button>
+            </Link>
+        )
+    }
 
 
     return (
@@ -148,6 +161,19 @@ export default function ShowProjectPage({ }: Props) {
                 <p>Voiçi le sommaire de votre livre</p>
                 <p className='mt-4'>Composez le en choisissant librement vos thèmes préférés</p>
             </div>
+
+            {renderBook()}
+
+            {bookPagesImages?.length > 0 &&
+                <HTMLFlipBook width={414} height={414 * 1.41}>
+                    {bookPagesImages.map((img) =>
+                        <img src={`data:image/png;base64,${img}`} />
+                    )
+
+                    }
+                </HTMLFlipBook>
+            }
+
 
             <Summary projectId={params.id}></Summary>
 

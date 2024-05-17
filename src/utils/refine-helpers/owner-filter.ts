@@ -1,4 +1,4 @@
-import { ERoles } from "@app/modeles/roles";
+import { ERoles } from "@app/modeles/database/roles";
 import { FieldPath } from "firebase/firestore";
 
 export function getOwnerFilter(currentUserId: string, currentRole: ERoles) {

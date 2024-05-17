@@ -1,13 +1,10 @@
-import { createSelector, createSlice } from "@reduxjs/toolkit";
-import { IdTokenResult, ParsedToken, User } from "firebase/auth";
-import type { PayloadAction } from '@reduxjs/toolkit'
+import { createSlice } from "@reduxjs/toolkit";
+import type { PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from "./store";
-import { ERoles } from "@app/modeles/roles";
 import { Project } from "@app/modeles/database/project";
 import { IChapter, IChapterTree } from "@app/modeles/database/book/book-template";
 import { IBookQuestion } from "@app/modeles/database/book/book-question";
-import { IProduct } from "@app/modeles/interfaces/refine.test";
-import { Root } from "react-dom/client";
+import { getChapterTree } from "./helpers/project.slice.helpers";
 
 export interface ISaveDialog {
     shouldSave: boolean
@@ -73,27 +70,7 @@ export const { setCurrentProject, setChapterTree, setQuestionResponse, setShould
 
 export const selectChapters = (state: RootState): IChapterTree[] | undefined => {
     if (state.currentProject.chapterTree && state.currentProject.project?.questionsOrder && state.currentProject.project?.questions) {
-
-
-        let chapters: IChapterTree[] = []
-
-        if (state.currentProject?.project?.chapters && state.currentProject?.project?.chapters.length > 0) {
-            let sortedQuestions = sortQuestions(state.currentProject.project?.questionsOrder, state.currentProject.project?.questions)
-
-            state.currentProject?.project?.chapters.forEach((c: IChapter) => {
-                let questions = sortedQuestions.filter((q: IBookQuestion) => q.chapterId === c.id)
-                if (questions) {
-                    chapters.push({
-                        ...c,
-                        orderedQuestions: questions
-                    } as IChapterTree)
-                }
-            })
-        }
-        console.log("by chapters", chapters)
-        return chapters
-
-
+        return getChapterTree(state.currentProject.project)
     }
 }
 
@@ -153,30 +130,6 @@ export const selectQuestion = (state: RootState, questionId: string): [IBookQues
     }
 
     return [undefined, undefined]
-}
-
-export function sortQuestions(questionsOrder: { index: number, id: string }[], questions: IBookQuestion[]): IBookQuestion[] {
-
-    // if there is an order : return sorted questions
-
-    if (questionsOrder && questionsOrder.length > 0 && questions.length > 0) {
-
-        let sortedIds = [...questionsOrder]?.sort((a, b) => {
-            return a.index - b.index
-        })
-
-        const sortedQuestions: IBookQuestion[] = []
-        if (sortedIds) {
-            for (const s of sortedIds) {
-                const q = questions.find((q) => q.template_question_id == s.id)
-                if (q) {
-                    sortedQuestions.push(q)
-                }
-            }
-            return sortedQuestions
-        }
-    }
-    return []
 }
 
 

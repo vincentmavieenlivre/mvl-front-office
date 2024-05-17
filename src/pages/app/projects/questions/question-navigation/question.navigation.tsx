@@ -74,7 +74,8 @@ export default function QuestionNavigation(props: Props) {
 
 
 
-                    <div style={{ height: isFixed ? '20px' : '0px' }} className={`pl-4 pr-4 mb-1 text-sky-950 text-md font-bold opacity-0 ${isFixed == true ? ' opacity-100 transition-opacity duration-1000 ' : ''} `}>
+                    <div style={{ height: isFixed ? 'auto' : 'auto' }} className={`pl-4 pr-4 mb-1 text-sky-950 text-md font-bold opacity-0
+                     ${isFixed == true ? ' opacity-100 transition-opacity duration-1000 ' : 'm-4'} `}>
                         {props.question.questionTitle}
                     </div>
 

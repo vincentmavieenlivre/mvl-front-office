@@ -12,8 +12,8 @@ import {
     useSelect,
     List,
 } from "@refinedev/antd";
-import { getRoleColor } from "@app/modeles/roles";
 import { User } from "@app/modeles/database/user";
+import { getRoleColor } from "@app/manager/admin/roles.manager";
 
 export const UserList = () => {
     const { mutate, isLoading, isUpdating } = useUpdate();

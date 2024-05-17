@@ -5,16 +5,16 @@ import PublicRoutes from "./routes/public.routes";
 import { UserStore, selectToken, selectUser, setUser, setUserProjects } from "./redux/auth.slice";
 import { useEffect, useState } from "react";
 import { IdTokenResult, User, onAuthStateChanged } from "firebase/auth";
-import { auth } from "./init/firebase";
+import { auth, db } from "./init/firebase";
 import BackOfficeRoutes from "./routes/backoffice.routes";
 import { Navigate, Route, Routes, useLocation, useNavigate } from "react-router-dom";
 
-import { ERoles } from "./modeles/roles";
 import AppRoutes from "./routes/app.routes.index";
 import { UserProjectsService } from "./domains/services/user-projects.service";
 import { pdfjs } from "react-pdf";
+import { ERoles } from "./modeles/database/roles";
 
-pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`;
+/* pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`; */
 
 function App() {
   const navigate = useNavigate();
@@ -32,7 +32,7 @@ function App() {
         tokenResult: token
       }
 
-      const p = await UserProjectsService.getUserProjects(data)
+      const p = await UserProjectsService.getUserProjects(db, data.user?.uid)
 
       dispatch(setUserProjects(p))
       dispatch(setUser(data));
