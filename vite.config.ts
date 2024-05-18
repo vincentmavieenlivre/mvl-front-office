@@ -5,7 +5,15 @@ import mkcert from 'vite-plugin-mkcert'
 export default defineConfig((test) => {
 
   let options = {
-
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          // Define the chunks for splitting
+          react: ['react', 'react-dom'],
+          utility: ['lodash', 'moment'],
+        },
+      },
+    },
   }
 
   // warning:
@@ -43,6 +51,7 @@ export default defineConfig((test) => {
     plugins: [react()],
     ...alias,
     mode: process.env.NODE_ENV,
-    ...options
+    ...options,
+
   }
 })

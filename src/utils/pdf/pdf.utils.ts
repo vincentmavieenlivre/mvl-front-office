@@ -8,7 +8,7 @@ export const openInTab = (url) => {
     newTab.location.href = url;
 }
 
-export const nestPdf = async (tokenResult: IdTokenResult, projectId: string,) => {
+export const getPdfImages = async (tokenResult: IdTokenResult, projectId: string,) => {
     const response = await fetch('http://192.168.1.67:2000/getImages', {
         method: 'POST',
         body: JSON.stringify({ projectId: projectId, tokenResult: tokenResult }), // Replace with your data object

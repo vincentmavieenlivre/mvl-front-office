@@ -1,5 +1,5 @@
 import { ReadOutlined } from '@ant-design/icons'
-import { nestPdf } from '@app/utils/pdf/pdf.utils'
+import { getPdfImages } from '@app/utils/pdf/pdf.utils'
 import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { FcPrevious } from 'react-icons/fc'
@@ -25,7 +25,7 @@ export default function ShowBookPage({ }: Props) {
 
     const loadImages = async () => {
         setLoading(true)
-        const images = await nestPdf(tokenResult, params.id).finally(() => setLoading(false))
+        const images = await getPdfImages(tokenResult, params.id).finally(() => setLoading(false))
         console.log("images", images.length)
         setBookPagesImages(images)
     }

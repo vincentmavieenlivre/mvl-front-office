@@ -1,31 +1,16 @@
-import { CustomerServiceOutlined, DownloadOutlined, ReadOutlined, RightCircleOutlined } from '@ant-design/icons'
-import AudioRecorder from '@app/components/app/media/AudioRecorder'
-import { UserProjectsService } from '@app/domains/services/user-projects.service'
-import { useMicrophone } from '@app/hook/use-microphone'
-import { db, functions } from '@app/init/firebase'
-import { IBookQuestion } from '@app/modeles/database/book/book-question'
-import { Project } from '@app/modeles/database/project'
-import { ECollections } from '@app/utils/firebase/firestore-collections'
-import { FirestoreHelper } from '@app/utils/firebase/firestore-helper'
-import { loadPdf, nestPdf, openInTab } from '@app/utils/pdf/pdf.utils'
-import { Badge, Button, Divider, FloatButton, List } from 'antd'
+import { ReadOutlined } from '@ant-design/icons'
+import { functions } from '@app/init/firebase'
+import { openInTab } from '@app/utils/pdf/pdf.utils'
 import { httpsCallable } from 'firebase/functions'
-import React, { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
-import { TypeAnimation } from 'react-type-animation'
-import { Document, Page, Thumbnail } from 'react-pdf';
-import { IChapterTree } from '@app/modeles/database/book/book-template'
-import { selectProject, setChapterTree, setCurrentProject } from '@app/redux/current.project.slice'
-import { useDispatch, useSelector } from 'react-redux'
-import { FaHome } from 'react-icons/fa'
+import { useSelector } from 'react-redux'
 import { FcPrevious } from 'react-icons/fc'
 import Summary from '@app/components/app/summary/summary'
-import { RootState } from '@app/redux/store'
-import { render } from 'react-dom'
 import useProject from '@app/hook/use-project'
 import { IdTokenResult } from 'firebase/auth'
 import { selectToken } from '@app/redux/auth.slice'
-import HTMLFlipBook from "react-pageflip";
+import HTMLFlipBook from "react-pageflip"
 const mockData = [
     `Eh bien oui, je me souviens bien que j’étais dans un cours
     privé, le cours Bossuet. Ça commençait en... on appelait ça
@@ -106,35 +91,7 @@ export default function ShowProjectPage({ }: Props) {
         }
     }
 
-    const renderPdf = () => {
-        return (
-            <div className='flex flex-row justify-center mt-20'>
-                <div className='document' >
 
-                    <Document className={"p-4 document"} renderMode="canvas" file={bookPdfUrl} onLoadSuccess={onDocumentLoadSuccess}>
-                        <Thumbnail width={500} pageNumber={pageNumber} />
-
-                        <div className="flex flex-row justify-around mt-6">
-
-                            <button onClick={() => setPageNumber(pageNumber - 1 >= 1 ? pageNumber - 1 : 1)} className="btn btn-circle btn-outline">
-                                {'<'}
-                            </button>
-
-                            <button onClick={() => openInTab(bookPdfUrl)} className="btn btn-outline">
-                                {'Télécharger'}
-                            </button>
-
-
-                            <button onClick={() => setPageNumber(pageNumber < (numPages as number) ? pageNumber + 1 : numPages as number)} className="btn btn-circle btn-outline">
-                                {'>'}
-                            </button>
-                        </div>
-
-                    </Document>
-                </div>
-            </div>
-        )
-    }
 
     const renderBook = () => {
         return (

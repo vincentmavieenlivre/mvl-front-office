@@ -11,11 +11,12 @@ import AppLayout from "@app/pages/layout/app.layout";
 import NewProject from "@app/pages/app/projects/new.project.page";
 import { Project } from "@app/modeles/database/project";
 import ShowProjectPage from "@app/pages/app/projects/show.project.page";
-import DashboardLayout from "@app/pages/layout/dashboard.layout";
+
 import ShowQuestion from "@app/pages/app/projects/questions/show.question";
 import SummaryDrawer from "@app/pages/layout/drawer/summary.layout";
 import { ERoles } from "@app/modeles/database/roles";
 import ShowBookPage from "@app/pages/app/books/show.book.page";
+import DashboardLayout from "@app/pages/layout/dashboard-nav.layout";
 
 export const APP_ROUTES = {
   NEW_PROJECT: "/app/projects/new",
