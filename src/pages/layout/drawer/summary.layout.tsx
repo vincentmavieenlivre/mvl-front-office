@@ -105,8 +105,9 @@ export default function SummaryDrawer({ children }: Props) {
                     </div>
 
                     <Alert className='mt-4' message1="Recommandation : Répondez à 3 ou 4 questions par chapitre."></Alert>
-
-                    <Summary saveDialog={true}></Summary>
+                    {project?.id &&
+                        <Summary saveDialog={true} projectId={project.id}></Summary>
+                    }
                 </div>
             </div>
         </div>

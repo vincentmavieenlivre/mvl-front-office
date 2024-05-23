@@ -1,5 +1,5 @@
 import { ReadOutlined } from '@ant-design/icons'
-import { getPdfImages } from '@app/utils/pdf/pdf.utils'
+import { getPdf, getPdfImages } from '@app/utils/pdf/pdf.utils'
 import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { FcPrevious } from 'react-icons/fc'
@@ -72,7 +72,18 @@ export default function ShowBookPage({ }: Props) {
 
                     }
                 </HTMLFlipBook>
+
+
             }
+
+            <div style={{ width: "100%" }}>
+                <button
+                    onClick={async () => {
+                        const images = await getPdf(tokenResult, params.id).finally(() => setLoading(false))
+                    }}
+                    className='btn btn-primary m-auto w-100 block mb-20 mt-20 '>PDF</button>
+            </div>
+
 
         </div>
     )

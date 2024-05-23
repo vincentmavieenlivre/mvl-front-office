@@ -8,6 +8,35 @@ export const openInTab = (url) => {
     newTab.location.href = url;
 }
 
+export const getPdf = async (tokenResult: IdTokenResult, projectId: string,) => {
+    const response = await fetch('http://192.168.1.67:2000/getPdf', {
+        method: 'POST',
+        body: JSON.stringify({ projectId: projectId, tokenResult: tokenResult }), // Replace with your data object
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    });
+
+
+    const blob = await response.blob();
+    // Create a URL for the PDF blob
+    const url = URL.createObjectURL(blob);
+
+
+    // Create a link element to download the PDF
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'mon-enfance.pdf';
+
+    // Append the link to the document body and click it to trigger the download
+    document.body.appendChild(link);
+    link.click();
+
+    // Clean up the URL and link element after the download
+    URL.revokeObjectURL(url);
+
+}
+
 export const getPdfImages = async (tokenResult: IdTokenResult, projectId: string,) => {
     const response = await fetch('http://192.168.1.67:2000/getImages', {
         method: 'POST',

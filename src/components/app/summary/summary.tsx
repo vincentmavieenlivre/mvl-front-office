@@ -3,7 +3,7 @@ import useProject from '@app/hook/use-project';
 import { IBookQuestion } from '@app/modeles/database/book/book-question';
 import { IChapterTree } from '@app/modeles/database/book/book-template';
 import { Project } from '@app/modeles/database/project';
-import { selectProject, selectChapters, selectShouldSave, setDisplaySaveDialog } from '@app/redux/current.project.slice';
+import { selectProject, selectChapters, selectShouldSave, setDisplaySaveDialog, selectAllQuestions } from '@app/redux/current.project.slice';
 import { RootState } from '@app/redux/store';
 import { pluralize } from '@app/utils/diverse.utils';
 import React, { useRef, useState } from 'react'
@@ -13,10 +13,25 @@ import SaveDialog from '../studio/save-dialog/save-dialog';
 import ImageCropDialog from '../images/image-crop-dialog';
 import { ImageUploader } from '../images/image-uploader';
 import { MdAddPhotoAlternate } from 'react-icons/md';
-
+import { MdChangeCircle } from "react-icons/md";
 type Props = {
     saveDialog?: boolean;
     projectId?: string
+}
+
+export enum EImageKind {
+    COVER = "cover",
+    CHAPTER = "chapter",
+    QUESTION = "question"
+}
+
+export type BookImage = {
+    selectedImage: any;
+    imageKind: EImageKind;
+    projectId: string;
+    question?: IBookQuestion;
+    chapterId?: string;
+
 }
 
 export default function Summary(props: Props) {
@@ -26,7 +41,7 @@ export default function Summary(props: Props) {
         return selectShouldSave(state)
     })
 
-    const [selectedImage, setSelectedImage] = useState(undefined)
+    const [selectedImage, setSelectedImage] = useState<BookImage | undefined>(undefined)
 
 
     useProject(props.projectId)
@@ -36,6 +51,11 @@ export default function Summary(props: Props) {
 
     let project: Project | undefined = useSelector((state: RootState) => {
         return selectProject(state)
+    })
+
+    // to force the refresh when question has changed (because image upload on question)
+    let questions = useSelector((state: RootState) => {
+        return selectAllQuestions(state)
     })
 
 
@@ -53,14 +73,16 @@ export default function Summary(props: Props) {
         return (
             <label id={q.id} key={q.id}
                 onClick={(e) => {
-                    console.log('nav', e.cancelable)
                     if (e.defaultPrevented == false) {
                         if (props.saveDialog && shouldSave) {
                             dispatch(setDisplaySaveDialog({
                                 wantedRoute: wantedRoute,
                                 displaySaveDialog: true
                             }))
+                        } else if (e.target.type === "file") {
+                            // come from chose image trick
                         } else {
+                            console.log("DO NAV")
                             nav(wantedRoute)
                         }
                     }
@@ -73,15 +95,37 @@ export default function Summary(props: Props) {
                     <RightCircleOutlined className='text-sky-600 px-4' />
                 </div>
                 {hasAnswers &&
-                    <div className='mt-2 self-end text-green-400'><b>{numAnswers}</b> {pluralize('réponse', numAnswers)} {pluralize('sauvegardée', numAnswers)} </div>
+                    <div className='mt-2 self-end text-green-400 mr-2'><b>{numAnswers}</b> {pluralize('réponse', numAnswers)} {pluralize('sauvegardée', numAnswers)} </div>
                 }
 
                 {hasAnswers &&
-                    <button onClick={(e) => {
-                        console.log('rimage')
-                        e.preventDefault()
-                    }} className='m-4 btn  bg-sky-50 text-sky-400 b-sky-900 shadow-sky-200 text-xs btn-sm'>
-                        <MdAddPhotoAlternate size={25} /> Ajouter une photo
+                    <button className='m-4 btn  bg-sky-50 text-sky-400 b-sky-900 shadow-sky-200 text-xs btn-sm'>
+                        <ImageUploader onImageSelected={(image) => {
+                            if (props.projectId) {
+
+                                setSelectedImage({
+                                    imageKind: EImageKind.QUESTION,
+                                    question: q,
+                                    selectedImage: image,
+                                    projectId: props.projectId
+                                })
+                                document.getElementById('crop_modal').showModal()
+
+                            }
+                        }}>
+                            <div className='flex flex-row items-center '>
+                                {!q.pictureUrl &&
+                                    <div className='flex flex-row items-center' >
+                                        <MdAddPhotoAlternate key={q.id} size={25} /> Ajouter une photo
+                                    </div>
+                                }
+                                {q.pictureUrl &&
+                                    <div className='flex flex-row items-center' >
+                                        <MdAddPhotoAlternate key={q.id} size={25} /> Changer la photo
+                                    </div>
+                                }
+                            </div>
+                        </ImageUploader>
                     </button>
                 }
             </label>
@@ -105,12 +149,27 @@ export default function Summary(props: Props) {
                             </div>
                             <div className="collapse-content">
                                 <ImageUploader onImageSelected={(imageUrl) => {
-                                    setSelectedImage(imageUrl)
-                                    console.log("open modal")
-                                    document.getElementById('crop_modal').showModal()
+                                    if (props.projectId) {
+                                        setSelectedImage({
+                                            imageKind: EImageKind.CHAPTER,
+                                            chapterId: c.id,
+                                            selectedImage: imageUrl,
+                                            projectId: props.projectId
+                                        })
+                                        document.getElementById('crop_modal').showModal()
+                                    }
                                 }}>
                                     <button className='btn bg-sky-50 text-sky-400 text-xs b-sky-900 shadow-sky-200 btn-sm'>
-                                        <MdAddPhotoAlternate size={25} /> Ajouter une photo
+                                        {!c.pictureUrl &&
+                                            <>
+                                                <MdAddPhotoAlternate size={25} /> Ajouter une photo
+                                            </>
+                                        }
+                                        {c.pictureUrl &&
+                                            <>
+                                                <MdChangeCircle size={25} /> Changer la photo
+                                            </>
+                                        }
                                     </button>
 
                                 </ImageUploader>
@@ -124,7 +183,7 @@ export default function Summary(props: Props) {
                 }
 
 
-                <ImageCropDialog aspectRatio={1 / 1.41} selectedImage={selectedImage}></ImageCropDialog>
+                <ImageCropDialog aspectRatio={1 / 1.41} bookImage={selectedImage}></ImageCropDialog>
 
 
 

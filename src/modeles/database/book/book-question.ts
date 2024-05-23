@@ -7,6 +7,7 @@ export interface IBookQuestion {
     template_question_id?: string // reference when stored in project collection (null in template collection)    
     chapterId?: string;
     responses?: IResponse[]
+    pictureUrl?: string
 }
 
 

@@ -3,10 +3,12 @@ import { MdAddPhotoAlternate } from "react-icons/md";
 import { ImageUploader } from '../images/image-uploader';
 import { Crop } from 'react-image-crop'
 import ReactCrop from 'react-image-crop'
-
+import { RiExchange2Fill } from "react-icons/ri";
 import 'react-image-crop/dist/ReactCrop.css'
+import { BookImage, EImageKind } from '../summary/summary';
+import { UserImageManager } from '@app/manager/client/user-image.manager';
 type Props = {
-    selectedImage: any;
+    bookImage: BookImage | undefined;
     aspectRatio: number;
 }
 
@@ -110,21 +112,21 @@ export default function ImageCropDialog(props: Props) {
     }
 
 
-    const doResize = () => {
-        var imageSource = props.selectedImage;
+    const doResize = async () => {
+        var imageSource = props.bookImage.selectedImage;
         console.log(crop, crop)
 
-        resizeAndCropImage(imageSource, crop.x, crop.y, crop.width, crop.height, function (resizedImage) {
-            // The resized image data URL is available in the 'resizedImage' variable
-            /* console.log("resized:")
-            console.log(resizedImage); */
+        return resizeAndCropImage(imageSource, crop.x, crop.y, crop.width, crop.height, function (resizedImageB64) {
+            if (props.bookImage) {
+                props.bookImage.selectedImage = resizedImageB64
+                if (props.bookImage.imageKind == EImageKind.CHAPTER) {
+                    new UserImageManager(props.bookImage).updateImageChapter()
+                }
 
-            // You can use the resized image data URL to display or further process the image
-            /* var imgElement = document.createElement('img');
-            imgElement.src = resizedImage;
-            document.body.appendChild(imgElement); */
-
-            // TODO : save image
+                if (props.bookImage.imageKind == EImageKind.QUESTION) {
+                    new UserImageManager(props.bookImage).updateImageQuestion()
+                }
+            }
         });
     }
 
@@ -147,15 +149,15 @@ export default function ImageCropDialog(props: Props) {
                     <p>En sélectionnant la zone adéquate</p>
                 </div>
 
-                {props.selectedImage &&
-                    <ReactCrop key={props.selectedImage} keepSelection={true} ruleOfThirds={false} aspect={ASPECT_RATIO}
+                {props.bookImage &&
+                    <ReactCrop key={props.bookImage.selectedImage} keepSelection={true} ruleOfThirds={false} aspect={ASPECT_RATIO}
 
                         crop={crop} onChange={c => {
                             if (imgRenderedDimensions.width > -1) {
                                 setCrop(c)
                             }
                         }}>
-                        <img onLoad={onImageLoad} src={props.selectedImage} />
+                        <img onLoad={onImageLoad} src={props.bookImage.selectedImage} />
                     </ReactCrop>
 
                 }
@@ -169,9 +171,9 @@ export default function ImageCropDialog(props: Props) {
                     </button>
  */}
 
-                    <button onClick={() => {
-                        doResize()
-
+                    <button onClick={async () => {
+                        const image = await doResize()
+                        document.getElementById('crop_modal').close()
                     }}
                         className="btn btn-primary text-white">Sauvegarder
                     </button>

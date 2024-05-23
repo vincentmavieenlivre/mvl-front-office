@@ -4,6 +4,7 @@ export interface IChapter {
     id?: string;
     name: string; //firebase.firestore.FieldValue.id();
     index: number
+    pictureUrl?: string;
 }
 
 

@@ -40,7 +40,6 @@ export class UserProjectsService {
                 }
             })
         }
-        console.log("by chapters", chapters)
         return chapters
     }
 

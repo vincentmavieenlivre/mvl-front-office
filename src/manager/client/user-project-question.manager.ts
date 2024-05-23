@@ -11,10 +11,20 @@ export class UserProjectQuestionManager {
 
     }
 
-    public async updateAudioUrl(audioUrl: string) {
+    getRef() {
         const collectionRef = collection(db, ECollections.PROJECTS, this.projectId, ECollections.QUESTIONS);
         const documentRef = doc(collectionRef, this.question.id)
-        await updateDoc(documentRef, {
+        return documentRef
+    }
+
+    public async updateQuestionImage(questionUrl: string): Promise<any> {
+        return await updateDoc(this.getRef(), {
+            questionUrl: questionUrl
+        })
+    }
+
+    public async updateAudioUrl(audioUrl: string) {
+        await updateDoc(this.getRef(), {
             audioUrl: audioUrl
         })
     }

@@ -19,8 +19,9 @@ export function ImageUploader(props: any) {
         reader.readAsDataURL(file);
     };
 
-    const handleButtonClick = () => {
+    const handleButtonClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
         // Call the onClick callback from the parent component
+        e.stopPropagation()
         fileInputRef.current.click();
     };
 

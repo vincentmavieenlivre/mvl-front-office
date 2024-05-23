@@ -40,6 +40,21 @@ export const authSlice = createSlice({
             state.project = action.payload
         },
 
+        updateChapters: (state, action: PayloadAction<IChapter[]>) => {
+            if (state && state.project) {
+                state.project.chapters = action.payload
+            }
+
+        },
+
+        /*    updateChapter: (state, action: PayloadAction<IChapter>) => {
+   
+               let index = state.project?.chapters.findIndex((c) => c.id == action.payload.id)
+               if (index != -1 && index != undefined && state.project?.chapters) {
+                   state.project.chapters[index] = action.payload
+               }
+           }, */
+
         setChapterTree: (state, action: PayloadAction<IChapterTree[] | undefined>) => {
             state.chapterTree = action.payload
         },
@@ -49,6 +64,15 @@ export const authSlice = createSlice({
                 let index = state.project.questions.findIndex((q: IBookQuestion) => q.id === action.payload?.id)
                 if (index != -1) {
                     state.project.questions[index].responses = action.payload?.responses
+                }
+            }
+        },
+
+        setQuestion: (state, action: PayloadAction<IBookQuestion>) => {
+            if (state && state.project && state.project.questions) {
+                let index = state.project.questions.findIndex((q: IBookQuestion) => q.id === action.payload?.id)
+                if (index != -1) {
+                    state.project.questions[index] = action.payload
                 }
             }
         },
@@ -66,7 +90,9 @@ export const authSlice = createSlice({
 });
 
 // Action creators are generated for each case reducer function
-export const { setCurrentProject, setChapterTree, setQuestionResponse, setShouldSave, setDisplaySaveDialog } = authSlice.actions;
+export const { setCurrentProject, setChapterTree, setQuestionResponse,
+    setShouldSave, setDisplaySaveDialog, updateChapters,
+    setQuestion } = authSlice.actions;
 
 export const selectChapters = (state: RootState): IChapterTree[] | undefined => {
     if (state.currentProject.chapterTree && state.currentProject.project?.questionsOrder && state.currentProject.project?.questions) {

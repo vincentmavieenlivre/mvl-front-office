@@ -43,7 +43,7 @@ export function getChapterTree(project: Project): IChapterTree[] | undefined {
             }
         })
     }
-    console.log("by chapters", chapters)
+    console.log("by chapters", JSON.stringify(chapters))
     return chapters
 
 }
