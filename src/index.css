@@ -48,3 +48,22 @@ textarea:focus {
   border-color: #719ECE;
   box-shadow: 0 0 10px #719ECE;
 }
+
+
+.ReactCrop__crop-mask {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  clip-path: polygon(
+    0% 0%,
+    0% 100%,
+    var(--pos-x) 100%,
+    var(--pos-x) var(--pos-y),
+    calc(var(--pos-x) + var(--pos-width)) var(--pos-y),
+    calc(var(--pos-x) + var(--pos-width)) calc(var(--pos-y) + var(--pos-height)),
+    var(--pos-x) calc(var(--pos-y) + var(--pos-height)),
+    var(--pos-x) 100%,
+    100% 100%,
+    100% 0%
+  );
+}

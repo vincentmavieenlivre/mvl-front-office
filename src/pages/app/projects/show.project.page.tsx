@@ -93,15 +93,6 @@ export default function ShowProjectPage({ }: Props) {
 
 
 
-    const renderBook = () => {
-        return (
-            <Link className='m-5 flex gap-4 flex-row items-center text-sky-900' to={`/app/books/${params.id}`}>
-                <button
-                    style={{ zIndex: 9999, bottom: 40, right: 40 }} className="btn btn-primary">
-                    <ReadOutlined style={{ fontSize: 25 }} size={500} /> Générer votre livre </button>
-            </Link>
-        )
-    }
 
 
     return (
@@ -119,7 +110,7 @@ export default function ShowProjectPage({ }: Props) {
                 <p className='mt-4'>Composez le en choisissant librement vos thèmes préférés</p>
             </div>
 
-            {renderBook()}
+
 
             {bookPagesImages?.length > 0 &&
                 <HTMLFlipBook width={414} height={414 * 1.41}>

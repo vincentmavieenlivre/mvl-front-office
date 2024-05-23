@@ -89,7 +89,7 @@ export default function SummaryDrawer({ children }: Props) {
             </div>
             <div className="drawer-side" >
                 <label htmlFor="my-drawer" aria-label="close sidebar" className="drawer-overlay"></label>
-                <div className='menu p-4 w-80 min-h-full bg-sky-50 text-base-content'>
+                <div className='menu p-4 w-5/6 min-h-full bg-sky-50 text-base-content'>
 
                     <div className='mt-4 flex flex-row items-center justify-between'>
                         <h2 className='  text-sky-950  text-3xl font-bold'>Sommaire</h2>

@@ -1,6 +1,8 @@
 import { auth } from '@app/init/firebase'
 import React, { ReactNode } from 'react'
 import { Outlet, useNavigate } from 'react-router-dom'
+import { IoIosNotificationsOutline } from "react-icons/io";
+import { IoMdNotificationsOutline } from "react-icons/io";
 
 type Props = {
     children: ReactNode
@@ -18,17 +20,30 @@ export default function DashboardLayout(props: Props) {
 
     return (
         <>
-            <header className="bg-sky-500 h-16 rounded-br-[40px]">
+            <header className="bg-sky-500 pt-6 pb-6">
 
                 <div className="dropdown dropdown-bottom flex  h-full">
 
                     {/* header */}
                     <div tabIndex={0} className="ml-5 h-full container flex flex-row gap-4  items-center">
-                        <div className="rounded-lg w-10 h-10 bg-sky-50 bg-[url('https://ui-avatars.com/api/?name=John+Doe')] bg-center"></div>
+
+                        {/* avatar */}
+                        <div className="avatar">
+                            <div className="w-12 h-12 rounded border border-sky-50 border-2 bg-sky-200">
+                                <img src={`https://api.dicebear.com/8.x/lorelei/svg?seed=xxx`} />
+                            </div>
+                        </div>
+
+                        {/* user name */}
                         <div className="flex flex-col">
                             <h1 className="text-sky-50 text-1xl font-bold">Bonjour</h1>
-                            <h1 className="text-sky-50 text-sm ">Les petits Lilas, 54730</h1>
+                            <h1 className="text-sky-50 text-sm ">Virginie Jacob</h1>
                         </div>
+
+                        <div className='grow text-right flex flex-row justify-end mr-5'>
+                            <IoMdNotificationsOutline size={30} color='white' />
+                        </div>
+
                     </div>
 
 

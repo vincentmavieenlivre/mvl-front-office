@@ -8,7 +8,9 @@ import { httpsCallable } from 'firebase/functions'
 import React, { useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
-
+import { LuArrowRightCircle } from "react-icons/lu";
+import { IoBookOutline } from "react-icons/io5";
+import { FiPrinter } from "react-icons/fi";
 type Props = {}
 
 export default function AppHome({ }: Props) {
@@ -21,39 +23,45 @@ export default function AppHome({ }: Props) {
         return (
             <ul role="list" className="divide-y divide-gray-300">
                 {userProjects.map((p: Project) => (
-                    <li key={p.id} className="flex flex-row  gap-x-6 py-5 justify-start ">
+                    <li key={p.id} className="flex flex-col  gap-x-6 py-5 justify-start ">
 
-                        <div className="avatar">
-                            <div className="w-12 h-12 rounded border bg-sky-200">
-                                <img src={`https://api.dicebear.com/8.x/lorelei/svg?seed=${p.id}`} />
-                            </div>
-                        </div>
-
-                        <div className="flex-grow">
-                            <div className="flex min-w-0 gap-x-4">
-                                <div className="min-w-0 flex-auto">
-                                    <p className="text-sm font-semibold leading-6 text-sky-850">{p.name}</p>
-                                    <p className="text-sm f leading-6 text-sky-850">Suzanne Jacob</p>
-
+                        <div className="flex flex-row gap-4">
+                            <div className="avatar">
+                                <div className="w-12 h-12 rounded border bg-sky-200">
+                                    <img src={`https://api.dicebear.com/8.x/lorelei/svg?seed=${p.id}`} />
                                 </div>
                             </div>
 
+                            <div className="flex-grow">
+                                <div className="flex min-w-0 gap-x-4">
+                                    <div className="min-w-0 flex-auto">
+                                        <p className="text-sm font-semibold leading-6 text-sky-850">{p.name}</p>
+                                        <p className="text-sm f leading-6 text-sky-850">Suzanne Jacob</p>
 
-
-
-                            <div className=" shrink-0 flex flex-row justify-end w-100 gap-10 mt-4">
-                                <Link to={`/app/projects/${p.id}`}>
-                                    <div className=' text-sky-500  '>Éditer</div>
-                                </Link>
-                                <Link to={`/app/books/${p.id}`}>
-                                    <div className=' text-sky-500  '>Apercu</div>
-                                </Link>
+                                    </div>
+                                </div>
                             </div>
+                        </div>
+
+
+                        <div className=" shrink-0 flex flex-row justify-around w-100 gap-10 mt-6 items-center">
+
+                            <Link to={`/app/books/${p.id}`}>
+                                <div className=' text-gray-500 flex flex-row gap-1 text-cs '>Impression/commande <FiPrinter size={15} className='self-center' />  </div>
+                            </Link>
+                            <Link className='' to={`/app/projects/${p.id}`}>
+                                <div className=' text-sky-500 flex flex-row gap-1 '>Reprendre <LuArrowRightCircle size={20} className='self-center' /></div>
+                            </Link>
 
                         </div>
+
+
+
+
                     </li>
-                ))}
-            </ul>
+                ))
+                }
+            </ul >
         )
     }
 
@@ -74,7 +82,7 @@ export default function AppHome({ }: Props) {
             </div>
 
 
-            <h2 className=' mt-12 text-sky-950  text-xl font-bold'>Mes projets</h2>
+            <h2 className=' mt-12 mb-4 text-sky-950  text-xl font-bold'>Mes projets</h2>
 
             {renderProjectList()}
         </div>
