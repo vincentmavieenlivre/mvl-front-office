@@ -41,7 +41,8 @@
     "react-type-animation": "^3.2.0",
     "swiper": "^11.1.1",
     "tailwindcss-ripple": "^0.7.1",
-    "uuid": "^9.0.1"
+    "uuid": "^9.0.1",
+    "yup": "^1.4.0"
   },
   "devDependencies": {
     "@refinedev/core": "^4.47.1",
