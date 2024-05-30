@@ -22,7 +22,8 @@ type Props = {
 export enum EImageKind {
     COVER = "cover",
     CHAPTER = "chapter",
-    QUESTION = "question"
+    QUESTION = "question",
+    BOOK_DESTINATION_AVATAR = "destination_avatar"
 }
 
 export type BookImage = {

@@ -26,8 +26,11 @@ export default function ShowBookForPage({ }: Props) {
     const saveDestination = async () => {
         if (db && project?.id) {
             await UserProjectsService.updateProjectDestination(db, destination, project?.id)
-            console.log("set value", destination)
-            set(project, 'bookFor.destination', destination, (value: number) => (value === undefined ? 0 : value));
+            console.log("set value", destination, project)
+            set({ ...project }, 'bookFor.destination', destination, (value: number) => {
+                console.log("value", value)
+                return (value === undefined ? 0 : value)
+            });
             dispatch(updateUserProjectInList(project))
             navigate(`/app/projects/${project.id}/bookForDetails`)
 

@@ -13,7 +13,7 @@ import { BookTemplateManager } from "@app/manager/backoffice/book-template.manag
 import { FirestoreHelper } from "@app/utils/firebase/firestore-helper"
 import { ECollections } from "@app/modeles/database/firestore-collections"
 import { IBookQuestion } from "@app/modeles/database/book/book-question"
-import { EBookDestination } from "@app/modeles/database/book-target"
+import { EBookDestination, IBookFor } from "@app/modeles/database/book-target"
 
 
 export class UserProjectsService {
@@ -68,6 +68,7 @@ export class UserProjectsService {
     public async loadProject(db: Firestore): Promise<Project> {
         console.log("firestore", this.projectId)
         const p = await FirestoreHelper.getDocument<Project>(db, ECollections.PROJECTS, this.projectId)
+        console.log("[loaded project]", p)
         this.loadedProject = p
         if (p) {
             return p
@@ -97,6 +98,20 @@ export class UserProjectsService {
         console.log("[getUserProjects] num=", projects)
 
         return projects
+    }
+
+    static async updateProjectBookFor(db: Firestore, bookFor: IBookFor, projectId: string): Promise<boolean> {
+        await new FirestoreHelper().updateDocument(db, ECollections.PROJECTS, projectId, {
+            "bookFor": bookFor
+        })
+        return true
+    }
+
+    static async updateDestinationAvatarUrl(db: Firestore, destinationAvatarUrl: string, projectId: string): Promise<boolean> {
+        await new FirestoreHelper().updateDocument(db, ECollections.PROJECTS, projectId, {
+            "bookFor.avatarUrl": destinationAvatarUrl
+        })
+        return true
     }
 
     static async updateProjectDestination(db: Firestore, destination: EBookDestination, projectId: string): Promise<boolean> {

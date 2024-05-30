@@ -50,6 +50,9 @@ export class UserImageManager {
             case EImageKind.CHAPTER:
                 imageRef = ref(storage, `projects/${this.image.projectId}/chapters/chapter-${this.image.chapterId}-image.png`);
                 break;
+            case EImageKind.BOOK_DESTINATION_AVATAR:
+                imageRef = ref(storage, `projects/${this.image.projectId}/destination-avatar-image.png`);
+                break;
             default:
                 console.error("upload image should never happen")
                 break;
@@ -104,6 +107,15 @@ export class UserImageManager {
 
     }
 
+    public async uploadDestinationAvatar(): Promise<any> {
+        // 1 save the image
+        let imageUrl = await this.uploadImage()
 
+        if (this.image && db && imageUrl) {
+            await UserProjectsService.updateDestinationAvatarUrl(db, imageUrl, this.image.projectId)
+            return imageUrl
+        }
+
+    }
 
 }

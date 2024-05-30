@@ -17,8 +17,8 @@ import SummaryDrawer from "@app/pages/layout/drawer/summary.layout";
 import { ERoles } from "@app/modeles/database/roles";
 import ShowBookPage from "@app/pages/app/books/show.book.page";
 import DashboardLayout from "@app/pages/layout/dashboard-nav.layout";
-import ShowBookForPage from "@app/pages/app/projects/book-for/book-for.page";
 import ShowBookForDetailsPage from "@app/pages/app/projects/book-for/book-for-details.page";
+import ShowBookForPage from "@app/pages/app/projects/book-for/book-for.page";
 
 export const APP_ROUTES = {
   NEW_PROJECT: "/app/projects/new",
