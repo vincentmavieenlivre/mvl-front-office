@@ -31,3 +31,7 @@ input:focus {
   margin-top: 5px;
   color: red;
 }
+
+.one-relation:not(:first-child) {
+  margin-top: 60px; /* Adjust the margin value as per your requirements */
+}

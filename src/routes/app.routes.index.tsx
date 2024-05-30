@@ -19,6 +19,7 @@ import ShowBookPage from "@app/pages/app/books/show.book.page";
 import DashboardLayout from "@app/pages/layout/dashboard-nav.layout";
 import ShowBookForDetailsPage from "@app/pages/app/projects/book-for/book-for-details.page";
 import ShowBookForPage from "@app/pages/app/projects/book-for/book-for.page";
+import InvitationPage from "@app/pages/app/invitation/invitation.page";
 
 export const APP_ROUTES = {
   NEW_PROJECT: "/app/projects/new",
@@ -28,6 +29,7 @@ export const APP_ROUTES = {
   SHOW_PROJECT_QUESTION: "/app/projects/:id/questions/:questionId",
   SHOW_BOOK_FOR: "/app/projects/:id/bookFor",
   SHOW_BOOK_FOR_DETAILS: "/app/projects/:id/bookForDetails",
+  BOOK_INVITATION: "/app/projects/:id/invitation"
 }
 
 interface RoutesProps {
@@ -51,6 +53,7 @@ export const AppRoutes = (props: RoutesProps) => {
             <Route path={APP_ROUTES.SHOW_BOOK} element={<ShowBookPage />} />
             <Route path={APP_ROUTES.SHOW_BOOK_FOR} element={<ShowBookForPage />} />
             <Route path={APP_ROUTES.SHOW_BOOK_FOR_DETAILS} element={<ShowBookForDetailsPage />} />
+            <Route path={APP_ROUTES.BOOK_INVITATION} element={<InvitationPage />} />
 
 
           </Route>

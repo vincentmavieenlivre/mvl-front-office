@@ -3,7 +3,6 @@ import useProject from '@app/hook/use-project';
 import CreateBookNavBar from '@app/components/app/nav/create-book-nav-bar.component';
 import { useDispatch } from 'react-redux';
 import { Formik, Field, Form, ErrorMessage } from 'formik';
-import "@app/components/app/forms/forms.scss";
 import { EBookDestination, EForGenre } from '@app/modeles/database/book-target';
 import { Project } from '@app/modeles/database/project';
 import { IBookFor } from "@app/modeles/database/book-target"
@@ -18,6 +17,11 @@ import { updateUserProjectInList } from '@app/redux/auth.slice';
 import { UserImageManager } from '@app/manager/client/user-image.manager';
 import { BookImage, EImageKind } from '@app/components/app/summary/summary';
 import avatarSvg from "@app/assets/avatar.svg"
+
+
+import "@app/components/app/forms/forms.scss";
+
+
 type Props = {}
 
 export default function ShowBookForDetailsPage({ }: Props) {
@@ -36,7 +40,7 @@ export default function ShowBookForDetailsPage({ }: Props) {
             firstName: '',
             lastName: '',
             genre: EForGenre.WOMEN,
-            avatarUrl: undefined,
+            avatarUrl: '',
             email: '',
             phone: '',
             room: '',
@@ -49,7 +53,7 @@ export default function ShowBookForDetailsPage({ }: Props) {
     }
 
     const [bookFor, setBookFor] = useState<IBookFor>(getDefault())
-    const [hasAvatar, setHasAvatar] = useState(project?.bookFor?.avatarUrl != undefined ?? false)
+    const [hasAvatar, setHasAvatar] = useState(false)
 
     useEffect(() => {
         setBookFor(getDefault())
@@ -57,7 +61,7 @@ export default function ShowBookForDetailsPage({ }: Props) {
 
 
     useEffect(() => {
-        if (avatarImgRef.current !== null && bookFor.avatarUrl != undefined) {
+        if (avatarImgRef.current !== null && bookFor.avatarUrl != '') {
             avatarImgRef.current.src = bookFor.avatarUrl
         }
         setLoaded(true)
@@ -78,12 +82,14 @@ export default function ShowBookForDetailsPage({ }: Props) {
     const save = async (values: IBookFor) => {
 
         if (db && project?.id) {
+            console.log("update detail with", values)
             await UserProjectsService.updateProjectBookFor(db, values, project?.id)
             let toUpdate = { ...project }
 
             toUpdate.bookFor = bookFor
 
             if (hasAvatar) {
+                console.log("try to upload avatar")
                 let avatarUrl = await (new UserImageManager({
                     selectedImage: avatarImgRef.current.src,
                     imageKind: EImageKind.BOOK_DESTINATION_AVATAR,
@@ -100,7 +106,7 @@ export default function ShowBookForDetailsPage({ }: Props) {
                 }
             }
             dispatch(updateUserProjectInList(toUpdate))
-            navigate(`/app/projects/${project.id}/bookForDetails`)
+            navigate(`/app/projects/${project.id}/invitation`)
         }
     }
 
