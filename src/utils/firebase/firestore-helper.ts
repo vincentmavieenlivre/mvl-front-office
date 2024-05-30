@@ -93,16 +93,16 @@ export class FirestoreHelper {
      * @returns {Promise<any>}
      * @memberof FirestoreHelper
      */
-    async updateDocument(
+    async updateDocument<T>(
         db: any,
         collectionName: string,
         docId: string,
-        data: any
-    ): Promise<any> {
+        data: T
+    ): Promise<T> {
 
         collection(db, collectionName)
         const ref = doc(db, collectionName, docId);
-        const ret = await updateDoc(ref, data);
+        const ret = await updateDoc(ref, data as any);
         return data
     }
 

@@ -53,11 +53,29 @@ export const authSlice = createSlice({
 
             }
         },
+        updateUserProjectInList: (state, action: PayloadAction<Project | undefined>) => {
+            if (action.payload) {
+                console.info("[store] users projects add", action.payload)
+                let projects = state.userProjects.map((p) => {
+                    if (action.payload && p.id === action.payload?.id) {
+                        return action.payload
+                    } else {
+                        return p
+                    }
+                })
+                if (projects) {
+                    state.userProjects = projects
+                }
+            } else {
+                console.info("[store] users projects NOT YET PROJECT", action)
+
+            }
+        },
     },
 });
 
 // Action creators are generated for each case reducer function
-export const { setUser, setUserProjects, addUserProjects } = authSlice.actions;
+export const { setUser, setUserProjects, addUserProjects, updateUserProjectInList } = authSlice.actions;
 
 export const selectUserProjects = (state: RootState): Project[] => state.user.userProjects
 export const selectUser = (state: RootState): User | undefined => state.user.user

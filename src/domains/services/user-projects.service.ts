@@ -13,6 +13,7 @@ import { BookTemplateManager } from "@app/manager/backoffice/book-template.manag
 import { FirestoreHelper } from "@app/utils/firebase/firestore-helper"
 import { ECollections } from "@app/modeles/database/firestore-collections"
 import { IBookQuestion } from "@app/modeles/database/book/book-question"
+import { EBookDestination } from "@app/modeles/database/book-target"
 
 
 export class UserProjectsService {
@@ -98,6 +99,13 @@ export class UserProjectsService {
         return projects
     }
 
+    static async updateProjectDestination(db: Firestore, destination: EBookDestination, projectId: string): Promise<boolean> {
+        await new FirestoreHelper().updateDocument(db, ECollections.PROJECTS, projectId, {
+            "bookFor.destination": destination
+        })
+        return true
+    }
+
     static async createProject(db: Firestore, projectName: string, creator: User, token: IdTokenResult, templateId: string): Promise<Project> {
 
         if (!creator.displayName || !creator.uid || !token.claims.role) {
@@ -126,6 +134,7 @@ export class UserProjectsService {
                 users: [u]
             },
             template_id: templateId,
+            templateCoverUrl: sourceTemplate.coverUrl ?? '',
             chapters: sourceTemplate.chapters
         }
 

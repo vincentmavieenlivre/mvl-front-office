@@ -64,8 +64,7 @@ export default function NewProject({ }: Props) {
             //const projectName = event.target.projectName.value;
             const newProject: Project = await UserProjectsService.createProject(db, currentTemplate.name, user, token, currentTemplate?.id)
             dispatch(addUserProjects(newProject))
-            navigate(APP_ROUTES.LIST_PROJECTS)
-
+            navigate(`/app/projects/${newProject.id}/bookFor`)
         } else {
             console.warn('no project selected')
         }

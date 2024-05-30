@@ -17,13 +17,17 @@ import SummaryDrawer from "@app/pages/layout/drawer/summary.layout";
 import { ERoles } from "@app/modeles/database/roles";
 import ShowBookPage from "@app/pages/app/books/show.book.page";
 import DashboardLayout from "@app/pages/layout/dashboard-nav.layout";
+import ShowBookForPage from "@app/pages/app/projects/book-for/book-for.page";
+import ShowBookForDetailsPage from "@app/pages/app/projects/book-for/book-for-details.page";
 
 export const APP_ROUTES = {
   NEW_PROJECT: "/app/projects/new",
   SHOW_PROJECT: "/app/projects/:id",
   SHOW_BOOK: "/app/books/:id",
   LIST_PROJECTS: "/app",
-  SHOW_PROJECT_QUESTION: "/app/projects/:id/questions/:questionId"
+  SHOW_PROJECT_QUESTION: "/app/projects/:id/questions/:questionId",
+  SHOW_BOOK_FOR: "/app/projects/:id/bookFor",
+  SHOW_BOOK_FOR_DETAILS: "/app/projects/:id/bookForDetails",
 }
 
 interface RoutesProps {
@@ -45,6 +49,8 @@ export const AppRoutes = (props: RoutesProps) => {
             <Route path={APP_ROUTES.SHOW_PROJECT} element={<ShowProjectPage />} />
             <Route path={APP_ROUTES.SHOW_PROJECT_QUESTION} element={<SummaryDrawer><ShowQuestion /></SummaryDrawer>} />
             <Route path={APP_ROUTES.SHOW_BOOK} element={<ShowBookPage />} />
+            <Route path={APP_ROUTES.SHOW_BOOK_FOR} element={<ShowBookForPage />} />
+            <Route path={APP_ROUTES.SHOW_BOOK_FOR_DETAILS} element={<ShowBookForDetailsPage />} />
 
 
           </Route>
@@ -76,8 +82,6 @@ function InternalAppRedirector({ children }: { children: JSX.Element }) {
 
     }
   }
-
-  console.log("nop")
 
 
   return children

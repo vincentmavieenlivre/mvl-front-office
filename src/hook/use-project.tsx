@@ -49,6 +49,8 @@ export default function useProject(projectId: string | undefined) {
         }
     }, [])
 
+    return project
+
 
 
 }
