@@ -1,0 +1,28 @@
+.f-elem {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.field {
+  border-bottom-width: 2px;
+  border-bottom-style: solid;
+  padding-bottom: 5px;
+  margin-top: 5px;
+}
+
+.select-field {
+  width: 100%;
+  padding: 10px;
+}
+
+input:focus {
+  outline: none;
+  box-shadow: none;
+  //border-color: transparent;
+}
+
+.required:after {
+  content: " *";
+  color: red;
+}
