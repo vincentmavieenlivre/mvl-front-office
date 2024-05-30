@@ -9,6 +9,16 @@ export default {
       colors: theme('colors'),
       darken: 0.05
   }),
+
+  fontSize:{
+    xs: '0.75rem', // Extra Small
+    sm: '0.875rem', // Small
+    base: '1rem', // Base
+    lg: '1.125rem', // Large
+    xl: '1.25rem', // Extra Large
+    "4xl": "4em"
+  }
+
   },
 
 

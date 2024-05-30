@@ -14,6 +14,7 @@ import { ERoles } from '@app/modeles/database/roles';
 import "@app/components/app/forms/forms.scss";
 import { securityAlert } from '@app/components/app/alert/security-alert';
 import { TbTrashXFilled } from 'react-icons/tb';
+import BeginWrite from '@app/components/app/page-transitions/begin-writing';
 
 type Props = {}
 
@@ -27,6 +28,7 @@ export default function InvitationPage({ }: Props) {
     const navigate = useNavigate()
     const dispatch = useDispatch();
     const project = useProject(params.id)
+    const [showBegin, setShowBegin] = useState(false)
 
     const [relations, setRelations] = useState<IRelationDto>(
         {
@@ -67,6 +69,7 @@ export default function InvitationPage({ }: Props) {
                     initialValues={relations}
                     onSubmit={async (values) => {
                         console.log("submit", values)
+                        setShowBegin(true)
                     }}
                 >
 
@@ -115,7 +118,9 @@ export default function InvitationPage({ }: Props) {
                                     Suivant
                                 </button>
 
-                                <button type="button" className='mt-6 text-xl text-sky-500'>
+                                <button
+                                    onClick={() => setShowBegin(true)}
+                                    type="button" className='mt-6 text-xl text-sky-500'>
                                     Passer cette étape
                                 </button>
 
@@ -133,6 +138,14 @@ export default function InvitationPage({ }: Props) {
 
 
             </div>
+
+            <BeginWrite
+
+
+                project={project} show={showBegin} onNextClicked={() => {
+                    navigate(`/app/projects/${project?.id}`)
+                }}></BeginWrite>
+
         </div>
 
 

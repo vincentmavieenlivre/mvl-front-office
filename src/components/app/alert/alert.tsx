@@ -10,7 +10,7 @@ type Props = {
 
 export default function Alert(props: Props) {
     return (
-        <div className={` bg-sky-100 rounded-b px-4 py-3 shadow-md ${props.className}`} role="alert">
+        <div className={` bg-sky-100 px-4 py-3 shadow-md ${props.className}`} role="alert">
             <div className="flex">
                 <div className="py-1">
                     <div className='fill-current h-6 w-6 text-sky-500 mr-4'>
