@@ -11,6 +11,9 @@ import { Link } from 'react-router-dom'
 import { LuArrowRightCircle } from "react-icons/lu";
 import { IoBookOutline } from "react-icons/io5";
 import { FiPrinter } from "react-icons/fi";
+import { EBookDestination } from '@app/modeles/database/book-target'
+import { MdOutlineMenuBook } from "react-icons/md";
+import { GiBookshelf } from "react-icons/gi";
 type Props = {}
 
 export default function AppHome({ }: Props) {
@@ -18,6 +21,8 @@ export default function AppHome({ }: Props) {
     const userProjects: Project[] = useSelector(selectUserProjects)
     const user = useSelector(selectUser)
     const userToken = useSelector(selectToken)
+
+    console.log("user", user)
 
     const renderProjectList = () => {
         return (
@@ -27,17 +32,32 @@ export default function AppHome({ }: Props) {
 
                         <div className="flex flex-row gap-4">
                             <div className="avatar">
-                                <div className="w-12 h-12 rounded border bg-sky-200">
-                                    <img src={`https://api.dicebear.com/8.x/lorelei/svg?seed=${p.id}`} />
+                                {/* AVATAR */}
+                                <div className="w-16 h-16 rounded border bg-sky-200">
+                                    {!p.bookFor?.avatarUrl &&
+                                        <img src={`https://api.dicebear.com/8.x/lorelei/svg?seed=${p.id}`} />
+                                    }
+                                    {p.bookFor?.avatarUrl &&
+                                        <img src={p.bookFor.avatarUrl} />
+                                    }
                                 </div>
                             </div>
 
-                            <div className="flex-grow">
-                                <div className="flex min-w-0 gap-x-4">
-                                    <div className="min-w-0 flex-auto">
-                                        <p className="text-sm font-semibold leading-6 text-sky-850">{p.name}</p>
-                                        <p className="text-sm f leading-6 text-sky-850">Suzanne Jacob</p>
+                            <div className="flex-grow ">
+                                <div className="flex min-w-0 gap-x-4 h-full">
+                                    <div className="min-w-0 flex-col justify-evenly">
+                                        {/* BOOK TITLE */}
+                                        <p className="text-lg text-gray-600 leading-6 text-sky-850 flex flex-row gap-2 items-center"><MdOutlineMenuBook />{p.name}</p>
 
+                                        {/* WHO */}
+                                        <div className='mt-1 text-xl text-gray-700 font-bold leading-6'>
+                                            {p.bookFor?.destination == EBookDestination.OTHER &&
+                                                <p>{`${p.bookFor?.firstName}  ${p.bookFor?.lastName}`} </p>
+                                            }
+                                            {(!p?.bookFor?.destination || p.bookFor.destination == EBookDestination.ME) &&
+                                                <p>Mon livre</p>
+                                            }
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -81,10 +101,15 @@ export default function AppHome({ }: Props) {
 
             </div>
 
+            <div className=''>
+                <h2 className=' mt-12 mb-4 text-sky-950  text-xl font-bold'>Mes histoires en cours</h2>
+                {renderProjectList()}
+            </div>
 
-            <h2 className=' mt-12 mb-4 text-sky-950  text-xl font-bold'>Mes projets</h2>
-
-            {renderProjectList()}
+            {/* <div className='mt-20'>
+                <h2 className=' mt-12 mb-4 text-sky-950  text-xl font-bold'>Mes histoires en finalisées</h2>
+                <GiBookshelf className='text-gray-300 flex flex-row mt-10 ml-10' size={80} />
+            </div> */}
         </div>
     )
 }
