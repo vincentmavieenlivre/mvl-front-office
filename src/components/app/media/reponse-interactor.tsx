@@ -152,6 +152,9 @@ export default function ResponseInteractor({
                 {animateText == false &&
                     <TextareaAutosize
                         ref={textArea}
+
+                        style={{ whiteSpace: "nowrap" }}
+                        spellCheck={false} // for demo purpose ?
                         onChange={() => {
                             if (textArea?.current?.value) {
                                 const textAreaContent = textArea.current.value;
