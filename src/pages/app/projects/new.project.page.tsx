@@ -21,6 +21,8 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination, Scrollbar, A11y } from 'swiper/modules';
 import { FcPrivacy } from 'react-icons/fc'
 import { current } from '@reduxjs/toolkit'
+import { securityAlert } from '@app/components/app/alert/security-alert'
+import CreateBookNavBar from '@app/components/app/nav/create-book-nav-bar.component'
 type Props = {}
 
 export default function NewProject({ }: Props) {
@@ -99,7 +101,9 @@ export default function NewProject({ }: Props) {
 
     return (
         <div className='bg-sky-50 h-screen'>
-            <form onSubmit={onProjectSubmit} className='p-4'>
+            <CreateBookNavBar></CreateBookNavBar>
+
+            <form onSubmit={onProjectSubmit} className='p-6'>
                 {/* <div className="grid gap-6 mb-6 md:grid-cols-2">
                 <div>
                     <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Le nom de votre projet</label>
@@ -109,7 +113,7 @@ export default function NewProject({ }: Props) {
             </div> */}
 
 
-                <h2 className=' mt-4 text-sky-950  text-2xl font-bold '>Sélectionnez le thème de votre livre de vie</h2>
+                <h1 className=' text-sky-950  text-2xl font-bold '>Sélectionnez le thème de votre livre de vie</h1>
 
                 <div className='mt-12'>
                     <Swiper
@@ -146,13 +150,8 @@ export default function NewProject({ }: Props) {
 
                         className={`mt-8 btn ${currentTemplate != undefined ? 'bg-sky-500' : 'bg-sky-200'}   text-sky-50 text-sm rounded-3xl w-11/12 text-xl`}>Suivant</button>
 
-                    <div className='flex flex-row mt-4'>
-                        <div className='w-1/5 flex flex-row justify-center'>
-                            <FcPrivacy className='self-center text-center' />
-                        </div>
-                        <div className='text-gray-500 w-4/5'>Vos informations sont sécurisées par chiffrement.</div>
+                    {securityAlert()}
 
-                    </div>
                 </div>
             </form >
         </div>

@@ -16,7 +16,8 @@ export default {
     base: '1rem', // Base
     lg: '1.125rem', // Large
     xl: '1.25rem', // Extra Large
-    "4xl": "4em"
+    '2xl': '1.5rem', // Extra Large
+    '4xl': "4em"
   }
 
   },
