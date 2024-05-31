@@ -153,7 +153,6 @@ export default function ResponseInteractor({
                     <TextareaAutosize
                         ref={textArea}
 
-                        style={{ whiteSpace: "nowrap" }}
                         spellCheck={false} // for demo purpose ?
                         onChange={() => {
                             if (textArea?.current?.value) {

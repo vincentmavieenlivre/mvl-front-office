@@ -120,7 +120,8 @@ export const TemplateEdit = () => {
             </Card>
             <Card>
                 <QuestionCreator
-                    onChapterAdded={(n) => { setChapters([...chapters, {...n, index: chapters.length + 1}]); console.log(n) }}
+                    templateId={currentTemplate?.id}
+                    onChapterAdded={(n) => { setChapters([...chapters, { ...n, index: chapters.length + 1 }]); console.log(n) }}
                     onToDelete={setToDeleteQuestionIds} onListChange={setQuestions}
                     chapters={chapters ?? []}
                     questions={questions}

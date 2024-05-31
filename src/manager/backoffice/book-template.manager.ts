@@ -110,11 +110,16 @@ export class BookTemplateManager {
         q.new = false
     }
 
+    async updateQuestionPictureInTemplate(question: IBookQuestionEditable, pictureUrl: string) {
+        const collectionRef = collection(this.db, ECollections.BOOK_TEMPLATE, this.templateId, ECollections.QUESTIONS);
+        const documentRef = doc(collectionRef, question.id)
+        await updateDoc(documentRef, { pictureUrl: pictureUrl })
+    }
+
     async updateQuestionInTemplate(q: IBookQuestionEditable) {
         const collectionRef = collection(this.db, ECollections.BOOK_TEMPLATE, this.templateId, ECollections.QUESTIONS);
         const documentRef = doc(collectionRef, q.id)
         await updateDoc(documentRef, this.removeEditableFields(q) as any)
-        console.log("question updated", q)
         q.changed = false
     }
 

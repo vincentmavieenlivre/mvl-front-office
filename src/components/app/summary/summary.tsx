@@ -23,16 +23,17 @@ export enum EImageKind {
     COVER = "cover",
     CHAPTER = "chapter",
     QUESTION = "question",
+    TEMPLATE_QUESTION = "template_question",
     BOOK_DESTINATION_AVATAR = "destination_avatar"
 }
 
 export type BookImage = {
     selectedImage: any;
     imageKind: EImageKind;
-    projectId: string;
+    projectId?: string;
     question?: IBookQuestion;
     chapterId?: string;
-
+    templateId?: string;
 }
 
 export default function Summary(props: Props) {

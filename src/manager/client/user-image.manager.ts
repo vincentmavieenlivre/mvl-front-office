@@ -11,6 +11,7 @@ import { getDownloadURL, ref, uploadBytes, uploadString } from "firebase/storage
 
 import { store } from "@app/redux/store"
 import { UserProjectQuestionManager } from "./user-project-question.manager";
+import { BookTemplateManager } from "../backoffice/book-template.manager";
 export class UserImageManager {
 
     constructor(
@@ -32,6 +33,17 @@ export class UserImageManager {
 
     }
 
+    public async uploadBookTemplateQuestionImage(): Promise<string> {
+        let imageUrl = await this.uploadImage()
+        if (imageUrl && db && this.image.templateId && this.image.question) {
+            const templateManager: BookTemplateManager = new BookTemplateManager(db, this.image.templateId)
+            await templateManager.updateQuestionPictureInTemplate(this.image.question, imageUrl)
+            return imageUrl
+        }
+
+        throw "upload template image fail"
+    }
+
     private uploadImage = async () => {
         if (!storage) return
 
@@ -44,6 +56,10 @@ export class UserImageManager {
         let imageRef
 
         switch (this.image.imageKind) {
+            case EImageKind.TEMPLATE_QUESTION:
+                imageRef = ref(storage, `templates/${this.image.templateId}/questions/question-${this.image.question?.id}-image.png`);
+                break;
+
             case EImageKind.QUESTION:
                 imageRef = ref(storage, `projects/${this.image.projectId}/questions/question-${this.image.question?.id}-image.png`);
                 break;

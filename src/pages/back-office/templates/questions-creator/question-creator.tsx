@@ -8,7 +8,11 @@ import { IChapter } from '@app/modeles/database/book/book-template';
 import { db } from '@app/init/firebase';
 import { nanoid } from 'nanoid'
 import { render } from 'react-dom';
-
+import { LuImagePlus } from "react-icons/lu";
+import { ImageUploader } from '@app/components/app/images/image-uploader';
+import { BookImage, EImageKind } from '@app/components/app/summary/summary';
+import { MdAddPhotoAlternate } from 'react-icons/md';
+import { UserImageManager } from '@app/manager/client/user-image.manager';
 const NO_CHAPTER_SELECTED = "no_theme"
 
 type Props = {
@@ -16,7 +20,8 @@ type Props = {
     chapters: IChapter[]
     onListChange: (questions: IBookQuestionEditable[]) => void
     onToDelete: (toDeleteIds: string[]) => void
-    onChapterAdded:(t:IChapter) => void
+    onChapterAdded: (t: IChapter) => void
+    templateId: string | undefined;
 }
 
 export default function QuestionCreator(props: Props) {
@@ -68,7 +73,7 @@ export default function QuestionCreator(props: Props) {
 
     const onExistingQuestionChange = (field: keyof IBookQuestionEditable, value: any, index: number) => {
         const updatedQuestions = [...questions];
-        const q:any = updatedQuestions[index]
+        const q: any = updatedQuestions[index]
         console.log("modif de ", field, " => ", value)
         q[field] = value
         if (q.id) {
@@ -139,60 +144,108 @@ export default function QuestionCreator(props: Props) {
         }
     };
 
-    const findIndex = (item:any) => props.questions.findIndex((d) => d.questionTitle ==  item.questionTitle ) 
+    const addPicture = async (index: number, imageB64: any) => {
+        const updatedQuestions = [...questions];
+        const q = updatedQuestions[index]
 
-    const renderChapter = (chapter:IChapter, questions:IBookQuestionEditable[]) => {
-        return(
+        let image: BookImage = {
+            imageKind: EImageKind.TEMPLATE_QUESTION,
+            selectedImage: imageB64,
+            question: q,
+            templateId: props.templateId
+        }
+
+        let mng = new UserImageManager(image)
+
+        let pictureUrl = await mng.uploadBookTemplateQuestionImage()
+
+        q.pictureUrl = pictureUrl
+
+        setQuestions(updatedQuestions);
+
+        console.log("updated question with picture", q)
+    }
+
+    const findIndex = (item: any) => props.questions.findIndex((d) => d.questionTitle == item.questionTitle)
+
+    const renderChapter = (chapter: IChapter, questions: IBookQuestionEditable[]) => {
+        return (
             <div key={chapter.id}>
-            <Typography.Title className='mb-4 mt-4' level={5} >{ _.capitalize(chapter.name)}</Typography.Title>
-            <List
-                size="large"
-                //header={<div>Liste des questions associées</div>}
-                bordered
-                dataSource={questions}
-                renderItem={(item: IBookQuestion, index) => {
+                <Typography.Title className='mb-4 mt-4' level={5} >{_.capitalize(chapter.name)}</Typography.Title>
+                <List
+                    size="large"
+                    //header={<div>Liste des questions associées</div>}
+                    bordered
+                    dataSource={questions}
+                    renderItem={(item: IBookQuestion, index) => {
 
 
 
-                    return (
-                        <List.Item>
-                            <Input value={item.questionTitle} onChange={(e) => onExistingQuestionChange("questionTitle", e.target.value, findIndex(item) )} />
+                        return (
+                            <List.Item>
+                                <Input value={item.questionTitle} onChange={(e) => onExistingQuestionChange("questionTitle", e.target.value, findIndex(item))} />
 
-                            <Select
-                            dropdownStyle={{width: 200}}
-                                onChange={(value:string) => {   onExistingQuestionChange("chapterId", value, findIndex(item))  }}
-                                value={item.chapterId}
-                                style={{ width: 90 }}
-                                options={props.chapters.map((i:IChapter) => {return{
-                                    label: i.name,
-                                    value: i.id
-                                }})}
-                            />
-                            <div className="flex-shrink-0 ">
-                                <Button
-                                    type="text"
-                                    icon={<ArrowUpOutlined />}
-                                    onClick={() => handleMoveUp( findIndex(item)  )}
-                                    disabled={index === 0}
+                                <Select
+                                    dropdownStyle={{ width: 200 }}
+                                    onChange={(value: string) => { onExistingQuestionChange("chapterId", value, findIndex(item)) }}
+                                    value={item.chapterId}
+                                    style={{ width: 90 }}
+                                    options={props.chapters.map((i: IChapter) => {
+                                        return {
+                                            label: i.name,
+                                            value: i.id
+                                        }
+                                    })}
                                 />
-                                <Button
-                                    type="text"
-                                    className='ant-btn-icon'
-                                    icon={<ArrowDownOutlined />}
-                                    onClick={() => handleMoveDown( findIndex(item) )}
-                                    disabled={index === questions.length - 1}
-                                />
-                                <Button
-                                    type="text"
-                                    icon={<DeleteOutlined />}
-                                    onClick={() => handleDelete(findIndex(item))}
-                                />
-                            </div>
-                        </List.Item>
-                    )
-                }}
-            />
-        </div>
+                                <div className="flex-shrink-0 items-center flex justify-center min-w-40 ">
+                                    <Button
+                                        type="text"
+                                        icon={<ArrowUpOutlined />}
+                                        onClick={() => handleMoveUp(findIndex(item))}
+                                        disabled={index === 0}
+                                    />
+                                    <Button
+                                        type="text"
+                                        className='ant-btn-icon'
+                                        icon={<ArrowDownOutlined />}
+                                        onClick={() => handleMoveDown(findIndex(item))}
+                                        disabled={index === questions.length - 1}
+                                    />
+
+
+
+                                    <Button className='border-0'  >
+                                        <ImageUploader className='ant-btn-icon' onImageSelected={async (imageB64: any) => {
+                                            await addPicture(findIndex(item), imageB64)
+                                        }}>
+                                            <div>
+                                                {!item?.pictureUrl &&
+                                                    <LuImagePlus />
+
+                                                }
+
+                                                {item?.pictureUrl &&
+                                                    <div className="avatar">
+                                                        <div className="w-6 rounded-md">
+                                                            <img src={item.pictureUrl} />
+                                                        </div>
+                                                    </div>
+                                                }
+                                            </div>
+                                        </ImageUploader>
+                                    </Button>
+
+                                    <Button
+                                        type="text"
+                                        icon={<DeleteOutlined />}
+                                        onClick={() => handleDelete(findIndex(item))}
+                                    />
+                                </div>
+                            </List.Item>
+                        )
+                    }}
+                />
+            </div>
         )
     }
 
@@ -204,7 +257,7 @@ export default function QuestionCreator(props: Props) {
                 <div className='w-1/2 mr-4'>
                     <Typography.Title level={5} >Questions associées</Typography.Title>
                     <div>
-                    <Input onKeyDown={handleNewQuestionKeyDown} value={questionInputValue} onChange={onNewQuestionChange} />
+                        <Input onKeyDown={handleNewQuestionKeyDown} value={questionInputValue} onChange={onNewQuestionChange} />
                         <Button className='mt-4 mb-10' type="primary" onClick={handleAddQuestion}>
                             Ajouter une question
                         </Button>
@@ -213,23 +266,23 @@ export default function QuestionCreator(props: Props) {
 
                 <div className='w-1/2 ml-4'>
                     <Typography.Title level={5} >Chapitre(s)</Typography.Title>
-                    <Input  value={themeInputValue} onChange={ (e) => setThemeInputValue(e.target.value)} />
-                        <Button className='mt-4 mb-10' type="primary" onClick={handleAddTheme}>
-                            Ajouter un chapitre 
-                        </Button>
+                    <Input value={themeInputValue} onChange={(e) => setThemeInputValue(e.target.value)} />
+                    <Button className='mt-4 mb-10' type="primary" onClick={handleAddTheme}>
+                        Ajouter un chapitre
+                    </Button>
                 </div>
             </div>
 
             {/* <pre>{JSON.stringify(props.chapters)}</pre> */}
 
-            { questionsByChapter[NO_CHAPTER_SELECTED] &&
-                   renderChapter({
-                    index:0,
+            {questionsByChapter[NO_CHAPTER_SELECTED] &&
+                renderChapter({
+                    index: 0,
                     name: "Sans chapitre"
-                   }, questionsByChapter[NO_CHAPTER_SELECTED]) 
+                }, questionsByChapter[NO_CHAPTER_SELECTED])
             }
 
-            {props.chapters.sort((a,b) => { return a.index - b.index } ).map((chapter: IChapter) => {
+            {props.chapters.sort((a, b) => { return a.index - b.index }).map((chapter: IChapter) => {
                 const questions = questionsByChapter[chapter.id]
                 const chapterName = chapter?.name ?? "pas de chapitre"
                 return renderChapter(chapter, questions)

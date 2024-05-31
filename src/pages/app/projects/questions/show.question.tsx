@@ -158,7 +158,7 @@ export default function ShowQuestion({ }: Props) {
 
             </QuestionNavigation>
             <div className='flex flex-row justify-center mt-4'>
-                <img className='rounded-lg' src={`https://picsum.photos/seed/${seed}/300/200`}></img>
+                <img className='rounded-lg w-[300px] h-[200px]' src={question.pictureUrl}></img>
             </div>
 
 
