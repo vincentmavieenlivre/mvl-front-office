@@ -19,7 +19,7 @@ export class AdminUserManager {
         return customToken
     }
 
-    async createUser(blob: CreateRequest, userRole: ERoles, emailVerified: boolean = false): Promise<User> {
+    async createUser(blob: CreateRequest, userRole: ERoles, claimsRole: ERoles, emailVerified: boolean = false): Promise<User> {
         console.log("[user create] params", blob)
 
         if (!blob.email) throw "email is null"
@@ -41,9 +41,14 @@ export class AdminUserManager {
                 // TODO Verify it does not exists 
                 const userRecord = await getAuth().createUser({
                     ...blob,
-                    emailVerified: emailVerified
+                    emailVerified: emailVerified,
                 }
                 )
+
+
+                await getAuth().setCustomUserClaims(userRecord.uid, {
+                    role: claimsRole
+                });
 
                 // See the UserRecord reference doc for the contents of userRecord.
                 console.log(`Firebase AUTH user inserted:  ${userRecord}`);
