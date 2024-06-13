@@ -14,6 +14,7 @@ import { FiPrinter } from "react-icons/fi";
 import { EBookDestination } from '@app/modeles/database/book-target'
 import { MdOutlineMenuBook } from "react-icons/md";
 import { GiBookshelf } from "react-icons/gi";
+import { getUserStatusOnProject } from '@app/redux/helpers/project.slice.helpers'
 type Props = {}
 
 export default function AppHome({ }: Props) {
@@ -25,64 +26,75 @@ export default function AppHome({ }: Props) {
     console.log("user", user)
 
     const renderProjectList = () => {
+
         return (
             <ul role="list" className="divide-y divide-gray-300">
-                {userProjects.map((p: Project) => (
-                    <li key={p.id} className="flex flex-col  gap-x-6 py-5 justify-start ">
+                {userProjects?.map((p: Project) => {
 
-                        <div className="flex flex-row gap-4">
-                            <div className="avatar">
-                                {/* AVATAR */}
-                                <div className="w-16 h-16 rounded border bg-sky-200">
-                                    {!p.bookFor?.avatarUrl &&
-                                        <img src={`https://api.dicebear.com/8.x/lorelei/svg?seed=${p.id}`} />
-                                    }
-                                    {p.bookFor?.avatarUrl &&
-                                        <img src={p.bookFor.avatarUrl} />
-                                    }
+                    let userStatus = user?.uid ? getUserStatusOnProject(p, user!.uid) : null
+
+                    return (
+                        <li key={p.id} className="flex flex-col  gap-x-6 py-5 justify-start ">
+
+                            <div className="flex flex-row gap-4">
+                                <div className="avatar">
+                                    {/* AVATAR */}
+                                    <div className="w-16 h-16 rounded border bg-sky-200">
+                                        {!p.bookFor?.avatarUrl &&
+                                            <img src={`https://api.dicebear.com/8.x/lorelei/svg?seed=${p.id}`} />
+                                        }
+                                        {p.bookFor?.avatarUrl &&
+                                            <img src={p.bookFor.avatarUrl} />
+                                        }
+                                    </div>
                                 </div>
-                            </div>
 
-                            <div className="flex-grow ">
-                                <div className="flex min-w-0 gap-x-4 h-full">
-                                    <div className="min-w-0 flex-col justify-evenly">
-                                        {/* BOOK TITLE */}
-                                        <p className="text-lg text-gray-600 leading-6 text-sky-850 flex flex-row gap-2 items-center"><MdOutlineMenuBook />{p.name}</p>
+                                <div className="flex-grow ">
+                                    <div className="flex min-w-0 gap-x-4 h-full">
+                                        <div className="min-w-0 flex-col justify-evenly w-full">
+                                            {/* BOOK TITLE */}
+                                            <div className='flex flex-row justify-between'>
+                                                <p className="text-lg text-gray-600 leading-6 text-sky-850 flex flex-row gap-2 items-center"><MdOutlineMenuBook />{p.name}</p>
+                                                {userStatus != null &&
+                                                    <div className='mr-4 badge bg-sky-500 border-0 text-sky-50 p-3' >{userStatus}</div>
+                                                }
+                                            </div>
 
-                                        {/* WHO */}
-                                        <div className='mt-1 text-xl text-gray-700 font-bold leading-6'>
+                                            {/* WHO */}
+                                            <div className='mt-1 text-xl text-gray-700 font-bold leading-6'>
 
-                                            {(p.bookFor?.destination != undefined && p.bookFor?.destination == EBookDestination.OTHER) &&
-                                                <p>{`${p.bookFor?.firstName}  ${p.bookFor?.lastName}`} </p>
-                                            }
+                                                {(p.bookFor?.destination != undefined && p.bookFor?.destination == EBookDestination.OTHER) &&
+                                                    <p>{`${p.bookFor?.firstName}  ${p.bookFor?.lastName}`} </p>
+                                                }
 
-                                            {(p.bookFor?.destination == EBookDestination.ME) &&
-                                                <p>Mon livre</p>
-                                            }
+                                                {(p.bookFor?.destination == EBookDestination.ME) &&
+                                                    <p>Mon livre</p>
+                                                }
 
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
 
 
-                        <div className=" shrink-0 flex flex-row justify-around w-100 gap-10 mt-6 items-center">
+                            <div className=" shrink-0 flex flex-row justify-around w-100 gap-10 mt-6 items-center">
 
-                            <Link to={`/app/books/${p.id}`}>
-                                <div className=' text-gray-500 flex flex-row gap-1 text-cs '>Impression/commande <FiPrinter size={15} className='self-center' />  </div>
-                            </Link>
-                            <Link className='' to={`/app/projects/${p.id}`}>
-                                <div className=' text-sky-500 flex flex-row gap-1 '>Reprendre <LuArrowRightCircle size={20} className='self-center' /></div>
-                            </Link>
+                                <Link to={`/app/books/${p.id}`}>
+                                    <div className=' text-gray-500 flex flex-row gap-1 text-cs '>Impression/commande <FiPrinter size={15} className='self-center' />  </div>
+                                </Link>
+                                <Link className='' to={`/app/projects/${p.id}`}>
+                                    <div className=' text-sky-500 flex flex-row gap-1 '>Reprendre <LuArrowRightCircle size={20} className='self-center' /></div>
+                                </Link>
 
-                        </div>
-
-
+                            </div>
 
 
-                    </li>
-                ))
+
+
+                        </li>
+                    )
+                })
                 }
             </ul >
         )

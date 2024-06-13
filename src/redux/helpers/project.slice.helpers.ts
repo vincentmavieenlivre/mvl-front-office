@@ -1,6 +1,23 @@
 import { IBookQuestion } from "@app/modeles/database/book/book-question"
 import { IChapter, IChapterTree } from "@app/modeles/database/book/book-template"
 import { Project } from "@app/modeles/database/project"
+import { ERoles } from "@app/modeles/database/roles"
+
+
+
+export function getUserStatusOnProject(project: Project, userId: string): string | null {
+    const u = project.owners.users.find((u) => u.user_id == userId)
+    if (u) {
+        switch (u.user_role) {
+            case ERoles.INVITED:
+                return "visiteur"
+            case ERoles.USER:
+                return null
+            default:
+                throw 'user not on project'
+        }
+    }
+}
 
 export function sortQuestions(questionsOrder: { index: number, id: string }[], questions: IBookQuestion[]): IBookQuestion[] {
 

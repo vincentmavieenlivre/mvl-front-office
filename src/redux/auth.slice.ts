@@ -33,6 +33,7 @@ export const authSlice = createSlice({
             } else {
                 state.user = undefined
                 state.tokenResult = undefined
+                state.userProjects = undefined
             }
         },
         setUserProjects: (state, action: PayloadAction<Project[] | undefined>) => {
