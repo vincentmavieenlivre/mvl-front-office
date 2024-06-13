@@ -3,5 +3,6 @@ export enum ECollections {
     PROJECTS = "project",
     ORGANIZATION = "organization",
     BOOK_TEMPLATE = "template",
-    QUESTIONS = "questions"
+    QUESTIONS = "questions",
+    INVITATIONS = "invitation"
 }

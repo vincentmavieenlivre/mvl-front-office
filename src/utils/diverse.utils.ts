@@ -6,3 +6,7 @@ export function pluralize(word: any, count: number) {
         return word + 's'; // Plural form
     }
 }
+
+export function getBackendUrl() {
+    return "http://localhost:2000"
+}

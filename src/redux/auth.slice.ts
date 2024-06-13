@@ -8,7 +8,7 @@ import { Project } from "@app/modeles/database/project";
 export interface UserStore {
     user?: User,
     tokenResult?: IdTokenResult,
-    userProjects: Project[]
+    userProjects?: Project[]
 }
 
 const initialState: UserStore = {

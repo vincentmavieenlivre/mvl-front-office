@@ -1,13 +1,13 @@
 import CreateBookNavBar from '@app/components/app/nav/create-book-nav-bar.component';
 import useProject from '@app/hook/use-project';
 import React, { useState } from 'react'
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Formik, Field, Form, ErrorMessage, FieldArray } from 'formik';
 import * as Yup from 'yup';
 import { UserOwner } from '@app/modeles/database/embedded/data-owner';
 import { Divider } from 'antd';
-import { User } from 'firebase/auth';
+import { IdTokenResult, User } from 'firebase/auth';
 import { ERoles } from '@app/modeles/database/roles';
 
 
@@ -15,12 +15,15 @@ import "@app/components/app/forms/forms.scss";
 import { securityAlert } from '@app/components/app/alert/security-alert';
 import { TbTrashXFilled } from 'react-icons/tb';
 import BeginWrite from '@app/components/app/page-transitions/begin-writing';
+import { functions } from '@app/init/firebase';
+import { httpsCallable } from 'firebase/functions';
+import { InvitationService } from '@app/domains/services/invitation.service';
+import { IRelationDto, UserWithInfo } from '@app/modeles/database/user';
+import { selectToken } from '@app/redux/auth.slice';
 
 type Props = {}
 
-interface IRelationDto {
-    relations: UserOwner[]
-}
+
 
 export default function InvitationPage({ }: Props) {
 
@@ -30,13 +33,14 @@ export default function InvitationPage({ }: Props) {
     const project = useProject(params.id)
     const [showBegin, setShowBegin] = useState(false)
 
+    const tokenResult: IdTokenResult | undefined = useSelector(selectToken)
+
+
     const [relations, setRelations] = useState<IRelationDto>(
         {
             relations: [{
-                email: '',
+                email: "",
                 phone: "",
-                user_name: '',
-                user_role: ERoles.FAMILY
             }]
         })
 
@@ -44,11 +48,17 @@ export default function InvitationPage({ }: Props) {
         relations: Yup.array()
             .of(
                 Yup.object().shape({
-                    email: Yup.string().email(),
+                    email: Yup.string().email().required('email obligatoire'),
                     phone: Yup.string()
                 })
             )
     });
+
+    const onInvite = async (value: IRelationDto) => {
+        if (tokenResult)
+            await new InvitationService().launchInvitation(params.id, tokenResult, value)
+    }
+
 
     return (
         <div className='h-screen flex flex-col p-5'>
@@ -65,15 +75,16 @@ export default function InvitationPage({ }: Props) {
 
                 <Formik
                     enableReinitialize={true}
+                    validateOnMount={true}
                     validationSchema={relationSchema}
                     initialValues={relations}
-                    onSubmit={async (values) => {
-                        console.log("submit", values)
-                        setShowBegin(true)
+                    onSubmit={async (value: IRelationDto) => {
+                        console.log("submit", value)
+                        await onInvite(value)
                     }}
                 >
 
-                    {({ values }) => (
+                    {({ values, isSubmitting }) => (
                         <Form className='flex-grow flex flex-col'>
                             <FieldArray
                                 name="relations"
@@ -114,6 +125,7 @@ export default function InvitationPage({ }: Props) {
                             {/* SUBMIT FORM*/}
                             <div className='flex flex-col justify-end  flex-grow mt-10'>
                                 <button type='submit'
+                                    disabled={isSubmitting}
                                     className={`mt-8 btn bg-sky-500 text-sky-50 text-sm rounded-3xl w-11/12 text-xl w-full`}>
                                     Suivant
                                 </button>

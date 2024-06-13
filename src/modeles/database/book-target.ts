@@ -1,7 +1,9 @@
 
 export enum EBookDestination {
-    ME,
-    OTHER
+
+    OTHER,
+    ME
+
 }
 
 export enum EForGenre {

@@ -51,12 +51,15 @@ export default function AppHome({ }: Props) {
 
                                         {/* WHO */}
                                         <div className='mt-1 text-xl text-gray-700 font-bold leading-6'>
-                                            {p.bookFor?.destination == EBookDestination.OTHER &&
+
+                                            {(p.bookFor?.destination != undefined && p.bookFor?.destination == EBookDestination.OTHER) &&
                                                 <p>{`${p.bookFor?.firstName}  ${p.bookFor?.lastName}`} </p>
                                             }
-                                            {(!p?.bookFor?.destination || p.bookFor.destination == EBookDestination.ME) &&
+
+                                            {(p.bookFor?.destination == EBookDestination.ME) &&
                                                 <p>Mon livre</p>
                                             }
+
                                         </div>
                                     </div>
                                 </div>

@@ -82,15 +82,6 @@ export default function ShowProjectPage({ }: Props) {
         setNumPages(numPages);
     }
 
-    const onInvite = async () => {
-        const email = "family@test.com"
-        if (functions) {
-            const test = httpsCallable(functions, 'inviteFamily');
-            const result = await test({ familyEmail: email })
-            console.log("[invite family result]", result)
-        }
-    }
-
 
 
 

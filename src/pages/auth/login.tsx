@@ -2,6 +2,7 @@ import { User, UserCredential, getAuth, signInWithEmailAndPassword } from "fireb
 import React from "react"
 import { useSelector, useDispatch } from "react-redux";
 import { setUser } from "../../redux/auth.slice";
+import { AuthManager } from "@app/manager/auth.manager";
 interface LoginProps {
 
 }
@@ -9,18 +10,8 @@ interface LoginProps {
 export const LoginPage = (props: LoginProps) => {
     const dispatch = useDispatch();
 
-    const doLogin = async (email, password) => {
-
-        const auth = getAuth();
-        const userCredential: UserCredential | void = await signInWithEmailAndPassword(auth, email, password).catch((e) => console.error("[login error]", e))
-        if (userCredential) {
-            const user: User = userCredential.user;
-            const idTokenResult = await user.getIdTokenResult(true);
-            dispatch(setUser({
-                user: user,
-                tokenResult: idTokenResult
-            }))
-        }
+    const doLogin = async (email: string, password: string) => {
+        await (new AuthManager()).login(email, password)
     }
 
     const handleLoginSubmit = async (event: any) => {
@@ -60,8 +51,8 @@ export const LoginPage = (props: LoginProps) => {
                                 <label className="mb-5 text-sm font-medium text-gray-700 tracking-wide">
                                     Password
                                 </label>
-                                <input type="password" name="password" 
-                                className="w-full content-center text-base px-4 py-2 border  border-gray-300 rounded-lg focus:outline-none focus:border-green-400" placeholder="Enter your password" />
+                                <input type="password" name="password"
+                                    className="w-full content-center text-base px-4 py-2 border  border-gray-300 rounded-lg focus:outline-none focus:border-green-400" placeholder="Enter your password" />
                             </div>
                             <div className="flex items-center justify-between">
                                 <div className="flex items-center">

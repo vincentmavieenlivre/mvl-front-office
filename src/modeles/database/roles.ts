@@ -4,7 +4,7 @@ export enum ERoles {
     ORGANIZATION_ADMIN = "organization_admin",
     BIOGRAPHER = "biographer",
     USER = "user",
-    FAMILY = "family"
+    INVITED = "invited" // use for user<->project (not in auth token)
 }
 
 export enum EPermission {

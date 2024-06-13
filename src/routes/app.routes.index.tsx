@@ -29,7 +29,10 @@ export const APP_ROUTES = {
   SHOW_PROJECT_QUESTION: "/app/projects/:id/questions/:questionId",
   SHOW_BOOK_FOR: "/app/projects/:id/bookFor",
   SHOW_BOOK_FOR_DETAILS: "/app/projects/:id/bookForDetails",
-  BOOK_INVITATION: "/app/projects/:id/invitation"
+  BOOK_INVITATION: "/app/projects/:id/invitation",
+  ONBOARD_INVITATION: "/app/invited",
+  APP_DASHBOARD: "/app"
+
 }
 
 interface RoutesProps {
@@ -39,12 +42,18 @@ interface RoutesProps {
 export const AppRoutes = (props: RoutesProps) => {
   return (
     <Routes>
+
+      {/* PUBLIC ROUTES (NOT AUTHENTICATED) */}
       <Route path="/*" element={<PublicRoutes></PublicRoutes>} />
       {props.authDone &&
         <>
+
+          {/* BACKOFFICE ROUTES */}
           <Route path="/admin/*" element={<RequireAuth><BackOfficeRoutes /></RequireAuth>} />
+
+          {/* APP ROUTES */}
           <Route element={<InternalAppRedirector><AppLayout /></InternalAppRedirector>} >
-            <Route path="/app" element={<DashboardLayout> <AppHome /></DashboardLayout>} />
+            <Route path={APP_ROUTES.APP_DASHBOARD} element={<DashboardLayout> <AppHome /></DashboardLayout>} />
 
             {/* PROJECTS */}
             <Route path={APP_ROUTES.NEW_PROJECT} element={<NewProject />} />

@@ -32,7 +32,7 @@ export function getRoleColor(r?: ERoles) {
             return "yellow"
         case ERoles.USER:
             return "green"
-        case ERoles.FAMILY:
+        case ERoles.INVITED:
             return "pink"
 
         default:
