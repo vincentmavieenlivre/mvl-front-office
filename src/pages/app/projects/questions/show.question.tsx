@@ -1,4 +1,4 @@
-import { selectSaveDialog, selectQuestion, selectQuestionPosition, selectShouldSave, setDisplaySaveDialog, setQuestionResponse, setShouldSave, ISaveDialog } from '@app/redux/current.project.slice'
+import { selectQuestionPosition, setQuestionResponse, setShouldSave } from '@app/redux/current.project.slice'
 import { RootState } from '@app/redux/store'
 import React, { useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
@@ -10,10 +10,11 @@ import AudioRecorder, { IActionRecordRef, IRecord } from '@app/components/app/me
 import ResponseInteractor from '@app/components/app/media/reponse-interactor'
 import { nanoid } from 'nanoid'
 import { UserProjectQuestionManager } from '@app/manager/client/user-project-question.manager'
-import { IResponse, shouldBeSaved } from '@app/modeles/database/book/response'
+import { IResponse } from '@app/modeles/database/book/response'
 import useProject from '@app/hook/use-project'
-import { render } from 'react-dom'
 import SaveDialog from '@app/components/app/studio/save-dialog/save-dialog'
+import { getAnsweredStats } from '@app/redux/helpers/project.slice.helpers'
+import { selectAllQuestions, selectQuestion } from '@app/redux/current.project.slice'
 
 type Props = {}
 
@@ -32,12 +33,12 @@ export default function ShowQuestion({ }: Props) {
 
     let { id: projectId, questionId } = params;
 
-    useProject(projectId)
+    let project = useProject(projectId)
 
 
     let [question, chapter] = useSelector((state: RootState) => { return selectQuestion(state, questionId) })
 
-
+    let questions = useSelector((state: RootState) => { return selectAllQuestions(state) })
 
     useEffect(() => {
         setEntries(question?.responses?.map((d) => {
@@ -75,29 +76,37 @@ export default function ShowQuestion({ }: Props) {
 
         let m = new UserProjectQuestionManager(projectId, question)
 
-        // trick to min display loader for one sec
-        let trick = new Promise((resolve) => setTimeout(resolve, 500))
-        await Promise.all([m.updateAllResponses(entries), trick])
+        if (project) {
+            let stats = getAnsweredStats(questions)
 
-        if (question) {
+            // only if it is the first response => inscrement project's stats
+            if (question?.responses == undefined || question?.responses?.length == 0) {
+                stats.numAnswered += 1
+            }
 
-            let responses: IResponse[] = [...entries.map((e) => {
-                e.modified = false
-                return e
-            })]
+            // trick to min display loader for one sec
+            await Promise.all([
+                m.updateAllResponses(entries, stats, projectId),
+                new Promise((resolve) => setTimeout(resolve, 500))
+            ])
 
-            dispatch(
-                setQuestionResponse(
-                    {
+            if (question) {
+
+                let responses: IResponse[] = [...entries.map((e) => {
+                    e.modified = false
+                    return e
+                })]
+
+                // dispatch in store
+                dispatch(
+                    setQuestionResponse({
                         ...question,
                         responses: responses
-                    }
+                    })
                 )
-            )
 
-            dispatch(setShouldSave(false))
-
-
+                dispatch(setShouldSave(false))
+            }
         }
     }
 

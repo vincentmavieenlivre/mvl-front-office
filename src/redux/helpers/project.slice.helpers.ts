@@ -1,8 +1,27 @@
-import { IBookQuestion } from "@app/modeles/database/book/book-question"
-import { IChapter, IChapterTree } from "@app/modeles/database/book/book-template"
-import { Project } from "@app/modeles/database/project"
-import { ERoles } from "@app/modeles/database/roles"
+import { IBookQuestion } from "@app/modeles/database/book/book-question";
+import { IChapter, IChapterTree } from "@app/modeles/database/book/book-template";
+import { Project } from "@app/modeles/database/project";
+import { ERoles } from "@app/modeles/database/roles";
 
+export interface IProjectStats {
+    totalQuestions: number;
+    numAnswered: number
+}
+
+export function getAnsweredStats(questions: IBookQuestion[]): IProjectStats {
+
+    let totalAnswered = questions.reduce((ac: number, current: IBookQuestion) => {
+        if (current?.responses == undefined) {
+            return ac
+        }
+        return current?.responses?.length > 0 ? ac + 1 : ac
+    }, 0)
+
+    return {
+        numAnswered: totalAnswered,
+        totalQuestions: questions.length
+    }
+}
 
 
 export function getUserStatusOnProject(project: Project, userId: string): string | null {
@@ -17,6 +36,7 @@ export function getUserStatusOnProject(project: Project, userId: string): string
                 throw 'user not on project'
         }
     }
+    return null
 }
 
 export function sortQuestions(questionsOrder: { index: number, id: string }[], questions: IBookQuestion[]): IBookQuestion[] {
@@ -60,7 +80,7 @@ export function getChapterTree(project: Project): IChapterTree[] | undefined {
             }
         })
     }
-    console.log("by chapters", JSON.stringify(chapters))
+    //console.log("by chapters", JSON.stringify(chapters))
     return chapters
 
 }

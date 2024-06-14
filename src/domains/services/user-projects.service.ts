@@ -121,10 +121,14 @@ export class UserProjectsService {
         return true
     }
 
-    static async createProject(db: Firestore, projectName: string, creator: User, token: IdTokenResult, templateId: string): Promise<Project> {
+    static async createProject(db: Firestore, projectName: string, creator: User, token: IdTokenResult, template: IBookTemplate): Promise<Project> {
 
         if (!creator.displayName || !creator.uid || !token.claims.role) {
             throw 'projectFactory one param is undefined'
+        }
+
+        if (!template.id) {
+            throw "template id is null"
         }
 
         if (!db) throw "database null"
@@ -138,7 +142,7 @@ export class UserProjectsService {
 
 
         // get questions & order from template
-        const templateManager = new BookTemplateManager(db, templateId)
+        const templateManager = new BookTemplateManager(db, template.id)
         const sourceTemplate: IBookTemplate = await templateManager.loadTemplate()
 
         // the minimal project data
@@ -148,9 +152,13 @@ export class UserProjectsService {
                 owner_ids: [creator.uid],
                 users: [u]
             },
-            template_id: templateId,
+            template_id: template.id,
             templateCoverUrl: sourceTemplate.coverUrl ?? '',
-            chapters: sourceTemplate.chapters
+            chapters: sourceTemplate.chapters,
+            stats: {
+                numAnswered: 0,
+                totalQuestions: template.questionsOrder?.length ?? -1
+            }
         }
 
 

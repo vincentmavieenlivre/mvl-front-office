@@ -2,6 +2,7 @@ import { db } from "@app/init/firebase";
 import { IBookQuestion } from "@app/modeles/database/book/book-question";
 import { IResponse } from "@app/modeles/database/book/response";
 import { ECollections } from "@app/modeles/database/firestore-collections";
+import { IProjectStats } from "@app/redux/helpers/project.slice.helpers";
 import { addDoc, collection, doc, updateDoc } from "firebase/firestore";
 
 
@@ -29,9 +30,12 @@ export class UserProjectQuestionManager {
         })
     }
 
-    public async updateAllResponses(responses: IResponse[]): Promise<any> {
+    public async updateAllResponses(responses: IResponse[], stats: IProjectStats, projectId: string): Promise<any> {
+
         const collectionRef = collection(db, ECollections.PROJECTS, this.projectId, ECollections.QUESTIONS);
         const documentRef = doc(collectionRef, this.question.id)
+
+        // add response in question
         await updateDoc(documentRef, {
             responses: responses.map((r: IResponse) => {
                 return {
@@ -43,6 +47,21 @@ export class UserProjectQuestionManager {
                 }
             })
         })
+
+
+        // write global stats
+        let statsUpdated = {
+            numAnswered: stats.numAnswered,
+            totalQuestions: stats.totalQuestions
+        } as IProjectStats
+
+        const collectionProjectRef = collection(db, ECollections.PROJECTS);
+        const projectRef = doc(collectionProjectRef, projectId)
+
+        await updateDoc(projectRef, {
+            stats: statsUpdated
+        })
+
     }
 
 }

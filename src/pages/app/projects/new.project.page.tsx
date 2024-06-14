@@ -64,7 +64,7 @@ export default function NewProject({ }: Props) {
 
         if (user && token && db && currentTemplate?.id) {
             //const projectName = event.target.projectName.value;
-            const newProject: Project = await UserProjectsService.createProject(db, currentTemplate.name, user, token, currentTemplate?.id)
+            const newProject: Project = await UserProjectsService.createProject(db, currentTemplate.name, user, token, currentTemplate)
             dispatch(addUserProjects(newProject))
             navigate(`/app/projects/${newProject.id}/bookFor`)
         } else {

@@ -1,3 +1,4 @@
+import { IProjectStats } from "@app/redux/helpers/project.slice.helpers";
 import { IBookFor } from "./book-target";
 import { IQuestionsContainer } from "./book/book-template";
 import { DataOwner } from "./embedded/data-owner";
@@ -10,5 +11,5 @@ export interface Project extends IQuestionsContainer {
     templateCoverUrl: string;
 
     bookFor?: IBookFor;
-
-}
+    stats: IProjectStats
+} 
