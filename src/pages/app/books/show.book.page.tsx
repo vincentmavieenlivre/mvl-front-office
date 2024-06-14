@@ -3,7 +3,7 @@ import { getPdf, getPdfImages } from '@app/utils/pdf/pdf.utils'
 import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { FcPrevious } from 'react-icons/fc'
-import Summary from '@app/components/app/summary/summary'
+import SummaryWithStates from '@app/components/app/summary/summary'
 import HTMLFlipBook from "react-pageflip"
 import { IdTokenResult } from 'firebase/auth'
 import { selectToken } from '@app/redux/auth.slice'

@@ -38,7 +38,7 @@ type Props = {
 
 const debugWait = 500;
 
-const DO_FAKE = false
+const DO_FAKE = true
 
 export default function ResponseInteractor({
     entry,

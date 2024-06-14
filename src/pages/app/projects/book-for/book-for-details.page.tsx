@@ -14,7 +14,7 @@ import { UserProjectsService } from '@app/domains/services/user-projects.service
 import { db } from '@app/init/firebase';
 import { updateUserProjectInList } from '@app/redux/auth.slice';
 import { UserImageManager } from '@app/manager/client/user-image.manager';
-import { BookImage, EImageKind } from '@app/components/app/summary/summary';
+import { BookImage, EImageKind } from '@app/components/app/summary/summary-with-states';
 
 
 import "@app/components/app/forms/forms.scss";

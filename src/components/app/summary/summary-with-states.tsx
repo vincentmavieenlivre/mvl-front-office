@@ -6,7 +6,7 @@ import { Project } from '@app/modeles/database/project';
 import { selectProject, selectChapters, selectShouldSave, setDisplaySaveDialog, selectAllQuestions } from '@app/redux/current.project.slice';
 import { RootState } from '@app/redux/store';
 import { pluralize } from '@app/utils/diverse.utils';
-import React, { useRef, useState } from 'react'
+import React, { PropsWithChildren, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import SaveDialog from '../studio/save-dialog/save-dialog';
@@ -36,7 +36,7 @@ export type BookImage = {
     templateId?: string;
 }
 
-export default function Summary(props: Props) {
+export default function SummaryWithStates(props: PropsWithChildren<Props>) {
 
 
     let shouldSave: boolean = useSelector((state: RootState) => {
@@ -89,15 +89,47 @@ export default function Summary(props: Props) {
                         }
                     }
                 }}
-                className={`mt-4  ripple-bg-sky-50 rounded-xl p-2 text-sky-950 flex flex-col  ''}`}
+                className={`mt-4  ripple-bg-sky-50 rounded-xl p-2 text-sky-950 flex flex-col ${hasAnswers ? "border-green-400 border-2" : ''}`}
                 htmlFor="my-drawer">
-
+                {/* <Link to={`/app/projects/${project.id}/questions/${q.id}`} key={q.id} className='mt-4  ripple-bg-sky-50 rounded-xl p-2 text-sky-950 flex flex-row items-center'> */}
                 <div className='flex flex-row items-center justify-around'>
                     <div className='text-sm'>{q.questionTitle}</div>
                     <RightCircleOutlined className='text-sky-600 px-4' />
                 </div>
+                {hasAnswers &&
+                    <div className='mt-2 self-end text-green-400 mr-2'><b>{numAnswers}</b> {pluralize('réponse', numAnswers)} {pluralize('sauvegardée', numAnswers)} </div>
+                }
 
+                {hasAnswers &&
+                    <button className='m-4 btn  bg-sky-50 text-sky-400 b-sky-900 shadow-sky-200 text-xs btn-sm'>
+                        <ImageUploader onImageSelected={(image) => {
+                            if (props.projectId) {
 
+                                setSelectedImage({
+                                    imageKind: EImageKind.QUESTION,
+                                    question: q,
+                                    selectedImage: image,
+                                    projectId: props.projectId
+                                })
+                                document.getElementById('crop_modal').showModal()
+
+                            }
+                        }}>
+                            <div className='flex flex-row items-center '>
+                                {!q.pictureUrl &&
+                                    <div className='flex flex-row items-center' >
+                                        <MdAddPhotoAlternate key={q.id} size={25} /> Ajouter une photo
+                                    </div>
+                                }
+                                {q.pictureUrl &&
+                                    <div className='flex flex-row items-center' >
+                                        <MdAddPhotoAlternate key={q.id} size={25} /> Changer la photo
+                                    </div>
+                                }
+                            </div>
+                        </ImageUploader>
+                    </button>
+                }
             </label>
         )
     }
@@ -118,6 +150,31 @@ export default function Summary(props: Props) {
                                 </div>
                             </div>
                             <div className="collapse-content">
+                                <ImageUploader onImageSelected={(imageUrl) => {
+                                    if (props.projectId) {
+                                        setSelectedImage({
+                                            imageKind: EImageKind.CHAPTER,
+                                            chapterId: c.id,
+                                            selectedImage: imageUrl,
+                                            projectId: props.projectId
+                                        })
+                                        document.getElementById('crop_modal').showModal()
+                                    }
+                                }}>
+                                    <button className='btn bg-sky-50 text-sky-400 text-xs b-sky-900 shadow-sky-200 btn-sm'>
+                                        {!c.pictureUrl &&
+                                            <>
+                                                <MdAddPhotoAlternate size={25} /> Ajouter une photo
+                                            </>
+                                        }
+                                        {c.pictureUrl &&
+                                            <>
+                                                <MdChangeCircle size={25} /> Changer la photo
+                                            </>
+                                        }
+                                    </button>
+
+                                </ImageUploader>
 
                                 {c.orderedQuestions?.map((q: IBookQuestion, index) => renderQuestion(q, index))}
                             </div>
@@ -126,13 +183,30 @@ export default function Summary(props: Props) {
                     )
                 })
                 }
+
+
+                <ImageCropDialog aspectRatio={1 / 1.41} bookImage={selectedImage}></ImageCropDialog>
+
+
+
+
+
+
+
+
+
             </div >
         )
     }
 
 
 
-    return renderChapters()
+    return (
+        <div>
+            {props.children}
+            {renderChapters()}
+        </div>
+    )
 
 
 }

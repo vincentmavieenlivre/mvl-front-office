@@ -10,7 +10,7 @@ import { nanoid } from 'nanoid'
 import { render } from 'react-dom';
 import { LuImagePlus } from "react-icons/lu";
 import { ImageUploader } from '@app/components/app/images/image-uploader';
-import { BookImage, EImageKind } from '@app/components/app/summary/summary';
+import { BookImage, EImageKind } from '@app/components/app/summary/summary-with-states';
 import { MdAddPhotoAlternate } from 'react-icons/md';
 import { UserImageManager } from '@app/manager/client/user-image.manager';
 const NO_CHAPTER_SELECTED = "no_theme"

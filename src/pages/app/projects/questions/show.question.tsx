@@ -83,6 +83,7 @@ export default function ShowQuestion({ }: Props) {
 
             // only if it is the first response => inscrement project's stats
             if (question?.responses == undefined || question?.responses?.length == 0) {
+                statsIfUpdatedNeeded = {}
                 Object.assign(statsIfUpdatedNeeded, project.stats)
                 statsIfUpdatedNeeded.numAnswered += 1
             }

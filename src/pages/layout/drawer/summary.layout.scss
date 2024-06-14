@@ -1,0 +1,22 @@
+.active {
+  position: relative;
+}
+
+.tab:first-child.active {
+  left: 0;
+}
+.tab:nth-child(2).active {
+  left: 33%;
+}
+
+.active::after {
+  content: "";
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background-color: rgb(59 130 246 / 0.5); /* Customize the color */
+  transform: scale(2s);
+  transition: transform 0.25s;
+}

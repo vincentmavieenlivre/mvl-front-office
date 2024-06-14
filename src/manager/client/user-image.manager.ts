@@ -1,4 +1,4 @@
-import { BookImage, EImageKind } from "@app/components/app/summary/summary";
+import { BookImage, EImageKind } from "@app/components/app/summary/summary-with-states";
 import { UserProjectsService } from "@app/domains/services/user-projects.service";
 import { db, storage } from "@app/init/firebase";
 import { IBookQuestion } from "@app/modeles/database/book/book-question";

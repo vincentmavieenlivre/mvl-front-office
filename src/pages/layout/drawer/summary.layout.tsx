@@ -6,12 +6,20 @@ import { Project } from '@app/modeles/database/project';
 import { selectAllQuestions, selectChapters, selectProject } from '@app/redux/current.project.slice';
 import { RootState } from '@app/redux/store';
 import { pluralize } from '@app/utils/diverse.utils';
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { FaHome } from 'react-icons/fa';
 import { useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import { isEqual } from "lodash";
+import SummaryWithStates from '@app/components/app/summary/summary-with-states';
 import Summary from '@app/components/app/summary/summary';
+import "./summary.layout.scss"
+import useProject from '@app/hook/use-project';
+import ProgressBar from '@app/components/app/progress/progress-bar';
+enum ETabSelected {
+    SUMMARY,
+    MY_BOOK
+}
 
 type Props = {
     children: React.ReactNode
@@ -19,67 +27,35 @@ type Props = {
 
 export default function SummaryDrawer({ children }: Props) {
 
+    const tabs = [
+        {
+            title: "Sommaire",
+            tab: ETabSelected.SUMMARY
+        }, {
+            title: "Mon livre",
+            tab: ETabSelected.MY_BOOK
+        }
+    ]
+
     const checkboxRef = useRef(null);
 
     let nav = useNavigate()
 
-    let project: Project = useSelector((state: RootState) => {
-        return selectProject(state)
-    })
+    /*   let project: Project = useSelector((state: RootState) => {
+          return selectProject(state)
+      }) */
+
+    let project = useProject()
 
 
     let chapters: IChapterTree[] = useSelector((state: RootState) => {
         return selectChapters(state)
     })
 
+    const [tabSelected, setTabSelected] = useState<ETabSelected>(ETabSelected.SUMMARY)
 
-    const renderQuestion = (q: IBookQuestion, index) => {
 
-        const hasAnswers = (q.responses && q.responses.length > 0) ?? false;
-        const numAnswers = q.responses?.length || 0
 
-        return (
-            <label id={q.id} key={q.id}
-                onClick={() => {
-                    nav(`/app/projects/${project.id}/questions/${q.id}`)
-                }}
-                className={`mt-4  ripple-bg-sky-50 rounded-xl p-2 text-sky-950 flex flex-col ${hasAnswers ? "border-green-400 border-2" : ''}`}
-                htmlFor="my-drawer">
-                {/* <Link to={`/app/projects/${project.id}/questions/${q.id}`} key={q.id} className='mt-4  ripple-bg-sky-50 rounded-xl p-2 text-sky-950 flex flex-row items-center'> */}
-                <div className='flex flex-row items-center justify-around'>
-                    <div className='text-sm'>{q.questionTitle}</div>
-                    <RightCircleOutlined className='text-sky-600 px-4' />
-                </div>
-                {hasAnswers &&
-                    <div className='mt-2 self-end text-green-400'><b>{numAnswers}</b> {pluralize('réponse', numAnswers)} {pluralize('sauvegardée', numAnswers)} </div>
-                }
-
-            </label>
-        )
-    }
-
-    const renderChapters = () => {
-        return (
-
-            <div className='mt-4'>
-                {chapters.map((c: IChapterTree, index: number) => {
-                    return (
-                        <div key={c.id} className="collapse collapse-arrow bg-sky-100 mt-4">
-                            <input type="checkbox" name={"test"} />
-                            <div className="collapse-title text-xl font-medium">
-                                {c.name}
-                            </div>
-                            <div className="collapse-content">
-                                {c.orderedQuestions?.map((q: IBookQuestion, index) => renderQuestion(q, index))}
-                            </div>
-                        </div>
-
-                    )
-                })
-                }
-            </div>
-        )
-    }
 
     return (
         <div className="drawer">
@@ -92,7 +68,13 @@ export default function SummaryDrawer({ children }: Props) {
                 <div className='menu p-4 w-5/6 min-h-full bg-sky-50 text-base-content'>
 
                     <div className='mt-4 flex flex-row items-center justify-between'>
-                        <h2 className='  text-sky-950  text-3xl font-bold'>Sommaire</h2>
+
+                        <h2 onClick={() => {
+                            if (checkboxRef.current) {
+                                checkboxRef.current.checked = !checkboxRef.current.checked;
+                            }
+                        }} className='  text-sky-950  text-3xl font-bold'>X</h2>
+
                         <Link to={`/app/`}>
 
                             <button className="mr-4 btn btn-circle btn-outline border-sky-900">
@@ -105,9 +87,35 @@ export default function SummaryDrawer({ children }: Props) {
                     </div>
 
                     <Alert className='mt-4' message1="Recommandation : Répondez à 3 ou 4 questions par chapitre."></Alert>
-                    {project?.id &&
+
+                    <div className='flex flex-row justify-evenly mt-4 tab'>
+                        {tabs.map((t) => {
+
+                            const isActive = t.tab === tabSelected;
+                            const tabClassName = isActive ? 'text-2xl active' : 'text-2xl';
+
+                            return (<div
+                                key={t.tab}
+                                className={tabClassName}
+                                onClick={() => setTabSelected(t.tab)} >{t.title}</div>)
+                        })}
+                    </div>
+
+
+                    {project?.id && tabSelected == ETabSelected.MY_BOOK &&
+                        <SummaryWithStates saveDialog={true} projectId={project.id}>
+                            <>
+                                <Alert className='mt-7 ml-1 mr-1 rounded-md' message1="Installez vous confortablement face à votre interlocuteur avec un verre d’eau et/ou quelques photos puis cliquez sur commencer. "></Alert>
+                                <ProgressBar containerClass='mt-2 mb-2' min={0} max={100} current={75}></ProgressBar>
+                            </>
+                        </SummaryWithStates>
+                    }
+
+                    {project?.id && tabSelected == ETabSelected.SUMMARY &&
                         <Summary saveDialog={true} projectId={project.id}></Summary>
                     }
+
+
                 </div>
             </div>
         </div>

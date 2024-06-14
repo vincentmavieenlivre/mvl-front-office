@@ -6,11 +6,12 @@ import { useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { FcPrevious } from 'react-icons/fc'
-import Summary from '@app/components/app/summary/summary'
+import SummaryWithStates from '@app/components/app/summary/summary-with-states'
 import useProject from '@app/hook/use-project'
 import { IdTokenResult } from 'firebase/auth'
 import { selectToken } from '@app/redux/auth.slice'
 import HTMLFlipBook from "react-pageflip"
+import Summary from '@app/components/app/summary/summary'
 
 type Props = {}
 

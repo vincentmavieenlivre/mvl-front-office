@@ -5,7 +5,7 @@ import { Crop } from 'react-image-crop'
 import ReactCrop from 'react-image-crop'
 import { RiExchange2Fill } from "react-icons/ri";
 import 'react-image-crop/dist/ReactCrop.css'
-import { BookImage, EImageKind } from '../summary/summary';
+import { BookImage, EImageKind } from '../summary/summary-with-states';
 import { UserImageManager } from '@app/manager/client/user-image.manager';
 type Props = {
     bookImage: BookImage | undefined;
