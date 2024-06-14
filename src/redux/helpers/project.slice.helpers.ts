@@ -7,6 +7,9 @@ export interface IProjectStats {
     totalQuestions: number;
     numAnswered: number
 }
+export interface IActionProjectStatsUpdate extends IProjectStats {
+    projectId?: string;
+}
 
 export function getAnsweredStats(questions: IBookQuestion[]): IProjectStats {
 

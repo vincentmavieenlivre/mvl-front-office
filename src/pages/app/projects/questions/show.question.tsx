@@ -13,8 +13,9 @@ import { UserProjectQuestionManager } from '@app/manager/client/user-project-que
 import { IResponse } from '@app/modeles/database/book/response'
 import useProject from '@app/hook/use-project'
 import SaveDialog from '@app/components/app/studio/save-dialog/save-dialog'
-import { getAnsweredStats } from '@app/redux/helpers/project.slice.helpers'
+import { IActionProjectStatsUpdate, IProjectStats, getAnsweredStats } from '@app/redux/helpers/project.slice.helpers'
 import { selectAllQuestions, selectQuestion } from '@app/redux/current.project.slice'
+import { updateStatsProjectInList } from '@app/redux/auth.slice'
 
 type Props = {}
 
@@ -77,16 +78,18 @@ export default function ShowQuestion({ }: Props) {
         let m = new UserProjectQuestionManager(projectId, question)
 
         if (project) {
-            let stats = getAnsweredStats(questions)
+
+            let statsIfUpdatedNeeded: any | undefined = undefined // if stay undefined no need to update
 
             // only if it is the first response => inscrement project's stats
             if (question?.responses == undefined || question?.responses?.length == 0) {
-                stats.numAnswered += 1
+                Object.assign(statsIfUpdatedNeeded, project.stats)
+                statsIfUpdatedNeeded.numAnswered += 1
             }
 
             // trick to min display loader for one sec
             await Promise.all([
-                m.updateAllResponses(entries, stats, projectId),
+                m.updateAllResponses(entries, statsIfUpdatedNeeded, projectId),
                 new Promise((resolve) => setTimeout(resolve, 500))
             ])
 
@@ -97,13 +100,20 @@ export default function ShowQuestion({ }: Props) {
                     return e
                 })]
 
-                // dispatch in store
+                // dispatch in currentProject store
                 dispatch(
                     setQuestionResponse({
                         ...question,
                         responses: responses
                     })
                 )
+
+                if (statsIfUpdatedNeeded) {
+                    dispatch(updateStatsProjectInList({
+                        ...statsIfUpdatedNeeded,
+                        projectId: projectId
+                    } as IActionProjectStatsUpdate))
+                }
 
                 dispatch(setShouldSave(false))
             }

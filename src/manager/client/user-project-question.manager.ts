@@ -30,7 +30,7 @@ export class UserProjectQuestionManager {
         })
     }
 
-    public async updateAllResponses(responses: IResponse[], stats: IProjectStats, projectId: string): Promise<any> {
+    public async updateAllResponses(responses: IResponse[], stats: IProjectStats | undefined, projectId: string): Promise<any> {
 
         const collectionRef = collection(db, ECollections.PROJECTS, this.projectId, ECollections.QUESTIONS);
         const documentRef = doc(collectionRef, this.question.id)
@@ -48,19 +48,20 @@ export class UserProjectQuestionManager {
             })
         })
 
+        if (stats) {
+            // write global stats
+            let statsUpdated = {
+                numAnswered: stats.numAnswered,
+                totalQuestions: stats.totalQuestions
+            } as IProjectStats
 
-        // write global stats
-        let statsUpdated = {
-            numAnswered: stats.numAnswered,
-            totalQuestions: stats.totalQuestions
-        } as IProjectStats
+            const collectionProjectRef = collection(db, ECollections.PROJECTS);
+            const projectRef = doc(collectionProjectRef, projectId)
 
-        const collectionProjectRef = collection(db, ECollections.PROJECTS);
-        const projectRef = doc(collectionProjectRef, projectId)
-
-        await updateDoc(projectRef, {
-            stats: statsUpdated
-        })
+            await updateDoc(projectRef, {
+                stats: statsUpdated
+            })
+        }
 
     }
 

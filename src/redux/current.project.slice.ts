@@ -1,10 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from '@reduxjs/toolkit';
-import { RootState } from "./store";
+import { RootState, store } from "./store";
 import { Project } from "@app/modeles/database/project";
 import { IChapter, IChapterTree } from "@app/modeles/database/book/book-template";
 import { IBookQuestion } from "@app/modeles/database/book/book-question";
 import { getChapterTree } from "./helpers/project.slice.helpers";
+import { updateStatsProjectInList } from "./auth.slice";
 
 export interface ISaveDialog {
     shouldSave: boolean
@@ -31,7 +32,7 @@ const initialState: ProjectStore = {
 
 };
 
-export const authSlice = createSlice({
+export const currentProjectSlice = createSlice({
     name: "currentProject",
     initialState,
     reducers: {
@@ -63,7 +64,22 @@ export const authSlice = createSlice({
             if (state && state.project && state.project.questions) {
                 let index = state.project.questions.findIndex((q: IBookQuestion) => q.id === action.payload?.id)
                 if (index != -1) {
+
+                    /*    // 1 - before assigning the response : computed if it is the first one to answer the question to increment the stats counter
+                       let beforeState = state.project.questions[index].responses == undefined || state.project.questions[index].responses?.length == 0
+                       let afterState = (action.payload?.responses && action.payload?.responses?.length > 0)
+                       console.log("BEFORE STATE", beforeState, "AFTER STATE", afterState)
+   
+   
+                       if (beforeState == true && afterState) { // means first response
+                           state.project.stats.numAnswered += 1
+                           console.log("xx increment counter in save response in store", state.project.stats.numAnswered)                   
+                       } */
+
+                    // 2 - assign the response
                     state.project.questions[index].responses = action.payload?.responses
+
+
                 }
             }
         },
@@ -92,7 +108,7 @@ export const authSlice = createSlice({
 // Action creators are generated for each case reducer function
 export const { setCurrentProject, setChapterTree, setQuestionResponse,
     setShouldSave, setDisplaySaveDialog, updateChapters,
-    setQuestion } = authSlice.actions;
+    setQuestion } = currentProjectSlice.actions;
 
 export const selectChapters = (state: RootState): IChapterTree[] | undefined => {
     if (state.currentProject.chapterTree && state.currentProject.project?.questionsOrder && state.currentProject.project?.questions) {
@@ -160,4 +176,4 @@ export const selectQuestion = (state: RootState, questionId: string): [IBookQues
 
 
 
-export default authSlice.reducer;
+export default currentProjectSlice.reducer;
