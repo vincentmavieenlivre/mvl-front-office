@@ -15,8 +15,21 @@
   bottom: -2px;
   left: 0;
   width: 100%;
-  height: 2px;
+  height: 3px;
   background-color: rgb(59 130 246 / 0.5); /* Customize the color */
-  transform: scale(2s);
   transition: transform 0.25s;
+}
+
+.active::after {
+  animation: myAnimation 0.5s;
+}
+
+@keyframes myAnimation {
+  0% {
+    transform: scale(0.3);
+  }
+
+  100% {
+    transform: scale(1);
+  }
 }

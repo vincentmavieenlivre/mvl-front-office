@@ -58,7 +58,9 @@ export default function AppHome({ }: Props) {
                                                 {userStatus != null &&
                                                     <div className='mr-4 badge bg-sky-500 border-0 text-sky-50 p-3' >{userStatus}</div>
                                                 }
-                                                <div className='badge'>{p?.stats?.numAnswered}/{p?.stats?.totalQuestions}</div>
+                                                {p.stats &&
+                                                    <div className='badge'>{p?.stats?.numAnswered}/{p?.stats?.totalQuestions}</div>
+                                                }
                                             </div>
 
                                             {/* WHO */}
