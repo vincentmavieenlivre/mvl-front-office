@@ -90,7 +90,7 @@ export default function SummaryWithStates(props: PropsWithChildren<Props>) {
                     }
                 }}
                 className={`mt-4  ripple-bg-sky-50 rounded-xl p-2 text-sky-950 flex flex-col ${hasAnswers ? "border-green-400 border-2" : ''}`}
-                htmlFor="my-drawer">
+                htmlFor="summary-drawer">
                 {/* <Link to={`/app/projects/${project.id}/questions/${q.id}`} key={q.id} className='mt-4  ripple-bg-sky-50 rounded-xl p-2 text-sky-950 flex flex-row items-center'> */}
                 <div className='flex flex-row items-center justify-around'>
                     <div className='text-sm'>{q.questionTitle}</div>

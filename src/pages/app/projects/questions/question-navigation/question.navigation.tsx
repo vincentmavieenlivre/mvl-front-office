@@ -57,7 +57,7 @@ export default function QuestionNavigation(props: Props) {
                                 </button>
                             }
 
-                            <label htmlFor="my-drawer" className="btn border-transparent bg-sky-50 b-sky-900 text-sky-600 uppercase shadow-sky-200">Sommaire</label>
+                            <label htmlFor="summary-drawer" className="btn border-transparent bg-sky-50 b-sky-900 text-sky-600 uppercase shadow-sky-200">Sommaire</label>
 
 
                             {

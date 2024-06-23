@@ -14,7 +14,10 @@ import { FiPrinter } from "react-icons/fi";
 import { EBookDestination } from '@app/modeles/database/book-target'
 import { MdOutlineMenuBook } from "react-icons/md";
 import { GiBookshelf } from "react-icons/gi";
-import { getUserStatusOnProject } from '@app/redux/helpers/project.slice.helpers'
+import { IProjectStats, getUserStatusOnProject } from '@app/redux/helpers/project.slice.helpers'
+
+import './app-home.css'
+
 type Props = {}
 
 export default function AppHome({ }: Props) {
@@ -24,6 +27,10 @@ export default function AppHome({ }: Props) {
     const userToken = useSelector(selectToken)
 
     console.log("user", user)
+    const computeProgression = (s: IProjectStats) => {
+        const pourcentage = Math.round(s?.numAnswered / s?.totalQuestions)
+        return pourcentage
+    }
 
     const renderProjectList = () => {
 
@@ -59,7 +66,7 @@ export default function AppHome({ }: Props) {
                                                     <div className='mr-4 badge bg-sky-500 border-0 text-sky-50 p-3' >{userStatus}</div>
                                                 }
                                                 {p.stats &&
-                                                    <div className='badge'>{p?.stats?.numAnswered}/{p?.stats?.totalQuestions}</div>
+                                                    <div className='progress-badge'>{computeProgression(p?.stats)}%</div>
                                                 }
                                             </div>
 

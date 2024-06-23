@@ -23,17 +23,22 @@ export default function ProgressBar({
     let currentWidthPourcentage = (current / max * 100)
 
     return (
-        <div className={`progress-bar flex flex-row w-full ${containerClass}`} >
-            {/* current */}
-            <div className='bar bg-sky-800' style={{ width: currentWidthPourcentage.toString() + "%" }}>
+        <div className={`${containerClass}`}>
+            <div className={`progress-bar flex flex-row w-full`} >
+                {/* current */}
+                <div className='bar bg-sky-800' style={{ width: currentWidthPourcentage.toString() + "%" }}>
 
+                </div>
+
+                <div className='bg-white' style={{ width: EMPTY_SPACE_POURCENTAGE.toString() + "%" }}></div>
+
+                {/* remaining */}
+                <div className='bar bg-sky-300' style={{ width: (100 - currentWidthPourcentage - EMPTY_SPACE_POURCENTAGE).toString() + "%" }}>
+
+                </div>
             </div>
-
-            <div className='bg-white' style={{ width: EMPTY_SPACE_POURCENTAGE.toString() + "%" }}></div>
-
-            {/* remaining */}
-            <div className='bar bg-sky-300' style={{ width: (100 - currentWidthPourcentage - EMPTY_SPACE_POURCENTAGE).toString() + "%" }}>
-
+            <div className='mt-2 text-gray-500'>
+                {message}
             </div>
         </div>
     )

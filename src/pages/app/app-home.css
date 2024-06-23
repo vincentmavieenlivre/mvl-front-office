@@ -1,0 +1,9 @@
+.progress-badge {
+  @apply !bg-yellow-200;
+  @apply !text-yellow-500;
+  padding-left: 15px;
+  padding-right: 15px;
+  padding-top:5px;
+  padding-bottom:5px;
+  border-radius: 20px;
+}

@@ -20,9 +20,9 @@ export default function Alert(props: Props) {
 
                 </div>
                 <div>
-                    <p className="">{props.message1}</p>
+                    <p className="text-sky-700">{props.message1}</p>
                     {props.message2 &&
-                        <p className="text-sm">{props.message2}</p>
+                        <p className="text-sm mt-4 text-sky-800">{props.message2}</p>
                     }
                 </div>
             </div>

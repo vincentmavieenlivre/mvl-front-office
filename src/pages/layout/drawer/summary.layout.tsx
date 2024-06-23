@@ -16,6 +16,8 @@ import Summary from '@app/components/app/summary/summary';
 import "./summary.layout.scss"
 import useProject from '@app/hook/use-project';
 import ProgressBar from '@app/components/app/progress/progress-bar';
+import { IoChevronBack } from "react-icons/io5";
+
 enum ETabSelected {
     SUMMARY,
     MY_BOOK
@@ -59,35 +61,39 @@ export default function SummaryDrawer({ children }: Props) {
 
     return (
         <div className="drawer">
-            <input ref={checkboxRef} id="my-drawer" type="checkbox" className="drawer-toggle" />
+            <input ref={checkboxRef} id="summary-drawer" type="checkbox" className="drawer-toggle" />
             <div className="drawer-content">
                 {children}
             </div>
             <div className="drawer-side" >
-                <label htmlFor="my-drawer" aria-label="close sidebar" className="drawer-overlay"></label>
-                <div className='menu p-4 w-5/6 min-h-full bg-sky-50 text-base-content'>
+                <label htmlFor="summary-drawer" aria-label="close sidebar" className="drawer-overlay"></label>
+                <div className='menu p-4 w-full min-h-full bg-sky-50 text-base-content'>
 
-                    <div className='mt-4 flex flex-row items-center justify-between'>
+                    <div className='mb-4 flex flex-row items-center justify-between'>
 
-                        <h2 onClick={() => {
+
+                        <button onClick={() => {
                             if (checkboxRef.current) {
                                 checkboxRef.current.checked = !checkboxRef.current.checked;
                             }
-                        }} className='  text-sky-950  text-3xl font-bold'>X</h2>
+                        }} className="mr-4 btn  border-sky-900">
+                            <IoChevronBack className=' text-sky-900' size={22} />
+                        </button>
+
 
                         <Link to={`/app/`}>
-
-                            <button className="mr-4 btn btn-circle btn-outline border-sky-900">
+                            <button className="mr-4 btn  btn-outline border-sky-900">
                                 <FaHome className=' text-sky-900' size={22} />
                             </button>
                         </Link>
+
                     </div>
-                    <div className='text-sky-950 mt-4 text-lg'>
+                    {/*    <div className='text-sky-950 mt-4 text-lg'>
                         <p>Parcourez et choisissez parmi ces différents chapitres, les questions auxquelles vous souhaitez répondre.</p>
                     </div>
 
                     <Alert className='mt-4' message1="Recommandation : Répondez à 3 ou 4 questions par chapitre."></Alert>
-
+ */}
                     <div className='flex flex-row justify-evenly mt-4 tab'>
                         {tabs.map((t) => {
 
@@ -105,14 +111,18 @@ export default function SummaryDrawer({ children }: Props) {
                     {project?.id && tabSelected == ETabSelected.MY_BOOK &&
                         <SummaryWithStates saveDialog={true} projectId={project.id}>
                             <>
-                                <Alert className='mt-7 ml-1 mr-1 rounded-md' message1="Installez vous confortablement face à votre interlocuteur avec un verre d’eau et/ou quelques photos puis cliquez sur commencer. "></Alert>
-                                <ProgressBar containerClass='mt-2 mb-2' min={0} max={100} current={75}></ProgressBar>
+                                <Alert className='mt-7 ml-1 mr-1 rounded-md'
+                                    message1='Trucs et astuces'
+                                    message2="Retrouvez ici toutes les questions auxquelles vous avez déjà répondues."></Alert>
+                                <ProgressBar containerClass='mt-6 mb-6' message={`Réponses enregistrées: ${75}/${100}`} min={0} max={100} current={75}></ProgressBar>
                             </>
                         </SummaryWithStates>
                     }
 
                     {project?.id && tabSelected == ETabSelected.SUMMARY &&
-                        <Summary saveDialog={true} projectId={project.id}></Summary>
+                        <Summary saveDialog={true} projectId={project.id}>
+
+                        </Summary>
                     }
 
 

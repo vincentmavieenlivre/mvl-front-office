@@ -16,8 +16,8 @@
   left: 0;
   width: 100%;
   height: 3px;
-  background-color: rgb(59 130 246 / 0.5); /* Customize the color */
   transition: transform 0.25s;
+  @apply bg-sky-500;
 }
 
 .active::after {

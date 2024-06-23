@@ -90,7 +90,7 @@ export default function Summary(props: Props) {
                     }
                 }}
                 className={`mt-4  ripple-bg-sky-50 rounded-xl p-2 text-sky-950 flex flex-col  ''}`}
-                htmlFor="my-drawer">
+                htmlFor="summary-drawer">
 
                 <div className='flex flex-row items-center justify-around'>
                     <div className='text-sm'>{q.questionTitle}</div>
