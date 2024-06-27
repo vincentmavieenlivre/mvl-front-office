@@ -5,7 +5,7 @@ import { BookTemplateManager } from '@app/manager/backoffice/book-template.manag
 import { IBookQuestion } from '@app/modeles/database/book/book-question'
 import { IBookTemplate } from '@app/modeles/database/book/book-template'
 import { Project } from '@app/modeles/database/project'
-import { selectUser, selectToken, setUserProjects, addUserProjects } from '@app/redux/auth.slice'
+import { selectUser, selectToken } from '@app/redux/auth.slice'
 import { ECollections } from '@app/utils/firebase/firestore-collections'
 import { FirestoreHelper } from '@app/utils/firebase/firestore-helper'
 import { Card, Divider } from 'antd'
@@ -23,6 +23,7 @@ import { FcPrivacy } from 'react-icons/fc'
 import { current } from '@reduxjs/toolkit'
 import { securityAlert } from '@app/components/app/alert/security-alert'
 import CreateBookNavBar from '@app/components/app/nav/create-book-nav-bar.component'
+import { addUserProjects } from '@app/redux/current.project.slice'
 type Props = {}
 
 export default function NewProject({ }: Props) {

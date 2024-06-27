@@ -2,7 +2,7 @@
 
 import { useSelector, useDispatch } from "react-redux";
 import PublicRoutes from "./routes/public.routes";
-import { UserStore, selectToken, selectUser, setUser, setUserProjects } from "./redux/auth.slice";
+import { UserStore, selectToken, selectUser, setUser } from "./redux/auth.slice";
 import { useEffect, useState } from "react";
 import { IdTokenResult, User, onAuthStateChanged } from "firebase/auth";
 import { auth, db } from "./init/firebase";
@@ -13,6 +13,7 @@ import AppRoutes from "./routes/app.routes.index";
 import { UserProjectsService } from "./domains/services/user-projects.service";
 import { pdfjs } from "react-pdf";
 import { ERoles } from "./modeles/database/roles";
+import { setUserProjects } from "./redux/current.project.slice";
 
 /* pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`; */
 

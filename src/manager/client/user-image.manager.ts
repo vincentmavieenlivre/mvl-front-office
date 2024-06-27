@@ -4,7 +4,7 @@ import { db, storage } from "@app/init/firebase";
 import { IBookQuestion } from "@app/modeles/database/book/book-question";
 import { IResponse } from "@app/modeles/database/book/response";
 import { ECollections } from "@app/modeles/database/firestore-collections";
-import { setChapterTree, setQuestion, updateChapter, updateChapters, updateProjectCoverUrl } from "@app/redux/current.project.slice";
+import { setChapterTree, setQuestion, updateChapter, updateChapters, updateImageCover, updateProjectCoverUrl } from "@app/redux/current.project.slice";
 import { getChapterTree } from "@app/redux/helpers/project.slice.helpers";
 import { addDoc, collection, doc, updateDoc } from "firebase/firestore";
 import { getDownloadURL, ref, uploadBytes, uploadString } from "firebase/storage";
@@ -12,7 +12,6 @@ import { getDownloadURL, ref, uploadBytes, uploadString } from "firebase/storage
 import { store } from "@app/redux/store"
 import { UserProjectQuestionManager } from "./user-project-question.manager";
 import { BookTemplateManager } from "../backoffice/book-template.manager";
-import { updateImageCoverProjectInList } from "@app/redux/auth.slice";
 export class UserImageManager {
 
     constructor(
@@ -32,7 +31,7 @@ export class UserImageManager {
 
             // in list of loaded projects
             if (this.image.projectId) {
-                store.dispatch(updateImageCoverProjectInList({
+                store.dispatch(updateImageCover({
                     projectId: this.image.projectId,
                     coverUrl: imageUrl
                 }))

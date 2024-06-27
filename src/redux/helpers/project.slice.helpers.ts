@@ -1,3 +1,4 @@
+import { IBookFor } from "@app/modeles/database/book-target";
 import { IBookQuestion } from "@app/modeles/database/book/book-question";
 import { IChapter, IChapterTree } from "@app/modeles/database/book/book-template";
 import { Project } from "@app/modeles/database/project";
@@ -9,6 +10,10 @@ export interface IProjectStats {
 }
 export interface IActionProjectStatsUpdate extends IProjectStats {
     projectId?: string;
+}
+
+export interface IActionBookFor {
+    bookFor: IBookFor
 }
 
 export interface IActionImageCoverUpdate {

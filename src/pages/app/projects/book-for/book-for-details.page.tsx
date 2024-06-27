@@ -12,13 +12,13 @@ import { MdAddPhotoAlternate } from 'react-icons/md';
 import { Avatar } from 'antd';
 import { UserProjectsService } from '@app/domains/services/user-projects.service';
 import { db } from '@app/init/firebase';
-import { updateUserProjectInList } from '@app/redux/auth.slice';
 import { UserImageManager } from '@app/manager/client/user-image.manager';
 import { BookImage, EImageKind } from '@app/components/app/summary/summary-with-states';
 
 
 import "@app/components/app/forms/forms.scss";
 import RegisterForm, { ERegisterForm } from '@app/components/app/forms/register.formik';
+import { updateBookFor } from '@app/redux/current.project.slice';
 
 
 type Props = {}
@@ -76,7 +76,10 @@ export default function ShowBookForDetailsPage({ }: Props) {
                     console.log("FAIL", toUpdate, avatarUrl)
                 }
             }
-            dispatch(updateUserProjectInList(toUpdate))
+            dispatch(updateBookFor({
+                bookFor: toUpdate.bookFor
+            }
+            ))
             navigate(`/app/projects/${project.id}/invitation`)
         }
     }

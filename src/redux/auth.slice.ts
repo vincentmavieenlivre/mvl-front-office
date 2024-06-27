@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { IdTokenResult, ParsedToken, User } from "firebase/auth";
-import type { PayloadAction } from '@reduxjs/toolkit'
+import type { Action, PayloadAction, ThunkAction } from '@reduxjs/toolkit'
 import { RootState } from "./store";
 import { ERoles } from "@app/manager/admin/roles";
 import { Project } from "@app/modeles/database/project";
@@ -17,24 +17,25 @@ export interface UserStore {
 const initialState: UserStore = {
     user: undefined,
     tokenResult: undefined,
-    userProjects: []
+
 };
 
 export interface TokenRole {
     role: ERoles
 }
 
+// Thunk type
+type AppThunk<T> = ThunkAction<Promise<void>, T, unknown, Action<string>>;
+
+const getAuthSlice = (): AppThunk<RootState> => (dispatch: any, getState: any) => {
+    const state = getState();
+    return state;
+};
 
 
 export const authSlice = createSlice({
     name: "user",
     initialState,
-    extraReducers: (builder) => {
-        builder.addCase(setQuestionResponse, (state, action: PayloadAction<IBookQuestion | undefined>) => {
-            console.log('xxx ADDCASE', action, state)
-        }
-        )
-    },
     reducers: {
         setUser: (state, action: PayloadAction<UserStore | undefined>) => {
             if (action.payload) {
@@ -44,98 +45,18 @@ export const authSlice = createSlice({
             } else {
                 state.user = undefined
                 state.tokenResult = undefined
-                state.userProjects = undefined
-            }
-        },
-        setUserProjects: (state, action: PayloadAction<Project[] | undefined>) => {
-            if (action.payload && action.payload.length > 0) {
-                console.info("[store] users projects num", action.payload.length)
-                state.userProjects = action.payload;
-            } else {
-                console.info("[store] users projects NOT YET PROJECT")
-
-            }
-        },
-        addUserProjects: (state, action: PayloadAction<Project | undefined>) => {
-            if (action.payload) {
-                console.info("[store] users projects add", action.payload)
-                state.userProjects.push(action.payload)
-            } else {
-                console.info("[store] users projects NOT YET PROJECT", action)
-
-            }
-        },
-
-        updateStatsProjectInList: (state, action: PayloadAction<IActionProjectStatsUpdate>) => {
-            if (action.payload) {
-                console.info("[store] users projects add", action.payload)
-                let project = state?.userProjects?.find((p) => p.id === action.payload.projectId)
-                if (project) {
-                    delete action.payload.projectId
-                    project.stats = action.payload
-                }
-            } else {
-                console.info("[store] users projects NOT YET PROJECT", action)
-
-            }
-        },
-
-        updateImageCoverProjectInList: (state, action: PayloadAction<IActionImageCoverUpdate>) => {
-            if (action.payload) {
-                console.info("[store] users projects add", action.payload)
-                let project = state?.userProjects?.find((p) => p.id === action.payload.projectId)
-                if (project) {
-                    project.templateCoverUrl = action.payload.coverUrl
-                }
-            } else {
-                console.info("[store] users projects NOT YET PROJECT", action)
-
-            }
-        },
-
-        updateNameProjectInList: (state, action: PayloadAction<IActionNameUpdate>) => {
-            if (action.payload) {
-                console.info("[store] users projects add", action.payload)
-                let project = state?.userProjects?.find((p) => p.id === action.payload.projectId)
-                if (project) {
-                    project.name = action.payload.name
-                }
-            } else {
-                console.info("[store] users projects NOT YET PROJECT", action)
-
             }
         },
 
 
-
-        updateUserProjectInList: (state, action: PayloadAction<Project | undefined>) => {
-            if (action.payload) {
-                console.info("[store] users projects add", action.payload)
-                let projects = state.userProjects.map((p) => {
-                    if (action.payload && p.id === action.payload?.id) {
-                        return action.payload
-                    } else {
-                        return p
-                    }
-                })
-                if (projects) {
-                    state.userProjects = projects
-                }
-            } else {
-                console.info("[store] users projects NOT YET PROJECT", action)
-
-            }
-        },
     },
 });
 
 // Action creators are generated for each case reducer function
-export const { setUser, setUserProjects, addUserProjects,
-    updateNameProjectInList,
-    updateImageCoverProjectInList, updateUserProjectInList,
-    updateStatsProjectInList } = authSlice.actions;
+export const { setUser
+} = authSlice.actions;
 
-export const selectUserProjects = (state: RootState): Project[] => state.user.userProjects
+
 export const selectUser = (state: RootState): User | undefined => state.user.user
 export const selectToken = (state: RootState): IdTokenResult | undefined => state.user.tokenResult
 

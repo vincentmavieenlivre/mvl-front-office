@@ -9,7 +9,6 @@ import { UserProjectsService } from '@app/domains/services/user-projects.service
 import { db } from '@app/init/firebase';
 import { useDispatch } from 'react-redux';
 import { updateProjectName } from '@app/redux/current.project.slice';
-import { updateNameProjectInList } from '@app/redux/auth.slice';
 
 type Props = {
     project?: Project;
@@ -54,10 +53,7 @@ export default function CoverCustomization({ project, containerClass }: Props) {
                     if (db && project?.id) {
                         UserProjectsService.updateProjectName(db, values.name, project.id)
                         dispatch(updateProjectName(values.name))
-                        dispatch(updateNameProjectInList({
-                            projectId: project.id,
-                            name: values.name
-                        }))
+
                         console.log("cover form values", values)
                     }
                 }}

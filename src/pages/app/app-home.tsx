@@ -2,7 +2,7 @@ import { functions } from '@app/init/firebase'
 import { hasPermission } from '@app/manager/admin/roles.manager'
 import { Project } from '@app/modeles/database/project'
 import { EPermission } from '@app/modeles/database/roles'
-import { selectToken, selectUser, selectUserProjects } from '@app/redux/auth.slice'
+import { selectToken, selectUser } from '@app/redux/auth.slice'
 import { APP_ROUTES } from '@app/routes/app.routes.index'
 import { httpsCallable } from 'firebase/functions'
 import React, { useEffect } from 'react'
@@ -17,6 +17,7 @@ import { GiBookshelf } from "react-icons/gi";
 import { IProjectStats, getUserStatusOnProject } from '@app/redux/helpers/project.slice.helpers'
 
 import './app-home.css'
+import { selectUserProjects } from '@app/redux/current.project.slice'
 
 type Props = {}
 
@@ -77,11 +78,11 @@ export default function AppHome({ }: Props) {
                                             {/* WHO */}
                                             <div className='mt-1 text-xl text-gray-700 font-bold leading-6'>
 
-                                                {(p.bookFor?.destination != undefined && p.bookFor?.destination === EBookDestination.ME) &&
+                                                {(p.bookFor?.destination != undefined && p.bookFor?.destination === EBookDestination.OTHER) &&
                                                     <p>Pour {`${p.bookFor?.firstName}  ${p.bookFor?.lastName}`} </p>
                                                 }
 
-                                                {(p.bookFor?.destination === EBookDestination.OTHER) &&
+                                                {(p.bookFor?.destination === EBookDestination.ME) &&
                                                     <p className='text-sm text-gray-500'>Mon livre</p>
                                                 }
 

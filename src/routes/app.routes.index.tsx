@@ -5,7 +5,7 @@ import PublicRoutes from "./public.routes";
 import { IdTokenResult, User } from "firebase/auth";
 import { useSelector } from "react-redux";
 import BackOfficeRoutes from "./backoffice.routes";
-import { TokenRole, selectToken, selectUser, selectUserProjects } from "../redux/auth.slice";
+import { TokenRole, selectToken, selectUser } from "../redux/auth.slice";
 import AppHome from "@app/pages/app/app-home";
 import AppLayout from "@app/pages/layout/app.layout";
 import NewProject from "@app/pages/app/projects/new.project.page";
@@ -20,6 +20,7 @@ import DashboardLayout from "@app/pages/layout/dashboard-nav.layout";
 import ShowBookForDetailsPage from "@app/pages/app/projects/book-for/book-for-details.page";
 import ShowBookForPage from "@app/pages/app/projects/book-for/book-for.page";
 import InvitationPage from "@app/pages/app/invitation/invitation.page";
+import { selectUserProjects } from "@app/redux/current.project.slice";
 
 export const APP_ROUTES = {
   NEW_PROJECT: "/app/projects/new",
@@ -82,7 +83,7 @@ function InternalAppRedirector({ children }: { children: JSX.Element }) {
   const userProjects: Project[] = useSelector(selectUserProjects)
   const location = useLocation();
 
-  console.log("user projects", location)
+  console.log("user projects", userProjects)
   // redirect to create a new project
   if (user && [ERoles.USER].includes(role) && location.pathname != APP_ROUTES.NEW_PROJECT) {
     console.log("one")

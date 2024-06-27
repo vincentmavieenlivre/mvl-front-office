@@ -1,12 +1,10 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, current } from "@reduxjs/toolkit";
 import type { PayloadAction } from '@reduxjs/toolkit';
 import { RootState, store } from "./store";
 import { Project } from "@app/modeles/database/project";
 import { IChapter, IChapterTree } from "@app/modeles/database/book/book-template";
 import { IBookQuestion } from "@app/modeles/database/book/book-question";
-import { getChapterTree } from "./helpers/project.slice.helpers";
-import { updateStatsProjectInList } from "./auth.slice";
-
+import { IActionBookFor, IActionImageCoverUpdate, IActionNameUpdate, IActionProjectStatsUpdate, getChapterTree } from "./helpers/project.slice.helpers";
 export interface ISaveDialog {
     shouldSave: boolean
     displaySaveDialog: boolean
@@ -17,6 +15,7 @@ export interface ProjectStore {
     project?: Project
     chapterTree?: IChapterTree[]
     saveDialog: ISaveDialog;
+    userProjects: Project[]
 
 }
 
@@ -27,10 +26,19 @@ const initialState: ProjectStore = {
         shouldSave: false,
         displaySaveDialog: false,
         wantedRoute: undefined
-    }
-
-
+    },
+    userProjects: []
 };
+
+function updateProjectInList(state: ProjectStore, project: any) {
+    console.log("synchronise", current(state.userProjects), project)
+    let projectIndex = state.userProjects.findIndex((p) => p.id == project.id)
+    if (projectIndex != -1) {
+        state.userProjects[projectIndex] = { ...project }
+    } else {
+        console.error("[synchronise] no current project found in list")
+    }
+}
 
 export const currentProjectSlice = createSlice({
     name: "currentProject",
@@ -39,11 +47,14 @@ export const currentProjectSlice = createSlice({
         setCurrentProject: (state, action: PayloadAction<Project | undefined>) => {
             console.log("setCurrentProject")
             state.project = action.payload
+            updateProjectInList(state, state.project)
         },
 
         updateChapters: (state, action: PayloadAction<IChapter[]>) => {
             if (state && state.project) {
                 state.project.chapters = action.payload
+                updateProjectInList(state, state.project)
+
             }
 
         },
@@ -51,22 +62,19 @@ export const currentProjectSlice = createSlice({
         updateProjectCoverUrl: (state, action: PayloadAction<string>) => {
             if (state && state.project) {
                 state.project.templateCoverUrl = action.payload
+                updateProjectInList(state, state.project)
+
             }
         },
 
         updateProjectName: (state, action: PayloadAction<string>) => {
             if (state && state.project) {
                 state.project.name = action.payload
+                updateProjectInList(state, state.project)
+
             }
         },
 
-        /*    updateChapter: (state, action: PayloadAction<IChapter>) => {
-   
-               let index = state.project?.chapters.findIndex((c) => c.id == action.payload.id)
-               if (index != -1 && index != undefined && state.project?.chapters) {
-                   state.project.chapters[index] = action.payload
-               }
-           }, */
 
         setChapterTree: (state, action: PayloadAction<IChapterTree[] | undefined>) => {
             state.chapterTree = action.payload
@@ -76,21 +84,8 @@ export const currentProjectSlice = createSlice({
             if (state && state.project && state.project.questions) {
                 let index = state.project.questions.findIndex((q: IBookQuestion) => q.id === action.payload?.id)
                 if (index != -1) {
-
-                    /*    // 1 - before assigning the response : computed if it is the first one to answer the question to increment the stats counter
-                       let beforeState = state.project.questions[index].responses == undefined || state.project.questions[index].responses?.length == 0
-                       let afterState = (action.payload?.responses && action.payload?.responses?.length > 0)
-                       console.log("BEFORE STATE", beforeState, "AFTER STATE", afterState)
-   
-   
-                       if (beforeState == true && afterState) { // means first response
-                           state.project.stats.numAnswered += 1
-                           console.log("xx increment counter in save response in store", state.project.stats.numAnswered)                   
-                       } */
-
-                    // 2 - assign the response
                     state.project.questions[index].responses = action.payload?.responses
-
+                    updateProjectInList(state, state.project)
 
                 }
             }
@@ -101,6 +96,8 @@ export const currentProjectSlice = createSlice({
                 let index = state.project.questions.findIndex((q: IBookQuestion) => q.id === action.payload?.id)
                 if (index != -1) {
                     state.project.questions[index] = action.payload
+                    updateProjectInList(state, state.project)
+
                 }
             }
         },
@@ -113,7 +110,90 @@ export const currentProjectSlice = createSlice({
 
         setShouldSave: (state, action: PayloadAction<boolean>) => {
             state.saveDialog.shouldSave = action.payload
-        }
+        },
+
+
+
+        updateBookFor: (state, action: PayloadAction<IActionBookFor>) => {
+            if (action.payload) {
+                console.info("[store] current project updateBookFor", action.payload)
+                if (state.project) {
+                    state.project.bookFor = { ...state.project.bookFor, ...action.payload.bookFor }
+                    updateProjectInList(state, state.project)
+
+                }
+            } else {
+                console.info("[store] users projects NOT YET PROJECT", action)
+
+            }
+        },
+
+
+
+
+
+        updateStats: (state, action: PayloadAction<IActionProjectStatsUpdate>) => {
+            if (action.payload) {
+                console.info("[store] current project stats", action.payload)
+                if (state.project) {
+                    state.project.stats = action.payload
+                    updateProjectInList(state, state.project)
+
+                }
+            } else {
+                console.info("[store] users projects NOT YET PROJECT", action)
+
+            }
+        },
+
+        updateImageCover: (state, action: PayloadAction<IActionImageCoverUpdate>) => {
+            if (action.payload) {
+                console.info("[store] current project image cover", action.payload)
+                if (state.project) {
+                    state.project.templateCoverUrl = action.payload.coverUrl
+                    updateProjectInList(state, state.project)
+
+                }
+            } else {
+                console.info("[store] users projects NOT YET PROJECT", action)
+
+            }
+        },
+
+
+
+
+
+        /* 
+            LIST MANAGEMENT
+        */
+
+        setUserProjects: (state, action: PayloadAction<Project[] | undefined>) => {
+            if (action.payload && action.payload.length > 0) {
+                console.info("[store] users projects num", action.payload.length)
+                state.userProjects = action.payload;
+            } else {
+                console.info("[store] users projects NOT YET PROJECT")
+
+            }
+        },
+        addUserProjects: (state, action: PayloadAction<Project | undefined>) => {
+            if (action.payload) {
+                console.info("[store] users projects add", action.payload)
+                state.userProjects.push(action.payload)
+            } else {
+                console.info("[store] users projects NOT YET PROJECT", action)
+
+            }
+        },
+
+
+
+
+
+
+
+
     },
 });
 
@@ -121,7 +201,24 @@ export const currentProjectSlice = createSlice({
 export const { setCurrentProject, setChapterTree, setQuestionResponse,
     setShouldSave, setDisplaySaveDialog, updateChapters,
     updateProjectName,
-    setQuestion, updateProjectCoverUrl } = currentProjectSlice.actions;
+    setQuestion, updateProjectCoverUrl,
+
+
+    updateStats,
+    updateImageCover,
+    updateBookFor,
+
+    setUserProjects,
+
+
+    addUserProjects,
+
+
+
+
+} = currentProjectSlice.actions;
+
+export const selectUserProjects = (state: RootState): Project[] => state.currentProject.userProjects
 
 export const selectChapters = (state: RootState): IChapterTree[] | undefined => {
     if (state.currentProject.chapterTree && state.currentProject.project?.questionsOrder && state.currentProject.project?.questions) {

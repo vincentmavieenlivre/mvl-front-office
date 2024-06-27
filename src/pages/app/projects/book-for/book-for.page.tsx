@@ -6,10 +6,10 @@ import { useEffect, useState } from 'react'
 import { UserProjectsService } from '@app/domains/services/user-projects.service'
 import { db } from '@app/init/firebase'
 import { Project } from '@app/modeles/database/project'
-import { updateUserProjectInList } from '@app/redux/auth.slice'
 import { useDispatch } from 'react-redux'
 import { set } from 'lodash'
 import BeginWrite from '@app/components/app/page-transitions/begin-writing'
+import { updateBookFor } from '@app/redux/current.project.slice'
 
 type Props = {}
 
@@ -31,8 +31,19 @@ export default function ShowBookForPage({ }: Props) {
             let test = { ...project }
             set(test, 'bookFor.destination', destination)
 
+            if (test.bookFor) {
+                dispatch(updateBookFor({
+                    bookFor: test.bookFor
+                }))
+            } else {
+                console.error("bookFor should never happen")
+            }
+
+
             if (destination == EBookDestination.OTHER) {
-                dispatch(updateUserProjectInList(project))
+
+
+
                 navigate(`/app/projects/${project.id}/bookForDetails`)
             }
 
