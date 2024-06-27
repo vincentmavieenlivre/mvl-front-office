@@ -9,12 +9,13 @@ import { Project } from '@app/modeles/database/project'
 import { updateUserProjectInList } from '@app/redux/auth.slice'
 import { useDispatch } from 'react-redux'
 import { set } from 'lodash'
+import BeginWrite from '@app/components/app/page-transitions/begin-writing'
 
 type Props = {}
 
 export default function ShowBookForPage({ }: Props) {
     const params: any = useParams()
-
+    const [showBegin, setshowBegin] = useState(false)
     const navigate = useNavigate()
     const dispatch = useDispatch();
 
@@ -26,13 +27,18 @@ export default function ShowBookForPage({ }: Props) {
     const saveDestination = async () => {
         if (db && project?.id) {
             await UserProjectsService.updateProjectDestination(db, destination, project?.id)
-            console.log("set value", destination, project)
-            set({ ...project }, 'bookFor.destination', destination, (value: number) => {
-                console.log("value", value)
-                return (value === undefined ? 0 : value)
-            });
-            dispatch(updateUserProjectInList(project))
-            navigate(`/app/projects/${project.id}/bookForDetails`)
+            console.log("set destination", destination, project)
+            let test = { ...project }
+            set(test, 'bookFor.destination', destination)
+
+            if (destination == EBookDestination.OTHER) {
+                dispatch(updateUserProjectInList(project))
+                navigate(`/app/projects/${project.id}/bookForDetails`)
+            }
+
+            if (destination == EBookDestination.ME) {
+                setshowBegin(true)
+            }
 
         }
     }
@@ -97,6 +103,14 @@ export default function ShowBookForPage({ }: Props) {
                 </div>
 
             </div>
+
+            <BeginWrite
+
+
+                project={project} show={showBegin} onNextClicked={() => {
+                    navigate(`/app/projects/${project?.id}`)
+                }}></BeginWrite>
+
 
         </div>
     )

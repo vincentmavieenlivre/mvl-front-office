@@ -11,6 +11,16 @@ export interface IActionProjectStatsUpdate extends IProjectStats {
     projectId?: string;
 }
 
+export interface IActionImageCoverUpdate {
+    projectId: string;
+    coverUrl: string
+}
+
+export interface IActionNameUpdate {
+    projectId: string;
+    name: string
+}
+
 export function getAnsweredStats(questions: IBookQuestion[]): IProjectStats {
 
     let totalAnswered = questions.reduce((ac: number, current: IBookQuestion) => {

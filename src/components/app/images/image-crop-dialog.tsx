@@ -10,6 +10,7 @@ import { UserImageManager } from '@app/manager/client/user-image.manager';
 type Props = {
     bookImage: BookImage | undefined;
     aspectRatio: number;
+    cropModalId?: string
 }
 
 export default function ImageCropDialog(props: Props) {
@@ -33,7 +34,7 @@ export default function ImageCropDialog(props: Props) {
     const [crop, setCrop] = useState<Crop>(config)
 
     const onImageLoad = (e: any) => {
-
+        console.log("on image loaded !")
         setImgRenderedDimensions({
             width: e.target.width,
             height: e.target.height
@@ -47,6 +48,12 @@ export default function ImageCropDialog(props: Props) {
 
         });
     };
+
+    useEffect(() => {
+
+        console.log("CROP DIALOG NEW IMAGE", props.bookImage?.selectedImage)
+    }, [props.bookImage])
+
 
     function resizeAndCropImage(src: string, cropX: number, cropY: number, cropWidth: number, cropHeight: number, callback: (img: string) => void) {
         var image = new Image();
@@ -126,19 +133,25 @@ export default function ImageCropDialog(props: Props) {
                 if (props.bookImage.imageKind == EImageKind.QUESTION) {
                     new UserImageManager(props.bookImage).updateImageQuestion()
                 }
+
+                if (props.bookImage.imageKind == EImageKind.COVER) {
+                    new UserImageManager(props.bookImage).updateImageCover()
+                }
+
+
             }
         });
     }
 
     return (
 
-        <dialog id="crop_modal" className="modal">
+        <dialog id={props.cropModalId} className="modal">
             <div className="modal-box w-ful ">
 
                 <button
-                    onClick={() => { document.getElementById('crop_modal').close() }}
+                    onClick={() => { document.getElementById(props.cropModalId).close() }}
                     className="btn btn-circle absolute right-4">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
                 </button>
 
                 <h2 className='mt-6  text-sky-950  text-xl font-bold'>Retouchez votre photo</h2>
@@ -173,7 +186,7 @@ export default function ImageCropDialog(props: Props) {
 
                     <button onClick={async () => {
                         const image = await doResize()
-                        document.getElementById('crop_modal').close()
+                        document.getElementById(props.cropModalId).close()
                     }}
                         className="btn btn-primary text-white">Sauvegarder
                     </button>
@@ -182,4 +195,9 @@ export default function ImageCropDialog(props: Props) {
             </div>
         </dialog>
     )
+}
+
+
+ImageCropDialog.defaultProps = {
+    cropModalId: "crop_modal"
 }

@@ -23,6 +23,8 @@ enum ETabSelected {
     MY_BOOK
 }
 
+export const MIN_QUESTIONS_TO_GENERATE = 20
+
 type Props = {
     children: React.ReactNode
 }
@@ -57,8 +59,9 @@ export default function SummaryDrawer({ children }: Props) {
     const [tabSelected, setTabSelected] = useState<ETabSelected>(ETabSelected.SUMMARY)
 
 
+    let currentProgress = ((project?.stats?.numAnswered ?? 1) / MIN_QUESTIONS_TO_GENERATE) * 100
 
-
+    console.log("current progress", currentProgress)
     return (
         <div className="drawer">
             <input ref={checkboxRef} id="summary-drawer" type="checkbox" className="drawer-toggle" />
@@ -114,7 +117,7 @@ export default function SummaryDrawer({ children }: Props) {
                                 <Alert className='mt-7 ml-1 mr-1 rounded-md'
                                     message1='Trucs et astuces'
                                     message2="Retrouvez ici toutes les questions auxquelles vous avez déjà répondues."></Alert>
-                                <ProgressBar containerClass='mt-6 mb-6' message={`Réponses enregistrées: ${75}/${100}`} min={0} max={100} current={75}></ProgressBar>
+                                <ProgressBar containerClass='mt-6 mb-6' message={`Réponses enregistrées: ${project?.stats?.numAnswered}/${MIN_QUESTIONS_TO_GENERATE}`} min={0} max={100} current={currentProgress}></ProgressBar>
                             </>
                         </SummaryWithStates>
                     }

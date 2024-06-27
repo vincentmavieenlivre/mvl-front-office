@@ -4,7 +4,7 @@ import { db, storage } from "@app/init/firebase";
 import { IBookQuestion } from "@app/modeles/database/book/book-question";
 import { IResponse } from "@app/modeles/database/book/response";
 import { ECollections } from "@app/modeles/database/firestore-collections";
-import { setChapterTree, setQuestion, updateChapter, updateChapters } from "@app/redux/current.project.slice";
+import { setChapterTree, setQuestion, updateChapter, updateChapters, updateProjectCoverUrl } from "@app/redux/current.project.slice";
 import { getChapterTree } from "@app/redux/helpers/project.slice.helpers";
 import { addDoc, collection, doc, updateDoc } from "firebase/firestore";
 import { getDownloadURL, ref, uploadBytes, uploadString } from "firebase/storage";
@@ -12,11 +12,35 @@ import { getDownloadURL, ref, uploadBytes, uploadString } from "firebase/storage
 import { store } from "@app/redux/store"
 import { UserProjectQuestionManager } from "./user-project-question.manager";
 import { BookTemplateManager } from "../backoffice/book-template.manager";
+import { updateImageCoverProjectInList } from "@app/redux/auth.slice";
 export class UserImageManager {
 
     constructor(
         private image: BookImage) {
     }
+
+    public async updateImageCover(): Promise<any> {
+        // 1 save the image
+        let imageUrl = await this.uploadImage()
+        if (imageUrl) {
+            // 2 save the cover url in project
+            await UserProjectsService.updateCoverImageUrl(db, imageUrl, this.image.projectId)
+            // 3 save into store
+
+            // in current selected project
+            store.dispatch(updateProjectCoverUrl(imageUrl))
+
+            // in list of loaded projects
+            if (this.image.projectId) {
+                store.dispatch(updateImageCoverProjectInList({
+                    projectId: this.image.projectId,
+                    coverUrl: imageUrl
+                }))
+            }
+        }
+
+    }
+
 
     public async updateImageQuestion(): Promise<any> {
         // 1 save the image
@@ -68,6 +92,9 @@ export class UserImageManager {
                 break;
             case EImageKind.BOOK_DESTINATION_AVATAR:
                 imageRef = ref(storage, `projects/${this.image.projectId}/destination-avatar-image.png`);
+                break;
+            case EImageKind.COVER:
+                imageRef = ref(storage, `projects/${this.image.projectId}/book-cover-image.png`);
                 break;
             default:
                 console.error("upload image should never happen")

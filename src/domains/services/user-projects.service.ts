@@ -107,6 +107,20 @@ export class UserProjectsService {
         return true
     }
 
+    static async updateProjectName(db: Firestore, name: string, projectId: string): Promise<boolean> {
+        await new FirestoreHelper().updateDocument(db, ECollections.PROJECTS, projectId, {
+            "name": name
+        })
+        return true
+    }
+
+    static async updateCoverImageUrl(db: Firestore, coverUrl: string, projectId: string): Promise<void> {
+        await new FirestoreHelper().updateDocument(db, ECollections.PROJECTS, projectId, {
+            "templateCoverUrl": coverUrl
+        })
+    }
+
+
     static async updateDestinationAvatarUrl(db: Firestore, destinationAvatarUrl: string, projectId: string): Promise<boolean> {
         await new FirestoreHelper().updateDocument(db, ECollections.PROJECTS, projectId, {
             "bookFor.avatarUrl": destinationAvatarUrl
@@ -114,7 +128,10 @@ export class UserProjectsService {
         return true
     }
 
+
+
     static async updateProjectDestination(db: Firestore, destination: EBookDestination, projectId: string): Promise<boolean> {
+        console.log("save destination", destination)
         await new FirestoreHelper().updateDocument(db, ECollections.PROJECTS, projectId, {
             "bookFor.destination": destination
         })

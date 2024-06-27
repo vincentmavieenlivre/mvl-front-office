@@ -48,6 +48,18 @@ export const currentProjectSlice = createSlice({
 
         },
 
+        updateProjectCoverUrl: (state, action: PayloadAction<string>) => {
+            if (state && state.project) {
+                state.project.templateCoverUrl = action.payload
+            }
+        },
+
+        updateProjectName: (state, action: PayloadAction<string>) => {
+            if (state && state.project) {
+                state.project.name = action.payload
+            }
+        },
+
         /*    updateChapter: (state, action: PayloadAction<IChapter>) => {
    
                let index = state.project?.chapters.findIndex((c) => c.id == action.payload.id)
@@ -108,7 +120,8 @@ export const currentProjectSlice = createSlice({
 // Action creators are generated for each case reducer function
 export const { setCurrentProject, setChapterTree, setQuestionResponse,
     setShouldSave, setDisplaySaveDialog, updateChapters,
-    setQuestion } = currentProjectSlice.actions;
+    updateProjectName,
+    setQuestion, updateProjectCoverUrl } = currentProjectSlice.actions;
 
 export const selectChapters = (state: RootState): IChapterTree[] | undefined => {
     if (state.currentProject.chapterTree && state.currentProject.project?.questionsOrder && state.currentProject.project?.questions) {

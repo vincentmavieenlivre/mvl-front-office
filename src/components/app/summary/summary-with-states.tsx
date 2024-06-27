@@ -14,6 +14,8 @@ import ImageCropDialog from '../images/image-crop-dialog';
 import { ImageUploader } from '../images/image-uploader';
 import { MdAddPhotoAlternate } from 'react-icons/md';
 import { MdChangeCircle } from "react-icons/md";
+import { Divider } from 'antd';
+import CoverCustomization from './cover/cover-customization';
 type Props = {
     saveDialog?: boolean;
     projectId?: string
@@ -204,6 +206,7 @@ export default function SummaryWithStates(props: PropsWithChildren<Props>) {
     return (
         <div>
             {props.children}
+            <CoverCustomization containerClass="m-4 pb-4" project={project}></CoverCustomization>
             {renderChapters()}
         </div>
     )

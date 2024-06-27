@@ -4,7 +4,7 @@ import type { PayloadAction } from '@reduxjs/toolkit'
 import { RootState } from "./store";
 import { ERoles } from "@app/manager/admin/roles";
 import { Project } from "@app/modeles/database/project";
-import { IActionProjectStatsUpdate } from "./helpers/project.slice.helpers";
+import { IActionImageCoverUpdate, IActionNameUpdate, IActionProjectStatsUpdate } from "./helpers/project.slice.helpers";
 import { setQuestionResponse } from "./current.project.slice";
 import { IBookQuestion } from "@app/modeles/database/book/book-question";
 
@@ -80,6 +80,34 @@ export const authSlice = createSlice({
             }
         },
 
+        updateImageCoverProjectInList: (state, action: PayloadAction<IActionImageCoverUpdate>) => {
+            if (action.payload) {
+                console.info("[store] users projects add", action.payload)
+                let project = state?.userProjects?.find((p) => p.id === action.payload.projectId)
+                if (project) {
+                    project.templateCoverUrl = action.payload.coverUrl
+                }
+            } else {
+                console.info("[store] users projects NOT YET PROJECT", action)
+
+            }
+        },
+
+        updateNameProjectInList: (state, action: PayloadAction<IActionNameUpdate>) => {
+            if (action.payload) {
+                console.info("[store] users projects add", action.payload)
+                let project = state?.userProjects?.find((p) => p.id === action.payload.projectId)
+                if (project) {
+                    project.name = action.payload.name
+                }
+            } else {
+                console.info("[store] users projects NOT YET PROJECT", action)
+
+            }
+        },
+
+
+
         updateUserProjectInList: (state, action: PayloadAction<Project | undefined>) => {
             if (action.payload) {
                 console.info("[store] users projects add", action.payload)
@@ -102,7 +130,10 @@ export const authSlice = createSlice({
 });
 
 // Action creators are generated for each case reducer function
-export const { setUser, setUserProjects, addUserProjects, updateUserProjectInList, updateStatsProjectInList } = authSlice.actions;
+export const { setUser, setUserProjects, addUserProjects,
+    updateNameProjectInList,
+    updateImageCoverProjectInList, updateUserProjectInList,
+    updateStatsProjectInList } = authSlice.actions;
 
 export const selectUserProjects = (state: RootState): Project[] => state.user.userProjects
 export const selectUser = (state: RootState): User | undefined => state.user.user

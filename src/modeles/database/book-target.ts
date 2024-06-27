@@ -1,8 +1,8 @@
 
 export enum EBookDestination {
 
-    OTHER,
-    ME
+    OTHER = "other",
+    ME = "me"
 
 }
 

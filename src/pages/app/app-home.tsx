@@ -28,7 +28,7 @@ export default function AppHome({ }: Props) {
 
     console.log("user", user)
     const computeProgression = (s: IProjectStats) => {
-        const pourcentage = Math.round(s?.numAnswered / s?.totalQuestions)
+        const pourcentage = Math.ceil(s?.numAnswered / s?.totalQuestions)
         return pourcentage
     }
 
@@ -50,8 +50,12 @@ export default function AppHome({ }: Props) {
                                         {!p.bookFor?.avatarUrl &&
                                             <img src={`https://api.dicebear.com/8.x/lorelei/svg?seed=${p.id}`} />
                                         }
-                                        {p.bookFor?.avatarUrl &&
+                                        {p.bookFor?.destination == EBookDestination.OTHER && p.bookFor?.avatarUrl &&
                                             <img src={p.bookFor.avatarUrl} />
+                                        }
+
+                                        {p.bookFor?.destination == EBookDestination.ME && p.templateCoverUrl &&
+                                            <img src={p.templateCoverUrl} />
                                         }
                                     </div>
                                 </div>
@@ -73,12 +77,12 @@ export default function AppHome({ }: Props) {
                                             {/* WHO */}
                                             <div className='mt-1 text-xl text-gray-700 font-bold leading-6'>
 
-                                                {(p.bookFor?.destination != undefined && p.bookFor?.destination == EBookDestination.OTHER) &&
-                                                    <p>{`${p.bookFor?.firstName}  ${p.bookFor?.lastName}`} </p>
+                                                {(p.bookFor?.destination != undefined && p.bookFor?.destination === EBookDestination.ME) &&
+                                                    <p>Pour {`${p.bookFor?.firstName}  ${p.bookFor?.lastName}`} </p>
                                                 }
 
-                                                {(p.bookFor?.destination == EBookDestination.ME) &&
-                                                    <p>Mon livre</p>
+                                                {(p.bookFor?.destination === EBookDestination.OTHER) &&
+                                                    <p className='text-sm text-gray-500'>Mon livre</p>
                                                 }
 
                                             </div>
