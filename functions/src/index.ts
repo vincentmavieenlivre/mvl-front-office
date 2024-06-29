@@ -17,4 +17,3 @@ export { test } from './test/test'
 export { createUser } from "./user/create-user"
 export { inviteFamily } from "./user/invite-family"
 export { speechToText } from './transcript/speech-to-text'
-export { renderPdfTest } from "./rendering/render-pdf"
