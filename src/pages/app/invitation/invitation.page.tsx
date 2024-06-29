@@ -55,8 +55,10 @@ export default function InvitationPage({ }: Props) {
     });
 
     const onInvite = async (value: IRelationDto) => {
-        if (tokenResult)
+        if (tokenResult) {
             await new InvitationService().launchInvitation(params.id, tokenResult, value)
+            setShowBegin(true)
+        }
     }
 
 

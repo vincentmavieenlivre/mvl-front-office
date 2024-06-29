@@ -53,7 +53,7 @@ export class InvitationService {
 
 
     public async launchInvitation(projectId: string, token: IdTokenResult, usersInfos: IRelationDto): Promise<any> {
-        const response = await fetch(getBackendUrl() + '/inviteFamily', {
+        return await fetch(getBackendUrl() + '/inviteFamily', {
             method: 'POST',
             body: JSON.stringify({
                 projectId: projectId,
@@ -65,7 +65,6 @@ export class InvitationService {
             },
         });
 
-        console.log("invite family respone", await response.json())
 
 
 
